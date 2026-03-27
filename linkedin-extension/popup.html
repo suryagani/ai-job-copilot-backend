@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AI Job Copilot</title>
+
+<style>
+:root{
+  --linkedin-blue: #0A66C2;
+  --linkedin-blue-dark: #004182;
+  --linkedin-blue-soft: #EAF4FF;
+  --bg: linear-gradient(180deg, #F7F9FC 0%, #EEF3F8 100%);
+  --card: #FFFFFF;
+  --text: #17212B;
+  --muted: #5E6B78;
+  --border: #D8E3EE;
+  --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  --success-bg: #EAF8EE;
+  --success-text: #17663A;
+  --success-border: #BCE3C8;
+  --error-bg: #FFF0F0;
+  --error-text: #B42318;
+  --error-border: #F2C7C7;
+  --info-bg: #EEF6FF;
+  --info-text: #0A66C2;
+  --info-border: #C9E0FF;
+}
+
+*{
+  box-sizing: border-box;
+}
+
+body{
+  font-family: Arial, sans-serif;
+  width: 400px;
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.wrapper{
+  padding: 14px;
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+#welcomeScreen,
+#homeScreen,
+#optimizerScreen,
+#scratchScreen,
+#resumeScreen,
+#messageScreen,
+#jobAlertScreen{
+  display: none;
+}
+
+#welcomeScreen.active,
+#homeScreen.active,
+#optimizerScreen.active,
+#scratchScreen.active,
+#resumeScreen.active,
+#messageScreen.active,
+#jobAlertScreen.active{
+  display: block;
+}
+
+.status-bar{
+  display: none;
+  padding: 11px 13px;
+  margin: 14px 14px 0 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.status-info{
+  display: block;
+  background: var(--info-bg);
+  color: var(--info-text);
+  border: 1px solid var(--info-border);
+}
+
+.status-success{
+  display: block;
+  background: var(--success-bg);
+  color: var(--success-text);
+  border: 1px solid var(--success-border);
+}
+
+.status-error{
+  display: block;
+  background: var(--error-bg);
+  color: var(--error-text);
+  border: 1px solid var(--error-border);
+}
+
+.top-accent{
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--linkedin-blue), #3C91E6);
+  margin-bottom: 14px;
+}
+
+.header{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.logo{
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--linkedin-blue), #3389DD);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow: 0 8px 20px rgba(10,102,194,0.22);
+}
+
+.header-text h1{
+  margin: 0;
+  font-size: 19px;
+  color: var(--linkedin-blue);
+}
+
+.header-text p{
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.section{
+  margin-top: 16px;
+}
+
+.section-title{
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: var(--text);
+}
+
+label{
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.helper-text{
+  margin-top: 6px;
+  margin-bottom: 0;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+input,
+select,
+textarea{
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 11px 12px;
+  font-size: 13px;
+  color: var(--text);
+  background: #fff;
+  outline: none;
+  transition: 0.18s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color: var(--linkedin-blue);
+  box-shadow: 0 0 0 3px rgba(10,102,194,0.12);
+}
+
+textarea{
+  resize: vertical;
+  line-height: 1.5;
+}
+
+textarea.small{
+  min-height: 78px;
+}
+
+textarea.medium{
+  min-height: 120px;
+}
+
+textarea.large{
+  min-height: 150px;
+}
+
+textarea.xlarge{
+  min-height: 215px;
+}
+
+.counter{
+  text-align: right;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.button-row{
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.button-row > button{
+  margin: 0;
+}
+
+button{
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 11px 13px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.18s ease;
+}
+
+button.primary{
+  background: linear-gradient(135deg, var(--linkedin-blue), #1976D2);
+  color: white;
+  box-shadow: 0 8px 18px rgba(10,102,194,0.18);
+}
+
+button.primary:hover{
+  background: linear-gradient(135deg, var(--linkedin-blue-dark), var(--linkedin-blue));
+}
+
+button.secondary{
+  background: #fff;
+  color: var(--linkedin-blue);
+  border: 1px solid var(--linkedin-blue);
+}
+
+button.secondary:hover{
+  background: var(--linkedin-blue-soft);
+}
+
+button.ghost{
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+button.ghost:hover{
+  background: #F8FAFC;
+}
+
+button:disabled{
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.output-card{
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FBFDFF 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.output-card h2{
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.role-badge{
+  display: none;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--info-bg);
+  color: var(--info-text);
+  border: 1px solid var(--info-border);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.role-badge.show{
+  display: block;
+}
+
+.spinner-wrap{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 20px;
+  margin-top: 10px;
+}
+
+.spinner{
+  display: none;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #DCE7F3;
+  border-top: 3px solid var(--linkedin-blue);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner.show{
+  display: block;
+}
+
+.divider{
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin: 16px 0;
+}
+
+.home-actions{
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.back-btn{
+  margin-bottom: 12px;
+}
+
+.note-box{
+  margin-top: 12px;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: var(--info-bg);
+  color: var(--info-text);
+  border: 1px solid var(--info-border);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.welcome-hero{
+  padding: 10px 0 4px 0;
+}
+
+.welcome-title{
+  margin: 0;
+  font-size: 24px;
+  color: var(--linkedin-blue);
+  line-height: 1.15;
+}
+
+.welcome-subtitle{
+  margin: 10px 0 0 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.feature-list{
+  margin-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.feature-item{
+  padding: 12px 13px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.feature-item strong{
+  display: block;
+  color: var(--text);
+  margin-bottom: 3px;
+  font-size: 12px;
+}
+
+.welcome-footer{
+  margin-top: 18px;
+}
+
+.quick-badge{
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--linkedin-blue-soft);
+  color: var(--linkedin-blue);
+  border: 1px solid var(--info-border);
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.mini-intro{
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8FBFF 100%);
+}
+
+@keyframes spin{
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div id="statusBar" class="status-bar"></div>
+
+<div class="wrapper">
+
+  <!-- WELCOME SCREEN -->
+  <div id="welcomeScreen" class="card active">
+    <div class="top-accent"></div>
+
+    <div class="header">
+      <div class="logo">AI</div>
+      <div class="header-text">
+        <h1>Welcome</h1>
+        <p>Your AI-powered career copilot</p>
+      </div>
+    </div>
+
+    <div class="welcome-hero">
+      <div class="quick-badge">Career Toolkit</div>
+      <h2 class="welcome-title">AI Job Copilot</h2>
+      <p class="welcome-subtitle">
+        Improve your LinkedIn profile, optimize your resume, generate recruiter outreach messages, and set up daily job alerts — all from one clean workflow.
+      </p>
+    </div>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <strong>Optimize Existing Profile</strong>
+        Improve headline, About section, and LinkedIn keywords.
+      </div>
+
+      <div class="feature-item">
+        <strong>Build Profile From Scratch</strong>
+        Generate a complete LinkedIn profile from education, skills, projects, and goals.
+      </div>
+
+      <div class="feature-item">
+        <strong>ATS Resume Optimizer</strong>
+        Restructure summary, experience, projects, and keywords for stronger ATS alignment.
+      </div>
+
+      <div class="feature-item">
+        <strong>Hiring Manager Messages</strong>
+        Create connection requests, outreach messages, and polite follow-ups.
+      </div>
+
+      <div class="feature-item">
+        <strong>Daily Job Alerts</strong>
+        Save your preferences and preview matched job alert emails.
+      </div>
+    </div>
+
+    <div class="welcome-footer">
+      <button id="startUsingBtn" class="primary">Start Using AI Job Copilot</button>
+    </div>
+  </div>
+
+  <!-- HOME SCREEN -->
+  <div id="homeScreen" class="card">
+    <div class="top-accent"></div>
+
+    <div class="header">
+      <div class="logo">AI</div>
+      <div class="header-text">
+        <h1>AI Job Copilot</h1>
+        <p>Build better LinkedIn profiles and resumes faster</p>
+      </div>
+    </div>
+
+    <div class="mini-intro">
+      <div class="helper-text" style="margin:0;">
+        Choose the workflow you want to use today.
+      </div>
+    </div>
+
+    <div class="home-actions">
+      <button id="optimizeBtn" class="primary">Optimize Existing Profile</button>
+      <button id="buildBtn" class="secondary">Build Profile From Scratch</button>
+      <button id="resumeBtn" class="secondary">ATS Resume Optimizer</button>
+      <button id="messageBtn" class="secondary">Hiring Manager Message Generator</button>
+      <button id="jobAlertBtn" class="secondary">Daily Job Alerts</button>
+    </div>
+  </div>
+
+  <!-- OPTIMIZER SCREEN -->
+  <div id="optimizerScreen" class="card">
+    <div class="top-accent"></div>
+    <button id="backBtn" class="ghost back-btn">← Back</button>
+
+    <div class="header">
+      <div class="logo">AI</div>
+      <div class="header-text">
+        <h1>Optimize Existing Profile</h1>
+        <p>Generate a stronger headline, About section, and keywords</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <label for="targetRole">Target Role</label>
+      <select id="targetRole">
+        <option value="">Select a role</option>
+        <optgroup label="Core Roles">
+          <option value="Software Engineer">Software Engineer</option>
+          <option value="Backend Developer">Backend Developer</option>
+          <option value="Python Developer">Python Developer</option>
+          <option value="Full Stack Developer">Full Stack Developer</option>
+          <option value="DevOps Engineer">DevOps Engineer</option>
+          <option value="Cloud Engineer">Cloud Engineer</option>
+          <option value="Data Analyst">Data Analyst</option>
+          <option value="Data Engineer">Data Engineer</option>
+          <option value="QA Automation Engineer">QA Automation Engineer</option>
+          <option value="RPA Developer">RPA Developer</option>
+        </optgroup>
+        <optgroup label="Trending Roles">
+          <option value="AI / ML Engineer">AI / ML Engineer</option>
+          <option value="Generative AI Engineer">Generative AI Engineer</option>
+          <option value="Automation Engineer">Automation Engineer</option>
+          <option value="Platform Engineer">Platform Engineer</option>
+          <option value="MLOps Engineer">MLOps Engineer</option>
+        </optgroup>
+      </select>
+
+      <div class="button-row">
+        <button id="suggestRoleBtn" class="secondary">Suggest Best Role</button>
+      </div>
+
+      <div id="roleBadge" class="role-badge"></div>
+    </div>
+
+    <div class="section">
+      <label for="inputText">Paste your About section</label>
+      <textarea id="inputText" class="large" placeholder="Paste your LinkedIn About section here..."></textarea>
+      <div class="helper-text">
+        The more detailed your About section is, the better the output quality.
+      </div>
+    </div>
+
+    <div class="spinner-wrap">
+      <div id="spinner" class="spinner"></div>
+    </div>
+
+    <div class="button-row">
+      <button id="generateBtn" class="primary">Generate Profile</button>
+    </div>
+
+    <div class="button-row">
+      <button id="downloadBtn" class="secondary">Download Pack</button>
+      <button id="copyAllBtn" class="secondary">Copy All</button>
+      <button id="clearAllBtn" class="ghost">Clear</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="output-card">
+      <h2>Optimized Headline</h2>
+      <textarea id="headlineOutput" class="small" placeholder="Optimized headline will appear here..."></textarea>
+      <div id="headlineCounter" class="counter">0 / 220</div>
+      <div class="button-row">
+        <button id="copyHeadlineBtn" class="secondary">Copy Headline</button>
+      </div>
+    </div>
+
+    <div class="output-card">
+      <h2>Improved About</h2>
+      <textarea id="aboutOutput" class="large" placeholder="Improved About section will appear here..."></textarea>
+      <div id="aboutCounter" class="counter">0 / 2600</div>
+      <div class="button-row">
+        <button id="copyAboutBtn" class="secondary">Copy About</button>
+      </div>
+    </div>
+
+    <div class="output-card">
+      <h2>Top Keywords</h2>
+      <textarea id="keywordsOutput" class="medium" placeholder="Top keywords will appear here..."></textarea>
+      <div class="button-row">
+        <button id="copyKeywordsBtn" class="secondary">Copy Keywords</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUILD FROM SCRATCH SCREEN -->
+  <div id="scratchScreen" class="card">
+    <div class="top-accent"></div>
+    <button id="scratchBackBtn" class="ghost back-btn">← Back</button>
+
+    <div class="header">
+      <div class="logo">AI</div>
+      <div class="header-text">
+        <h1>Build Profile From Scratch</h1>
+        <p>Create a LinkedIn profile even if you are starting from zero</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <label for="scratchRole">Target Role</label>
+      <select id="scratchRole">
+        <option value="">Select a role</option>
+        <optgroup label="Core Roles">
+          <option value="Software Engineer">Software Engineer</option>
+          <option value="Backend Developer">Backend Developer</option>
+          <option value="Python Developer">Python Developer</option>
+          <option value="Full Stack Developer">Full Stack Developer</option>
+          <option value="DevOps Engineer">DevOps Engineer</option>
+          <option value="Cloud Engineer">Cloud Engineer</option>
+          <option value="Data Analyst">Data Analyst</option>
+          <option value="Data Engineer">Data Engineer</option>
+          <option value="QA Automation Engineer">QA Automation Engineer</option>
+          <option value="RPA Developer">RPA Developer</option>
+        </optgroup>
+        <optgroup label="Trending Roles">
+          <option value="AI / ML Engineer">AI / ML Engineer</option>
+          <option value="Generative AI Engineer">Generative AI Engineer</option>
+          <option value="Automation Engineer">Automation Engineer</option>
+          <option value="Platform Engineer">Platform Engineer</option>
+          <option value="MLOps Engineer">MLOps Engineer</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="section">
+      <label for="scratchEducation">Education</label>
+      <textarea id="scratchEducation" class="small" placeholder="e.g. MSc Computer Science, University of East London"></textarea>
+    </div>
+
+    <div class="section">
+      <label for="scratchSkills">Skills</label>
+      <textarea id="scratchSkills" class="small" placeholder="e.g. Python, FastAPI, SQL, Docker"></textarea>
+    </div>
+
+    <div class="section">
+      <label for="scratchProjects">Projects</label>
+      <textarea id="scratchProjects" class="medium" placeholder="e.g. Built AI Job Copilot using FastAPI, OpenAI API, and a Chrome extension"></textarea>
+    </div>
+
+    <div class="section">
+      <label for="scratchExperience">Experience (Optional)</label>
+      <textarea id="scratchExperience" class="medium" placeholder="e.g. Internship, work experience, freelance, volunteering"></textarea>
+    </div>
+
+    <div class="section">
+      <label for="scratchGoal">Career Goal</label>
+      <textarea id="scratchGoal" class="small" placeholder="e.g. Looking for junior Python developer roles in the UK"></textarea>
+    </div>
+
+    <div class="button-row">
+      <button id="scratchGenerateBtn" class="primary">Generate From Scratch</button>
+    </div>
+
+    <div class="button-row">
+      <button id="scratchCopyAllBtn" class="secondary">Copy All</button>
+      <button id="scratchClearBtn" class="ghost">Clear</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="output-card">
+      <h2>Generated Headline</h2>
+      <textarea id="scratchHeadlineOutput" class="small" placeholder="Generated headline will appear here..."></textarea>
+      <div id="scratchHeadlineCounter" class="counter">0 / 220</div>
+      <div class="button-row">
+        <button id="scratchCopyHeadlineBtn" class="secondary">Copy Headline</button>
+      </div>
+    </div>
+
+    <div class="output-card">
+      <h2>Generated About</h2>
+      <textarea id="scratchAboutOutput" class="large" placeholder="Generated About section will appear here..."></textarea>
+      <div id="scratchAboutCounter" class="counter">0 / 2600</div>
+      <div class="button-row">
+        <button id="scratchCopyAboutBtn" class="secondary">Copy About</button>
+      </div>
+    </div>
+
+    <div class="output-card">
+      <h2>Generated Keywords</h2>
+      <textarea id="scratchKeywordsOutput" class="medium" placeholder="Generated keywords will appear here..."></textarea>
+      <div class="button-row">
+        <button id="scratchCopyKeywordsBtn" class="secondary">Copy Keywords</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUME OPTIMIZER SCREEN -->
+  <div id="resumeScreen" class="card">
+    <div class="top-accent"></div>
+    <button id="resumeBackBtn" class="ghost back-btn">← Back</button>
+
+    <div class="header">
+      <div class="logo">AI</div>
+      <div class="header-text">
+        <h1>ATS Resume Optimizer</h1>
+        <p>Paste your resume and improve it for ATS and recruiter readability</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <label for="resumeName">Name</label>
+      <input id="resumeName" placeholder="Your full name">
+    </div>
+
+    <div class="section">
+      <label for="resumeLocation">Location</label>
+      <input id="resumeLocation" placeholder="e.g. London, UK">
+    </div>
+
+    <div class="section">
+      <label for="resumeEmail">Email</label>
+      <input id="resumeEmail" placeholder="e.g. you@example.com">
+    </div>
+
+    <div class="section">
+      <label for="resumeLinkedin">LinkedIn</label>
+      <input id="resumeLinkedin" placeholder="LinkedIn profile URL">
+    </div>
+
+    <div class="section">
+      <label for="resumeRole">Target Role</label>
+      <select id="resumeRole">
+        <option value="">Select a role</option>
+        <optgroup label="Core Roles">
+          <option value="Software Engineer">Software Engineer</option>
+          <option value="Backend Developer">Backend Developer</option>
+          <option value="Python Developer">Python Developer</option>
+          <option value="Full Stack Developer">Full Stack Developer</option>
+          <option value="DevOps Engineer">DevOps Engineer</option>
+          <option value="Cloud Engineer">Cloud Engineer</option>
+          <option value="Data Analyst">Data Analyst</option>
+          <option value="Data Engineer">Data Engineer</option>
+          <option value="QA Automation Engineer">QA Automation Engineer</option>
+          <option value="RPA Developer">RPA Developer</option>
+        </optgroup>
+        <optgroup label="Trending Roles">
+          <option value="AI / ML Engineer">AI / ML Engineer</option>
+          <option value="Generative AI Engineer">Generative AI Engineer</option>
+          <option value="Automation Engineer">Automation Engineer</option>
+          <option value="Platform Engineer">Platform Engineer</option>
+          <option value="MLOps Engineer">MLOps Engineer</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="section">
+      <label for="resumeInputText">Paste Full Resume</label>
+      <textarea id="resumeInputText" class="xlarge" placeholder="Paste your full resume text here..."></textarea>
+    </div>
+
+    <div class="section">
+      <label for="resumeJD">Optional Job Description</label>
+      <textarea id="resumeJD" class="medium" placeholder="Paste the job description here if you want resume optimization aligned to a specific role..."></textarea>
+      <div class="helper-text">
+        This is optional. If provided, the resume can be aligned more closely to the job requirements.
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button id="resumeGenerateBtn" class="primary">Optimize Resume</button>
+    </div>
+
+    <div class="button-row">
+      <button id="resumeCopyAllBtn" class="secondary">Copy All</button>
+      <button id="resumeDownloadBtn" class="secondary">Download Pack</button>
+      <button id="resumeDownloadFullBtn" class="secondary">Download Full Resume</button>
+      <button id="resumeClearBtn" class="ghost">Clear</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="output-card">
+      <h2>Optimized Professional Summary</h2>
+      <textarea id="resumeSummaryOutput" class="medium" placeholder="Optimized summary will appear here..."></textarea>
+      <div class="button-row">
+        <button id="resumeCopySummaryBtn" class="secondary">Copy Summary</button>
+      </div>
+    </div>
+
+    <div class="output-card">
+      <h2>Improved Experience</h2>
+      <textarea id="resumeExperienceOutput" class="large" placeholder="Improved ATS-friendly experience section will appear here..."></textarea>
+      <div class="button-row">
+        <button id="resumeCopyExperienceBtn" class="secondary">Copy Experience</button>
+      </div>
+    </div>
+
+    <div class="output-card">
+      <h2>Improved Projects</h2>
+      <textarea id="resumeProjectsOutput" class="large" placeholder="Improved ATS-friendly projects section will appear here..."></textarea>
+      <div class="button-row">
+        <button id="resumeCopyProjectsBtn" class="secondary">Copy Projects</button>
+      </div>
+    </div>
+
+    <div class="output-card">
+      <h2>ATS Keywords</h2>
+      <textarea id="resumeKeywordsOutput" class="medium" placeholder="ATS keywords will appear here..."></textarea>
+      <div class="button-row">
+        <button id="resumeCopyKeywordsBtn" class="secondary">Copy Keywords</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MESSAGE GENERATOR SCREEN -->
+  <div id="messageScreen" class="card">
+    <div class="top-accent"></div>
+    <button id="messageBackBtn" class="ghost back-btn">← Back</button>
+
+    <div class="header">
+      <div class="logo">AI</div>
+      <div class="header-text">
+        <h1>Hiring Manager Message Generator</h1>
+        <p>Create professional recruiter outreach messages</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <label for="messageRole">Target Role</label>
+      <select id="messageRole">
+        <option value="">Select a role</option>
+        <optgroup label="Core Roles">
+          <option value="Software Engineer">Software Engineer</option>
+          <option value="Backend Developer">Backend Developer</option>
+          <option value="Python Developer">Python Developer</option>
+          <option value="Full Stack Developer">Full Stack Developer</option>
+          <option value="DevOps Engineer">DevOps Engineer</option>
+          <option value="Cloud Engineer">Cloud Engineer</option>
+          <option value="Data Analyst">Data Analyst</option>
+          <option value="Data Engineer">Data Engineer</option>
+          <option value="QA Automation Engineer">QA Automation Engineer</option>
+          <option value="RPA Developer">RPA Developer</option>
+        </optgroup>
+        <optgroup label="Trending Roles">
+          <option value="AI / ML Engineer">AI / ML Engineer</option>
+          <option value="Generative AI Engineer">Generative AI Engineer</option>
+          <option value="Automation Engineer">Automation Engineer</option>
+          <option value="Platform Engineer">Platform Engineer</option>
+          <option value="MLOps Engineer">MLOps Engineer</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="section">
+      <label for="messageCompany">Company Name</label>
+      <input id="messageCompany" placeholder="e.g. Amazon">
+    </div>
+
+    <div class="section">
+      <label for="messageManager">Hiring Manager Name (Optional)</label>
+      <input id="messageManager" placeholder="e.g. Sarah Johnson">
+    </div>
+
+    <div class="section">
+      <label for="messageJobContext">Job Link / Job Description / Context (Optional)</label>
+      <textarea id="messageJobContext" class="medium" placeholder="Paste the job link, job description, or role context here..."></textarea>
+    </div>
+
+    <div class="section">
+      <label for="messageBackground">Your Background</label>
+      <textarea id="messageBackground" class="large" placeholder="Briefly describe your background, skills, projects, or why you are a good fit..."></textarea>
+    </div>
+
+    <div class="button-row">
+      <button id="messageGenerateBtn" class="primary">Generate Messages</button>
+    </div>
+
+    <div class="button-row">
+      <button id="messageCopyAllBtn" class="secondary">Copy All</button>
+      <button id="messageDownloadBtn" class="secondary">Download Pack</button>
+      <button id="messageClearBtn" class="ghost">Clear</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="output-card">
+      <h2>Connection Message</h2>
+      <textarea id="connectionMessageOutput" class="medium" placeholder="Short connection request message will appear here..."></textarea>
+      <div class="button-row">
+        <button id="copyConnectionBtn" class="secondary">Copy Connection Message</button>
+      </div>
+    </div>
+
+    <div class="output-card">
+      <h2>Direct Outreach Message</h2>
+      <textarea id="outreachMessageOutput" class="large" placeholder="Direct outreach message will appear here..."></textarea>
+      <div class="button-row">
+        <button id="copyOutreachBtn" class="secondary">Copy Outreach Message</button>
+      </div>
+    </div>
+
+    <div class="output-card">
+      <h2>Follow-up Message</h2>
+      <textarea id="followupMessageOutput" class="medium" placeholder="Follow-up message will appear here..."></textarea>
+      <div class="button-row">
+        <button id="copyFollowupBtn" class="secondary">Copy Follow-up Message</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAILY JOB ALERT SCREEN -->
+  <div id="jobAlertScreen" class="card">
+    <div class="top-accent"></div>
+    <button id="jobAlertBackBtn" class="ghost back-btn">← Back</button>
+
+    <div class="header">
+      <div class="logo">AI</div>
+      <div class="header-text">
+        <h1>Daily Job Alerts</h1>
+        <p>Set up matched job alerts and test your email flow</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <label for="jobAlertEmail">Email</label>
+      <input id="jobAlertEmail" placeholder="e.g. you@example.com">
+    </div>
+
+    <div class="section">
+      <label for="jobAlertRole">Target Role</label>
+      <select id="jobAlertRole">
+        <option value="">Select a role</option>
+        <optgroup label="Core Roles">
+          <option value="Software Engineer">Software Engineer</option>
+          <option value="Backend Developer">Backend Developer</option>
+          <option value="Python Developer">Python Developer</option>
+          <option value="Full Stack Developer">Full Stack Developer</option>
+          <option value="DevOps Engineer">DevOps Engineer</option>
+          <option value="Cloud Engineer">Cloud Engineer</option>
+          <option value="Data Analyst">Data Analyst</option>
+          <option value="Data Engineer">Data Engineer</option>
+          <option value="QA Automation Engineer">QA Automation Engineer</option>
+          <option value="RPA Developer">RPA Developer</option>
+        </optgroup>
+        <optgroup label="Trending Roles">
+          <option value="AI / ML Engineer">AI / ML Engineer</option>
+          <option value="Generative AI Engineer">Generative AI Engineer</option>
+          <option value="Automation Engineer">Automation Engineer</option>
+          <option value="Platform Engineer">Platform Engineer</option>
+          <option value="MLOps Engineer">MLOps Engineer</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="section">
+      <label for="jobAlertLocation">Location</label>
+      <input id="jobAlertLocation" placeholder="e.g. London, UK">
+    </div>
+
+    <div class="section">
+      <label for="jobAlertExperienceLevel">Experience Level</label>
+      <select id="jobAlertExperienceLevel">
+        <option value="">Select experience level</option>
+        <option value="Entry Level (0–1 years)">Entry Level (0–1 years)</option>
+        <option value="Junior (1–3 years)">Junior (1–3 years)</option>
+        <option value="Mid-Level (3–5 years)">Mid-Level (3–5 years)</option>
+        <option value="Senior (5–8 years)">Senior (5–8 years)</option>
+        <option value="Lead / Principal (8+ years)">Lead / Principal (8+ years)</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <label for="jobAlertKeywords">Keywords (Optional)</label>
+      <input id="jobAlertKeywords" placeholder="e.g. Python, FastAPI, AWS">
+    </div>
+
+    <div class="section">
+      <label for="jobAlertTime">Preferred Send Time</label>
+      <input id="jobAlertTime" placeholder="e.g. 09:00">
+      <div class="helper-text">
+        Example: 09:00. This stores your preference for later daily automation.
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button id="saveJobAlertBtn" class="primary">Save Job Alert</button>
+      <button id="sendTestJobAlertBtn" class="secondary">Send Test Email</button>
+    </div>
+
+    <div class="button-row">
+      <button id="copyJobAlertPreviewBtn" class="secondary">Copy Preview</button>
+      <button id="clearJobAlertBtn" class="ghost">Clear</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="output-card">
+      <h2>Preview Subject</h2>
+      <textarea id="jobAlertPreviewSubject" class="small" placeholder="Email subject preview will appear here..."></textarea>
+    </div>
+
+    <div class="output-card">
+      <h2>Preview Body</h2>
+      <textarea id="jobAlertPreviewBody" class="large" placeholder="Email preview body will appear here..."></textarea>
+    </div>
+
+    <div class="note-box">
+      This setup screen stores alert preferences and supports a test email flow. Full daily automation requires a deployed backend, scheduler, and job source.
+    </div>
+  </div>
+
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

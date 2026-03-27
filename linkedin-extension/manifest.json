@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "AI Job Copilot",
+  "version": "1.0",
+  "description": "Optimize LinkedIn profile",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": [
+    "https://www.linkedin.com/*",
+    "http://127.0.0.1:8000/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
