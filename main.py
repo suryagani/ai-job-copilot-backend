@@ -1,3 +1,4 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
@@ -21,6 +22,13 @@ if not api_key:
 client = OpenAI(api_key=api_key)
 
 app = FastAPI(title="AI Job Copilot", version="1.0.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 DATA_DIR = Path(".")
 JOB_ALERT_FILE = DATA_DIR / "job_alert_config.json"

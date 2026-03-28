@@ -571,7 +571,7 @@ suggestRoleBtn.addEventListener("click", async () => {
   showStatus("Suggesting the best matching role...", "info");
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/suggest-role", {
+    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/suggest-role", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ about: aboutText })
@@ -617,7 +617,7 @@ generateBtn.addEventListener("click", async () => {
   showStatus("Generating optimized profile...", "info");
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/optimize-profile", {
+    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/optimize-profile", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -680,7 +680,7 @@ scratchGenerateBtn.addEventListener("click", async () => {
   showStatus("Generating profile from scratch...", "info");
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/generate-profile-from-scratch", {
+    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/generate-profile-from-scratch", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -742,7 +742,7 @@ resumeGenerateBtn.addEventListener("click", async () => {
   showStatus("Optimizing resume for ATS and recruiter readability...", "info");
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/optimize-resume", {
+    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/optimize-resume", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -802,7 +802,7 @@ messageGenerateBtn.addEventListener("click", async () => {
   showStatus("Generating hiring manager messages...", "info");
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/generate-hiring-messages", {
+    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/generate-hiring-messages", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -858,7 +858,7 @@ saveJobAlertBtn.addEventListener("click", async () => {
   showStatus("Saving job alert preferences...", "info");
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/save-job-alert", {
+    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/save-job-alert", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -903,7 +903,7 @@ sendTestJobAlertBtn.addEventListener("click", async () => {
   showStatus("Sending or previewing test job alert...", "info");
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/send-test-job-alert", {
+    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/send-test-job-alert", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
