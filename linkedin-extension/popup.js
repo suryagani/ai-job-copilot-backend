@@ -1,3 +1,5 @@
+const API_BASE_URL = "https://ai-job-copilot-jdqk.onrender.com";
+
 // ---------- Screen Elements ----------
 const welcomeScreen = document.getElementById("welcomeScreen");
 const homeScreen = document.getElementById("homeScreen");
@@ -75,6 +77,7 @@ const resumeLocation = document.getElementById("resumeLocation");
 const resumeEmail = document.getElementById("resumeEmail");
 const resumeLinkedin = document.getElementById("resumeLinkedin");
 const resumeRole = document.getElementById("resumeRole");
+const resumeCountry = document.getElementById("resumeCountry");
 const resumeInputText = document.getElementById("resumeInputText");
 const resumeJD = document.getElementById("resumeJD");
 
@@ -117,7 +120,8 @@ const copyFollowupBtn = document.getElementById("copyFollowupBtn");
 // ---------- Job Alert Elements ----------
 const jobAlertEmail = document.getElementById("jobAlertEmail");
 const jobAlertRole = document.getElementById("jobAlertRole");
-const jobAlertLocation = document.getElementById("jobAlertLocation");
+const jobAlertCountry = document.getElementById("jobAlertCountry");
+const jobAlertCity = document.getElementById("jobAlertCity");
 const jobAlertExperienceLevel = document.getElementById("jobAlertExperienceLevel");
 const jobAlertKeywords = document.getElementById("jobAlertKeywords");
 const jobAlertTime = document.getElementById("jobAlertTime");
@@ -304,6 +308,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     "resumeEmail",
     "resumeLinkedin",
     "resumeRole",
+    "resumeCountry",
     "resumeInputText",
     "resumeJD",
     "resumeSummaryOutput",
@@ -322,7 +327,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     "jobAlertEmail",
     "jobAlertRole",
-    "jobAlertLocation",
+    "jobAlertCountry",
+    "jobAlertCity",
     "jobAlertExperienceLevel",
     "jobAlertKeywords",
     "jobAlertTime",
@@ -351,6 +357,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   resumeEmail.value = data.resumeEmail || "";
   resumeLinkedin.value = data.resumeLinkedin || "";
   resumeRole.value = data.resumeRole || "";
+  resumeCountry.value = data.resumeCountry || "United Kingdom";
   resumeInputText.value = data.resumeInputText || "";
   resumeJD.value = data.resumeJD || "";
   resumeSummaryOutput.value = data.resumeSummaryOutput || "";
@@ -369,7 +376,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   jobAlertEmail.value = data.jobAlertEmail || "";
   jobAlertRole.value = data.jobAlertRole || "";
-  jobAlertLocation.value = data.jobAlertLocation || "";
+  jobAlertCountry.value = data.jobAlertCountry || "United Kingdom";
+  jobAlertCity.value = data.jobAlertCity || "";
   jobAlertExperienceLevel.value = data.jobAlertExperienceLevel || "";
   jobAlertKeywords.value = data.jobAlertKeywords || "";
   jobAlertTime.value = data.jobAlertTime || "09:00";
@@ -457,6 +465,7 @@ async function saveResumeData() {
     resumeEmail: resumeEmail.value,
     resumeLinkedin: resumeLinkedin.value,
     resumeRole: resumeRole.value,
+    resumeCountry: resumeCountry.value,
     resumeInputText: resumeInputText.value,
     resumeJD: resumeJD.value,
     resumeSummaryOutput: resumeSummaryOutput.value,
@@ -483,7 +492,8 @@ async function saveJobAlertData() {
   await chrome.storage.local.set({
     jobAlertEmail: jobAlertEmail.value,
     jobAlertRole: jobAlertRole.value,
-    jobAlertLocation: jobAlertLocation.value,
+    jobAlertCountry: jobAlertCountry.value,
+    jobAlertCity: jobAlertCity.value,
     jobAlertExperienceLevel: jobAlertExperienceLevel.value,
     jobAlertKeywords: jobAlertKeywords.value,
     jobAlertTime: jobAlertTime.value,
@@ -532,6 +542,7 @@ resumeLocation.addEventListener("input", saveResumeData);
 resumeEmail.addEventListener("input", saveResumeData);
 resumeLinkedin.addEventListener("input", saveResumeData);
 resumeRole.addEventListener("input", saveResumeData);
+resumeCountry.addEventListener("input", saveResumeData);
 resumeInputText.addEventListener("input", saveResumeData);
 resumeJD.addEventListener("input", saveResumeData);
 resumeSummaryOutput.addEventListener("input", saveResumeData);
@@ -550,7 +561,8 @@ followupMessageOutput.addEventListener("input", saveMessageData);
 
 jobAlertEmail.addEventListener("input", saveJobAlertData);
 jobAlertRole.addEventListener("input", saveJobAlertData);
-jobAlertLocation.addEventListener("input", saveJobAlertData);
+jobAlertCountry.addEventListener("input", saveJobAlertData);
+jobAlertCity.addEventListener("input", saveJobAlertData);
 jobAlertExperienceLevel.addEventListener("input", saveJobAlertData);
 jobAlertKeywords.addEventListener("input", saveJobAlertData);
 jobAlertTime.addEventListener("input", saveJobAlertData);
@@ -571,7 +583,7 @@ suggestRoleBtn.addEventListener("click", async () => {
   showStatus("Suggesting the best matching role...", "info");
 
   try {
-    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/suggest-role", {
+    const response = await fetch(`${API_BASE_URL}/suggest-role`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ about: aboutText })
@@ -617,7 +629,7 @@ generateBtn.addEventListener("click", async () => {
   showStatus("Generating optimized profile...", "info");
 
   try {
-    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/optimize-profile", {
+    const response = await fetch(`${API_BASE_URL}/optimize-profile`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -655,7 +667,7 @@ generateBtn.addEventListener("click", async () => {
   }
 });
 
-// ---------- Generate scratch profile with AI ----------
+// ---------- Generate scratch profile ----------
 scratchGenerateBtn.addEventListener("click", async () => {
   const role = scratchRole.value.trim();
   const education = scratchEducation.value.trim();
@@ -680,7 +692,7 @@ scratchGenerateBtn.addEventListener("click", async () => {
   showStatus("Generating profile from scratch...", "info");
 
   try {
-    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/generate-profile-from-scratch", {
+    const response = await fetch(`${API_BASE_URL}/generate-profile-from-scratch`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -720,9 +732,10 @@ scratchGenerateBtn.addEventListener("click", async () => {
   }
 });
 
-// ---------- Generate resume with AI ----------
+// ---------- Generate resume ----------
 resumeGenerateBtn.addEventListener("click", async () => {
   const role = resumeRole.value.trim();
+  const country = resumeCountry.value.trim();
   const resumeText = resumeInputText.value.trim();
   const jdText = resumeJD.value.trim();
 
@@ -742,14 +755,15 @@ resumeGenerateBtn.addEventListener("click", async () => {
   showStatus("Optimizing resume for ATS and recruiter readability...", "info");
 
   try {
-    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/optimize-resume", {
+    const response = await fetch(`${API_BASE_URL}/optimize-resume`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         target_role: role,
+        target_country: country,
         resume_text: resumeText,
         job_description: jdText,
-        target_location: "United Kingdom"
+        target_location: country
       })
     });
 
@@ -802,7 +816,7 @@ messageGenerateBtn.addEventListener("click", async () => {
   showStatus("Generating hiring manager messages...", "info");
 
   try {
-    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/generate-hiring-messages", {
+    const response = await fetch(`${API_BASE_URL}/generate-hiring-messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -843,13 +857,14 @@ messageGenerateBtn.addEventListener("click", async () => {
 saveJobAlertBtn.addEventListener("click", async () => {
   const email = jobAlertEmail.value.trim();
   const role = jobAlertRole.value.trim();
-  const location = jobAlertLocation.value.trim();
+  const country = jobAlertCountry.value.trim();
+  const city = jobAlertCity.value.trim();
   const experienceLevel = jobAlertExperienceLevel.value.trim();
   const keywords = jobAlertKeywords.value.trim();
   const preferredTime = jobAlertTime.value.trim() || "09:00";
 
-  if (!email || !role || !location || !experienceLevel) {
-    showStatus("Please enter email, target role, location, and experience level.", "error");
+  if (!email || !role || !country || !city || !experienceLevel) {
+    showStatus("Please enter email, target role, country, city, and experience level.", "error");
     return;
   }
 
@@ -858,13 +873,14 @@ saveJobAlertBtn.addEventListener("click", async () => {
   showStatus("Saving job alert preferences...", "info");
 
   try {
-    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/save-job-alert", {
+    const response = await fetch(`${API_BASE_URL}/save-job-alert`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: email,
         target_role: role,
-        location: location,
+        country: country,
+        city: city,
         experience_level: experienceLevel,
         keywords: keywords,
         preferred_time: preferredTime
@@ -888,13 +904,14 @@ saveJobAlertBtn.addEventListener("click", async () => {
 sendTestJobAlertBtn.addEventListener("click", async () => {
   const email = jobAlertEmail.value.trim();
   const role = jobAlertRole.value.trim();
-  const location = jobAlertLocation.value.trim();
+  const country = jobAlertCountry.value.trim();
+  const city = jobAlertCity.value.trim();
   const experienceLevel = jobAlertExperienceLevel.value.trim();
   const keywords = jobAlertKeywords.value.trim();
   const preferredTime = jobAlertTime.value.trim() || "09:00";
 
-  if (!email || !role || !location || !experienceLevel) {
-    showStatus("Please enter email, target role, location, and experience level.", "error");
+  if (!email || !role || !country || !city || !experienceLevel) {
+    showStatus("Please enter email, target role, country, city, and experience level.", "error");
     return;
   }
 
@@ -903,13 +920,14 @@ sendTestJobAlertBtn.addEventListener("click", async () => {
   showStatus("Sending or previewing test job alert...", "info");
 
   try {
-    const response = await fetch("https://ai-job-copilot-backend-jdqk.onrender.com/send-test-job-alert", {
+    const response = await fetch(`${API_BASE_URL}/send-test-job-alert`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: email,
         target_role: role,
-        location: location,
+        country: country,
+        city: city,
         experience_level: experienceLevel,
         keywords: keywords,
         preferred_time: preferredTime
@@ -959,7 +977,7 @@ async function copyText(text, successMessage) {
   }
 }
 
-// ---------- Optimizer copy ----------
+// ---------- Optimizer copy/download/clear ----------
 copyHeadlineBtn.addEventListener("click", async () => {
   await copyText(headlineOutput.value, "Headline copied.");
 });
@@ -987,7 +1005,6 @@ ${keywordsOutput.value}
   await copyText(combinedText, "Everything copied.");
 });
 
-// ---------- Optimizer download ----------
 downloadBtn.addEventListener("click", async () => {
   const content = `
 AI Job Copilot - Profile Pack
@@ -1021,7 +1038,6 @@ ${keywordsOutput.value}
   showStatus("Profile pack downloaded.", "success");
 });
 
-// ---------- Optimizer clear ----------
 clearAllBtn.addEventListener("click", async () => {
   targetRoleInput.value = "";
   inputText.value = "";
@@ -1044,7 +1060,7 @@ clearAllBtn.addEventListener("click", async () => {
   showStatus("All fields cleared.", "success");
 });
 
-// ---------- Scratch copy ----------
+// ---------- Scratch copy/clear ----------
 scratchCopyHeadlineBtn.addEventListener("click", async () => {
   await copyText(scratchHeadlineOutput.value, "Scratch headline copied.");
 });
@@ -1072,7 +1088,6 @@ ${scratchKeywordsOutput.value}
   await copyText(combinedText, "Scratch profile copied.");
 });
 
-// ---------- Scratch clear ----------
 scratchClearBtn.addEventListener("click", async () => {
   scratchRole.value = "";
   scratchEducation.value = "";
@@ -1101,7 +1116,7 @@ scratchClearBtn.addEventListener("click", async () => {
   showStatus("Scratch fields cleared.", "success");
 });
 
-// ---------- Resume copy ----------
+// ---------- Resume copy/download/clear ----------
 resumeCopySummaryBtn.addEventListener("click", async () => {
   await copyText(resumeSummaryOutput.value, "Resume summary copied.");
 });
@@ -1136,13 +1151,15 @@ ${resumeKeywordsOutput.value}
   await copyText(combinedText, "Resume pack copied.");
 });
 
-// ---------- Resume download pack ----------
 resumeDownloadBtn.addEventListener("click", async () => {
   const content = `
 AI Job Copilot - Resume Pack
 
 Target Role:
 ${resumeRole.value}
+
+Target Country / Job Market:
+${resumeCountry.value}
 
 Optimized Professional Summary:
 ${resumeSummaryOutput.value}
@@ -1178,11 +1195,13 @@ ${resumeKeywordsOutput.value}
   showStatus("Resume pack downloaded.", "success");
 });
 
-// ---------- Resume download full resume ----------
 resumeDownloadFullBtn.addEventListener("click", async () => {
   const fullResume = `
 ${resumeName.value}
 ${resumeLocation.value} | ${resumeEmail.value} | ${resumeLinkedin.value}
+
+TARGET COUNTRY / JOB MARKET
+${resumeCountry.value}
 
 PROFESSIONAL SUMMARY
 ${resumeSummaryOutput.value}
@@ -1218,13 +1237,13 @@ ${resumeKeywordsOutput.value}
   showStatus("Full resume downloaded.", "success");
 });
 
-// ---------- Resume clear ----------
 resumeClearBtn.addEventListener("click", async () => {
   resumeName.value = "";
   resumeLocation.value = "";
   resumeEmail.value = "";
   resumeLinkedin.value = "";
   resumeRole.value = "";
+  resumeCountry.value = "United Kingdom";
   resumeInputText.value = "";
   resumeJD.value = "";
   resumeSummaryOutput.value = "";
@@ -1238,6 +1257,7 @@ resumeClearBtn.addEventListener("click", async () => {
     "resumeEmail",
     "resumeLinkedin",
     "resumeRole",
+    "resumeCountry",
     "resumeInputText",
     "resumeJD",
     "resumeSummaryOutput",
@@ -1249,7 +1269,7 @@ resumeClearBtn.addEventListener("click", async () => {
   showStatus("Resume fields cleared.", "success");
 });
 
-// ---------- Message copy ----------
+// ---------- Message copy/download/clear ----------
 copyConnectionBtn.addEventListener("click", async () => {
   await copyText(connectionMessageOutput.value, "Connection message copied.");
 });
@@ -1277,7 +1297,6 @@ ${followupMessageOutput.value}
   await copyText(combinedText, "Message pack copied.");
 });
 
-// ---------- Message download ----------
 messageDownloadBtn.addEventListener("click", async () => {
   const content = `
 AI Job Copilot - Hiring Manager Messages
@@ -1318,7 +1337,6 @@ ${followupMessageOutput.value}
   showStatus("Message pack downloaded.", "success");
 });
 
-// ---------- Message clear ----------
 messageClearBtn.addEventListener("click", async () => {
   messageRole.value = "";
   messageCompany.value = "";
@@ -1343,7 +1361,7 @@ messageClearBtn.addEventListener("click", async () => {
   showStatus("Message fields cleared.", "success");
 });
 
-// ---------- Job alert copy preview ----------
+// ---------- Job alert copy/clear ----------
 copyJobAlertPreviewBtn.addEventListener("click", async () => {
   const combinedText = `
 SUBJECT:
@@ -1356,11 +1374,11 @@ ${jobAlertPreviewBody.value}
   await copyText(combinedText, "Job alert preview copied.");
 });
 
-// ---------- Job alert clear ----------
 clearJobAlertBtn.addEventListener("click", async () => {
   jobAlertEmail.value = "";
   jobAlertRole.value = "";
-  jobAlertLocation.value = "";
+  jobAlertCountry.value = "United Kingdom";
+  jobAlertCity.value = "";
   jobAlertExperienceLevel.value = "";
   jobAlertKeywords.value = "";
   jobAlertTime.value = "09:00";
@@ -1370,7 +1388,8 @@ clearJobAlertBtn.addEventListener("click", async () => {
   await chrome.storage.local.remove([
     "jobAlertEmail",
     "jobAlertRole",
-    "jobAlertLocation",
+    "jobAlertCountry",
+    "jobAlertCity",
     "jobAlertExperienceLevel",
     "jobAlertKeywords",
     "jobAlertTime",

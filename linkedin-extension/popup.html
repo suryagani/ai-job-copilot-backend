@@ -149,12 +149,6 @@ body{
   margin-top: 16px;
 }
 
-.section-title{
-  margin: 0 0 8px 0;
-  font-size: 14px;
-  color: var(--text);
-}
-
 label{
   display: block;
   margin-bottom: 6px;
@@ -197,21 +191,10 @@ textarea{
   line-height: 1.5;
 }
 
-textarea.small{
-  min-height: 78px;
-}
-
-textarea.medium{
-  min-height: 120px;
-}
-
-textarea.large{
-  min-height: 150px;
-}
-
-textarea.xlarge{
-  min-height: 215px;
-}
+textarea.small{ min-height: 78px; }
+textarea.medium{ min-height: 120px; }
+textarea.large{ min-height: 150px; }
+textarea.xlarge{ min-height: 215px; }
 
 .counter{
   text-align: right;
@@ -282,7 +265,6 @@ button:disabled{
   border: 1px solid var(--border);
   border-radius: 16px;
   background: linear-gradient(180deg, #FFFFFF 0%, #FBFDFF 100%);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
 .output-card h2{
@@ -432,10 +414,8 @@ button:disabled{
 
 <div class="wrapper">
 
-  <!-- WELCOME SCREEN -->
   <div id="welcomeScreen" class="card active">
     <div class="top-accent"></div>
-
     <div class="header">
       <div class="logo">AI</div>
       <div class="header-text">
@@ -453,30 +433,11 @@ button:disabled{
     </div>
 
     <div class="feature-list">
-      <div class="feature-item">
-        <strong>Optimize Existing Profile</strong>
-        Improve headline, About section, and LinkedIn keywords.
-      </div>
-
-      <div class="feature-item">
-        <strong>Build Profile From Scratch</strong>
-        Generate a complete LinkedIn profile from education, skills, projects, and goals.
-      </div>
-
-      <div class="feature-item">
-        <strong>ATS Resume Optimizer</strong>
-        Restructure summary, experience, projects, and keywords for stronger ATS alignment.
-      </div>
-
-      <div class="feature-item">
-        <strong>Hiring Manager Messages</strong>
-        Create connection requests, outreach messages, and polite follow-ups.
-      </div>
-
-      <div class="feature-item">
-        <strong>Daily Job Alerts</strong>
-        Save your preferences and preview matched job alert emails.
-      </div>
+      <div class="feature-item"><strong>Optimize Existing Profile</strong>Improve headline, About section, and LinkedIn keywords.</div>
+      <div class="feature-item"><strong>Build Profile From Scratch</strong>Generate a complete LinkedIn profile from education, skills, projects, and goals.</div>
+      <div class="feature-item"><strong>ATS Resume Optimizer</strong>Restructure summary, experience, projects, and keywords for stronger ATS alignment.</div>
+      <div class="feature-item"><strong>Hiring Manager Messages</strong>Create connection requests, outreach messages, and polite follow-ups.</div>
+      <div class="feature-item"><strong>Daily Job Alerts</strong>Save your preferences and preview matched job alert emails.</div>
     </div>
 
     <div class="welcome-footer">
@@ -484,10 +445,8 @@ button:disabled{
     </div>
   </div>
 
-  <!-- HOME SCREEN -->
   <div id="homeScreen" class="card">
     <div class="top-accent"></div>
-
     <div class="header">
       <div class="logo">AI</div>
       <div class="header-text">
@@ -511,7 +470,6 @@ button:disabled{
     </div>
   </div>
 
-  <!-- OPTIMIZER SCREEN -->
   <div id="optimizerScreen" class="card">
     <div class="top-accent"></div>
     <button id="backBtn" class="ghost back-btn">← Back</button>
@@ -559,9 +517,7 @@ button:disabled{
     <div class="section">
       <label for="inputText">Paste your About section</label>
       <textarea id="inputText" class="large" placeholder="Paste your LinkedIn About section here..."></textarea>
-      <div class="helper-text">
-        The more detailed your About section is, the better the output quality.
-      </div>
+      <div class="helper-text">The more detailed your About section is, the better the output quality.</div>
     </div>
 
     <div class="spinner-wrap">
@@ -607,7 +563,6 @@ button:disabled{
     </div>
   </div>
 
-  <!-- BUILD FROM SCRATCH SCREEN -->
   <div id="scratchScreen" class="card">
     <div class="top-accent"></div>
     <button id="scratchBackBtn" class="ghost back-btn">← Back</button>
@@ -709,7 +664,6 @@ button:disabled{
     </div>
   </div>
 
-  <!-- RESUME OPTIMIZER SCREEN -->
   <div id="resumeScreen" class="card">
     <div class="top-accent"></div>
     <button id="resumeBackBtn" class="ghost back-btn">← Back</button>
@@ -769,6 +723,21 @@ button:disabled{
     </div>
 
     <div class="section">
+      <label for="resumeCountry">Target Country / Job Market</label>
+      <select id="resumeCountry">
+        <option value="United Kingdom">United Kingdom</option>
+        <option value="United States">United States</option>
+        <option value="India">India</option>
+        <option value="Canada">Canada</option>
+        <option value="Australia">Australia</option>
+        <option value="UAE">UAE</option>
+        <option value="Germany">Germany</option>
+        <option value="Remote / International">Remote / International</option>
+      </select>
+      <div class="helper-text">This helps the AI adjust resume wording for the target job market.</div>
+    </div>
+
+    <div class="section">
       <label for="resumeInputText">Paste Full Resume</label>
       <textarea id="resumeInputText" class="xlarge" placeholder="Paste your full resume text here..."></textarea>
     </div>
@@ -776,9 +745,7 @@ button:disabled{
     <div class="section">
       <label for="resumeJD">Optional Job Description</label>
       <textarea id="resumeJD" class="medium" placeholder="Paste the job description here if you want resume optimization aligned to a specific role..."></textarea>
-      <div class="helper-text">
-        This is optional. If provided, the resume can be aligned more closely to the job requirements.
-      </div>
+      <div class="helper-text">This is optional. If provided, the resume can be aligned more closely to the job requirements.</div>
     </div>
 
     <div class="button-row">
@@ -797,37 +764,28 @@ button:disabled{
     <div class="output-card">
       <h2>Optimized Professional Summary</h2>
       <textarea id="resumeSummaryOutput" class="medium" placeholder="Optimized summary will appear here..."></textarea>
-      <div class="button-row">
-        <button id="resumeCopySummaryBtn" class="secondary">Copy Summary</button>
-      </div>
+      <div class="button-row"><button id="resumeCopySummaryBtn" class="secondary">Copy Summary</button></div>
     </div>
 
     <div class="output-card">
       <h2>Improved Experience</h2>
       <textarea id="resumeExperienceOutput" class="large" placeholder="Improved ATS-friendly experience section will appear here..."></textarea>
-      <div class="button-row">
-        <button id="resumeCopyExperienceBtn" class="secondary">Copy Experience</button>
-      </div>
+      <div class="button-row"><button id="resumeCopyExperienceBtn" class="secondary">Copy Experience</button></div>
     </div>
 
     <div class="output-card">
       <h2>Improved Projects</h2>
       <textarea id="resumeProjectsOutput" class="large" placeholder="Improved ATS-friendly projects section will appear here..."></textarea>
-      <div class="button-row">
-        <button id="resumeCopyProjectsBtn" class="secondary">Copy Projects</button>
-      </div>
+      <div class="button-row"><button id="resumeCopyProjectsBtn" class="secondary">Copy Projects</button></div>
     </div>
 
     <div class="output-card">
       <h2>ATS Keywords</h2>
       <textarea id="resumeKeywordsOutput" class="medium" placeholder="ATS keywords will appear here..."></textarea>
-      <div class="button-row">
-        <button id="resumeCopyKeywordsBtn" class="secondary">Copy Keywords</button>
-      </div>
+      <div class="button-row"><button id="resumeCopyKeywordsBtn" class="secondary">Copy Keywords</button></div>
     </div>
   </div>
 
-  <!-- MESSAGE GENERATOR SCREEN -->
   <div id="messageScreen" class="card">
     <div class="top-accent"></div>
     <button id="messageBackBtn" class="ghost back-btn">← Back</button>
@@ -901,29 +859,22 @@ button:disabled{
     <div class="output-card">
       <h2>Connection Message</h2>
       <textarea id="connectionMessageOutput" class="medium" placeholder="Short connection request message will appear here..."></textarea>
-      <div class="button-row">
-        <button id="copyConnectionBtn" class="secondary">Copy Connection Message</button>
-      </div>
+      <div class="button-row"><button id="copyConnectionBtn" class="secondary">Copy Connection Message</button></div>
     </div>
 
     <div class="output-card">
       <h2>Direct Outreach Message</h2>
       <textarea id="outreachMessageOutput" class="large" placeholder="Direct outreach message will appear here..."></textarea>
-      <div class="button-row">
-        <button id="copyOutreachBtn" class="secondary">Copy Outreach Message</button>
-      </div>
+      <div class="button-row"><button id="copyOutreachBtn" class="secondary">Copy Outreach Message</button></div>
     </div>
 
     <div class="output-card">
       <h2>Follow-up Message</h2>
       <textarea id="followupMessageOutput" class="medium" placeholder="Follow-up message will appear here..."></textarea>
-      <div class="button-row">
-        <button id="copyFollowupBtn" class="secondary">Copy Follow-up Message</button>
-      </div>
+      <div class="button-row"><button id="copyFollowupBtn" class="secondary">Copy Follow-up Message</button></div>
     </div>
   </div>
 
-  <!-- DAILY JOB ALERT SCREEN -->
   <div id="jobAlertScreen" class="card">
     <div class="top-accent"></div>
     <button id="jobAlertBackBtn" class="ghost back-btn">← Back</button>
@@ -968,8 +919,22 @@ button:disabled{
     </div>
 
     <div class="section">
-      <label for="jobAlertLocation">Location</label>
-      <input id="jobAlertLocation" placeholder="e.g. London, UK">
+      <label for="jobAlertCountry">Country</label>
+      <select id="jobAlertCountry">
+        <option value="United Kingdom">United Kingdom</option>
+        <option value="United States">United States</option>
+        <option value="India">India</option>
+        <option value="Canada">Canada</option>
+        <option value="Australia">Australia</option>
+        <option value="UAE">UAE</option>
+        <option value="Germany">Germany</option>
+        <option value="Remote / International">Remote / International</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <label for="jobAlertCity">City / Location</label>
+      <input id="jobAlertCity" placeholder="e.g. London, Hyderabad, New York, Remote">
     </div>
 
     <div class="section">
@@ -992,9 +957,7 @@ button:disabled{
     <div class="section">
       <label for="jobAlertTime">Preferred Send Time</label>
       <input id="jobAlertTime" placeholder="e.g. 09:00">
-      <div class="helper-text">
-        Example: 09:00. This stores your preference for later daily automation.
-      </div>
+      <div class="helper-text">Example: 09:00. This stores your preference for later daily automation.</div>
     </div>
 
     <div class="button-row">

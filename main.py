@@ -1,5 +1,5 @@
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 import os
@@ -22,6 +22,7 @@ if not api_key:
 client = OpenAI(api_key=api_key)
 
 app = FastAPI(title="AI Job Copilot", version="1.0.0")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -80,6 +81,7 @@ class ScratchProfileInput(BaseModel):
 
 class ResumeOptimizerInput(BaseModel):
     target_role: str
+    target_country: str = "United Kingdom"
     resume_text: str
     job_description: str = ""
     target_location: str = "United Kingdom"
@@ -110,7 +112,8 @@ class HiringMessageOutput(BaseModel):
 class JobAlertInput(BaseModel):
     email: str
     target_role: str
-    location: str
+    country: str
+    city: str
     experience_level: str
     keywords: str = ""
     preferred_time: str = "09:00"
@@ -157,7 +160,8 @@ def build_job_alert_preview(data: JobAlertInput) -> tuple[str, str]:
 Your daily AI Job Copilot alert is configured successfully.
 
 Target role: {data.target_role}
-Location: {data.location}
+Country: {data.country}
+City / Location: {data.city}
 Experience level: {data.experience_level}
 Keywords: {data.keywords or "Not specified"}
 Preferred send time: {data.preferred_time}
@@ -256,7 +260,7 @@ Return only the exact role name.
 @app.post("/optimize-profile", response_model=OptimizedProfile)
 def optimize_profile(data: ProfileInput):
     system_msg = (
-        "You are an expert LinkedIn profile strategist for the UK job market. "
+        "You are an expert LinkedIn profile strategist for the job market specified by the user. "
         "You optimize profiles for recruiter clarity, keyword relevance, and professional positioning. "
         "The user's About section is the primary source of truth. "
         "You must NEVER invent employers, dates, certifications, achievements, metrics, tools, or projects "
@@ -266,14 +270,14 @@ def optimize_profile(data: ProfileInput):
 
     user_msg = f"""
 Target role: {data.target_role}
-Target location: {data.target_location}
+Target job market / country: {data.target_location}
 
 Primary source input (About section):
 {data.about}
 
 Your tasks:
 1. Create a LinkedIn headline tailored to the target role.
-2. Rewrite the About section in a strong UK-professional tone.
+2. Rewrite the About section in a strong professional tone suitable for the target job market.
 3. Keep the About section natural, confident, and recruiter-friendly.
 4. Highlight transferable strengths already present in the input.
 5. Generate 10-15 relevant LinkedIn/ATS keywords.
@@ -335,7 +339,7 @@ Return ONLY valid JSON in this exact format:
 def generate_profile_from_scratch(data: ScratchProfileInput):
     system_msg = (
         "You are an expert LinkedIn profile strategist for freshers, students, early-career professionals, "
-        "and career switchers in the UK job market. "
+        "and career switchers in the user's target job market. "
         "Your task is to create a strong LinkedIn headline, About section, and keywords from structured user inputs. "
         "You must NEVER invent employers, dates, certifications, achievements, metrics, tools, projects, "
         "or experience that are not clearly supported by the user input. "
@@ -344,7 +348,7 @@ def generate_profile_from_scratch(data: ScratchProfileInput):
 
     user_msg = f"""
 Target role: {data.target_role}
-Target location: {data.target_location}
+Target job market / country: {data.target_location}
 
 User details:
 Education:
@@ -423,17 +427,18 @@ Return ONLY valid JSON in this exact format:
 @app.post("/optimize-resume", response_model=ResumeOptimizerOutput)
 def optimize_resume(data: ResumeOptimizerInput):
     system_msg = (
-        "You are an expert ATS resume optimizer for the UK job market. "
+        "You are an expert ATS resume optimizer for the user's target job market. "
         "You improve resumes for recruiter readability and ATS alignment. "
         "You must NEVER invent employers, dates, certifications, achievements, metrics, tools, projects, "
         "or responsibilities not supported by the user's resume text. "
         "If a job description is provided, align the wording and keyword emphasis to it, but remain truthful. "
-        "You should separate improvements into summary, experience, projects, and ATS keywords."
+        "Adapt tone and style slightly to the target country/job market where appropriate, "
+        "while keeping the output ATS-friendly and professional."
     )
 
     user_msg = f"""
 Target role: {data.target_role}
-Target location: {data.target_location}
+Target country / job market: {data.target_country}
 
 Resume text:
 {data.resume_text}
@@ -442,13 +447,14 @@ Optional Job Description:
 {data.job_description}
 
 Tasks:
-1. Create an ATS-friendly professional summary tailored to the target role.
+1. Create an ATS-friendly professional summary tailored to the target role and job market.
 2. Improve the experience section wording in a concise, recruiter-friendly way.
 3. Improve the projects section wording with stronger action verbs and clearer technical framing.
 4. Generate 12-18 ATS keywords based on the resume and job description if available.
 5. Do not invent facts.
 6. Do not use emojis.
 7. If job description is provided, prioritize matching terminology where truthful.
+8. Keep the style suitable for the selected country/job market.
 
 Summary rules:
 - 60 to 120 words
@@ -503,7 +509,7 @@ Return ONLY valid JSON in this exact format:
 @app.post("/generate-hiring-messages", response_model=HiringMessageOutput)
 def generate_hiring_messages(data: HiringMessageInput):
     system_msg = (
-        "You are an expert career communication assistant for the UK job market. "
+        "You are an expert career communication assistant for the user's target job market. "
         "Your job is to generate short, polite, professional outreach messages for LinkedIn or email. "
         "You must NEVER invent achievements, years of experience, or technical skills not supported by the user's background. "
         "Messages should feel human, confident, and respectful—not spammy or over-salesy."
@@ -513,7 +519,7 @@ def generate_hiring_messages(data: HiringMessageInput):
 Target role: {data.target_role}
 Company name: {data.company_name}
 Hiring manager name: {data.hiring_manager_name}
-Target location: {data.target_location}
+Target location / country: {data.target_location}
 
 Optional job context:
 {data.job_context}
