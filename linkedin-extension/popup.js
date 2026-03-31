@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://ai-job-copilot-jdqk.onrender.com";
+const API_BASE_URL = "https://ai-job-copilot-backend-jdqk.onrender.com";
 
 // ---------- Screen Elements ----------
 const welcomeScreen = document.getElementById("welcomeScreen");
