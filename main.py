@@ -87,6 +87,23 @@ class ResumeOptimizerInput(BaseModel):
     target_location: str = "United Kingdom"
 
 
+class ResumeBuilderInput(BaseModel):
+    full_name: str = ""
+    email: str = ""
+    phone: str = ""
+    location: str = ""
+    education: str
+    target_role: str
+    target_industry: str = ""
+    career_path: str = "Non-Technical"
+    skills: str
+    projects: str = ""
+    experience: str = ""
+    certifications: str = ""
+    career_objective: str = ""
+    target_country: str = "United Kingdom"
+
+
 class ResumeOptimizerOutput(BaseModel):
     summary: str
     experience: str
@@ -503,6 +520,89 @@ Return ONLY valid JSON in this exact format:
         raise HTTPException(status_code=500, detail="ats_keywords must be a list.")
 
     parsed["ats_keywords"] = [str(x).strip() for x in parsed["ats_keywords"] if str(x).strip()]
+    return parsed
+
+
+@app.post("/build-resume")
+def build_resume(data: ResumeBuilderInput):
+    system_msg = (
+        "You are an expert professional resume writer. "
+        "Create a complete ATS-friendly resume from scratch using only the user's provided information. "
+        "Do not invent employers, degrees, certifications, dates, projects, metrics, or experience. "
+        "If the user is from a technical background but targeting a non-technical role, translate their strengths into relevant transferable skills. "
+        "Return a clean resume suitable for the selected target country/job market."
+    )
+
+    user_msg = f"""
+Create a complete professional resume from scratch.
+
+Personal details:
+Full name: {data.full_name}
+Email: {data.email}
+Phone: {data.phone}
+Location: {data.location}
+
+Target role: {data.target_role}
+Target industry: {data.target_industry}
+Career path: {data.career_path}
+Target country/job market: {data.target_country}
+
+Education:
+{data.education}
+
+Skills:
+{data.skills}
+
+Projects:
+{data.projects}
+
+Experience / Internship:
+{data.experience}
+
+Certifications:
+{data.certifications}
+
+Career objective:
+{data.career_objective}
+
+Instructions:
+1. Create a complete ATS-friendly resume.
+2. Include sections: Contact Details, Professional Summary, Key Skills, Education, Projects, Experience/Internship, Certifications.
+3. If experience is missing, keep it fresher-friendly.
+4. If targeting non-technical roles, focus on communication, problem-solving, coordination, documentation, Excel, operations, analysis, customer handling, and transferable skills where supported by input.
+5. Do not invent facts.
+6. Use clean formatting.
+7. Return ONLY valid JSON in this format:
+{{
+  "full_resume": "string",
+  "summary": "string",
+  "skills": "string",
+  "education": "string",
+  "projects": "string",
+  "experience": "string",
+  "certifications": "string"
+}}
+"""
+
+    resp = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": user_msg},
+        ],
+        temperature=0.2,
+    )
+
+    content = (resp.choices[0].message.content or "").strip()
+    parsed = parse_json_response(content)
+
+    required_keys = {"full_resume", "summary", "skills", "education", "projects", "experience", "certifications"}
+    if not required_keys.issubset(parsed.keys()):
+        raise HTTPException(
+            status_code=500,
+            detail=f"Missing keys in resume builder response. Required: {required_keys}. Got: {list(parsed.keys())}",
+        )
+
     return parsed
 
 
