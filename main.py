@@ -1,14 +1,22 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 import os
 import json
 import smtplib
+from io import BytesIO
 from email.mime.text import MIMEText
 from pathlib import Path
 from json_repair import repair_json
 from openai import OpenAI
+from docx import Document
+from docx.shared import Pt
+from reportlab.lib.pagesizes import A4, letter
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.enums import TA_LEFT
 
 # -----------------------
 # Setup
@@ -39,6 +47,109 @@ SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
 SMTP_USER = os.getenv("SMTP_USER", "")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
 SMTP_FROM = os.getenv("SMTP_FROM", SMTP_USER)
+
+ROLE_CATALOG = [
+    "Software Engineer",
+    "Backend Developer",
+    "Frontend Developer",
+    "Full Stack Developer",
+    "Mobile App Developer",
+    "DevOps Engineer",
+    "Cloud Engineer",
+    "Site Reliability Engineer",
+    "Platform Engineer",
+    "Systems Administrator",
+    "Network Engineer",
+    "Cybersecurity Analyst",
+    "IT Support Engineer",
+    "QA Engineer",
+    "QA Automation Engineer",
+    "Automation Engineer",
+    "RPA Developer",
+    "Data Analyst",
+    "Business Analyst",
+    "Data Engineer",
+    "Data Scientist",
+    "BI Analyst",
+    "AI / ML Engineer",
+    "Machine Learning Engineer",
+    "Generative AI Engineer",
+    "MLOps Engineer",
+    "Product Manager",
+    "Project Manager",
+    "Program Manager",
+    "Scrum Master",
+    "Operations Analyst",
+    "Operations Executive",
+    "Operations Manager",
+    "Supply Chain Analyst",
+    "Logistics Coordinator",
+    "Procurement Specialist",
+    "Sales Executive",
+    "Business Development Executive",
+    "Account Manager",
+    "Marketing Executive",
+    "Digital Marketing Specialist",
+    "SEO Specialist",
+    "Content Strategist",
+    "Content Writer",
+    "Social Media Manager",
+    "Graphic Designer",
+    "UI/UX Designer",
+    "Motion Designer",
+    "Recruiter",
+    "Talent Acquisition Specialist",
+    "HR Executive",
+    "HR Generalist",
+    "Customer Support Executive",
+    "Customer Success Manager",
+    "Accountant",
+    "Financial Analyst",
+    "Finance Executive",
+    "Investment Analyst",
+    "Audit Associate",
+    "Tax Associate",
+    "Banking Associate",
+    "Administrative Assistant",
+    "Executive Assistant",
+    "Office Administrator",
+    "Legal Associate",
+    "Compliance Analyst",
+    "Research Assistant",
+    "Teacher",
+    "Lecturer",
+    "Instructional Designer",
+    "Healthcare Administrator",
+    "Pharmacist",
+    "Nurse",
+    "Medical Coder",
+    "Clinical Data Analyst",
+    "Electronics Engineer",
+    "Embedded Systems Engineer",
+    "VLSI Design Engineer",
+    "Telecommunications Engineer",
+    "ECE Engineer",
+    "Electrical Engineer",
+    "Power Systems Engineer",
+    "Mechanical Engineer",
+    "Automotive Engineer",
+    "Manufacturing Engineer",
+    "Production Engineer",
+    "Industrial Engineer",
+    "Civil Engineer",
+    "Structural Engineer",
+    "Site Engineer",
+    "Construction Engineer",
+    "Architect",
+    "Interior Designer",
+    "Environmental Engineer",
+    "Chemical Engineer",
+    "Process Engineer",
+    "Food Technologist",
+    "Agriculture Officer",
+    "Geologist",
+    "Quantity Surveyor",
+]
 
 
 # -----------------------
@@ -111,6 +222,18 @@ class ResumeOptimizerOutput(BaseModel):
     ats_keywords: list[str]
 
 
+class ResumeExportSection(BaseModel):
+    heading: str
+    body: str
+
+
+class ResumeExportInput(BaseModel):
+    full_name: str = ""
+    target_role: str = ""
+    target_country: str = "United Kingdom"
+    sections: list[ResumeExportSection]
+
+
 class HiringMessageInput(BaseModel):
     target_role: str
     company_name: str
@@ -170,6 +293,177 @@ def load_json_file(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def get_country_template_settings(country: str) -> dict:
+    normalized = (country or "").strip().lower()
+    default_settings = {
+        "page_size": A4,
+        "summary_heading": "Professional Summary",
+        "skills_heading": "Key Skills",
+    }
+
+    if "united states" in normalized or "canada" in normalized:
+        return {
+            "page_size": letter,
+            "summary_heading": "Professional Summary",
+            "skills_heading": "Core Skills",
+        }
+
+    if "australia" in normalized:
+        return {
+            "page_size": A4,
+            "summary_heading": "Career Summary",
+            "skills_heading": "Key Skills",
+        }
+
+    if "germany" in normalized:
+        return {
+            "page_size": A4,
+            "summary_heading": "Professional Profile",
+            "skills_heading": "Core Competencies",
+        }
+
+    return default_settings
+
+
+def normalize_export_sections(sections: list[ResumeExportSection], country: str) -> list[ResumeExportSection]:
+    settings = get_country_template_settings(country)
+    normalized = []
+    for section in sections:
+        heading = section.heading.strip()
+        if heading.lower() in {"summary", "professional summary"}:
+            heading = settings["summary_heading"]
+        elif heading.lower() in {"skills", "key skills"}:
+            heading = settings["skills_heading"]
+
+        body = section.body.strip()
+        if body:
+            normalized.append(ResumeExportSection(heading=heading, body=body))
+
+    return normalized
+
+
+def build_docx_resume(export: ResumeExportInput) -> BytesIO:
+    settings = get_country_template_settings(export.target_country)
+    sections = normalize_export_sections(export.sections, export.target_country)
+
+    document = Document()
+    normal_style = document.styles["Normal"]
+    normal_style.font.name = "Calibri"
+    normal_style.font.size = Pt(11)
+
+    title = export.full_name.strip() or export.target_role.strip() or "Resume"
+    title_paragraph = document.add_paragraph()
+    title_run = title_paragraph.add_run(title)
+    title_run.bold = True
+    title_run.font.size = Pt(18)
+
+    if export.target_role.strip():
+      subtitle = document.add_paragraph()
+      subtitle_run = subtitle.add_run(export.target_role.strip())
+      subtitle_run.italic = True
+      subtitle_run.font.size = Pt(11)
+
+    country_line = document.add_paragraph()
+    country_line.add_run(f"Template: {export.target_country.strip() or 'United Kingdom'}")
+
+    for section in sections:
+        heading = document.add_paragraph()
+        heading_run = heading.add_run(section.heading)
+        heading_run.bold = True
+        heading_run.font.size = Pt(12)
+
+        for line in section.body.splitlines():
+            cleaned = line.strip()
+            if not cleaned:
+                continue
+            if cleaned.startswith("- ") or cleaned.startswith("* "):
+                document.add_paragraph(cleaned[2:].strip(), style="List Bullet")
+            else:
+                document.add_paragraph(cleaned)
+
+    buffer = BytesIO()
+    document.save(buffer)
+    buffer.seek(0)
+    return buffer
+
+
+def build_pdf_resume(export: ResumeExportInput) -> BytesIO:
+    settings = get_country_template_settings(export.target_country)
+    sections = normalize_export_sections(export.sections, export.target_country)
+    buffer = BytesIO()
+
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=settings["page_size"],
+        leftMargin=42,
+        rightMargin=42,
+        topMargin=42,
+        bottomMargin=42,
+    )
+
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        "ResumeTitle",
+        parent=styles["Title"],
+        fontName="Helvetica-Bold",
+        fontSize=18,
+        leading=22,
+        alignment=TA_LEFT,
+        spaceAfter=8,
+    )
+    subtitle_style = ParagraphStyle(
+        "ResumeSubtitle",
+        parent=styles["Normal"],
+        fontName="Helvetica-Oblique",
+        fontSize=10,
+        leading=13,
+        textColor="#334155",
+        spaceAfter=8,
+    )
+    heading_style = ParagraphStyle(
+        "ResumeHeading",
+        parent=styles["Heading2"],
+        fontName="Helvetica-Bold",
+        fontSize=11,
+        leading=14,
+        spaceBefore=8,
+        spaceAfter=4,
+    )
+    body_style = ParagraphStyle(
+        "ResumeBody",
+        parent=styles["BodyText"],
+        fontName="Helvetica",
+        fontSize=10,
+        leading=14,
+        spaceAfter=3,
+    )
+
+    story = []
+    title = export.full_name.strip() or export.target_role.strip() or "Resume"
+    story.append(Paragraph(title, title_style))
+
+    if export.target_role.strip():
+        story.append(Paragraph(export.target_role.strip(), subtitle_style))
+
+    story.append(Paragraph(f"Template: {export.target_country.strip() or 'United Kingdom'}", subtitle_style))
+    story.append(Spacer(1, 8))
+
+    for section in sections:
+        story.append(Paragraph(section.heading, heading_style))
+        for line in section.body.splitlines():
+            cleaned = line.strip()
+            if not cleaned:
+                continue
+            if cleaned.startswith("- ") or cleaned.startswith("* "):
+                cleaned = f"&bull; {cleaned[2:].strip()}"
+            story.append(Paragraph(cleaned.replace("\n", "<br/>"), body_style))
+        story.append(Spacer(1, 4))
+
+    doc.build(story)
+    buffer.seek(0)
+    return buffer
+
+
 def build_job_alert_preview(data: JobAlertInput) -> tuple[str, str]:
     subject = f"AI Job Copilot Daily Job Alert - {data.target_role}"
     body = f"""Hello,
@@ -221,40 +515,23 @@ def home():
 
 @app.post("/suggest-role")
 def suggest_role(data: RoleSuggestionInput):
-    allowed_roles = [
-        "Software Engineer",
-        "Backend Developer",
-        "Python Developer",
-        "Full Stack Developer",
-        "DevOps Engineer",
-        "Cloud Engineer",
-        "Data Analyst",
-        "Data Engineer",
-        "QA Automation Engineer",
-        "RPA Developer",
-        "AI / ML Engineer",
-        "Generative AI Engineer",
-        "Automation Engineer",
-        "Platform Engineer",
-        "MLOps Engineer"
-    ]
-
     system_msg = (
-        "You are a career assistant for LinkedIn optimization. "
-        "Read the user's About section and choose the single best matching role "
-        "from the allowed roles list. "
-        "Return only one exact role name from the list and nothing else."
+        "You are a career assistant for job seekers across technical and non-technical fields. "
+        "Read the user's About section and suggest the single best professional role title. "
+        "Use the broad role catalog as guidance, but if a better common professional title is needed, "
+        "return that role title instead. "
+        "Return only one concise role name and nothing else."
     )
 
     user_msg = f"""
-Allowed roles:
-{allowed_roles}
+Reference role catalog:
+{ROLE_CATALOG}
 
 User About section:
 {data.about}
 
-Choose the single best matching role from the allowed roles list.
-Return only the exact role name.
+Choose the single best matching professional role title.
+Return only the role name.
 """
 
     resp = client.chat.completions.create(
@@ -267,8 +544,7 @@ Return only the exact role name.
     )
 
     suggested_role = (resp.choices[0].message.content or "").strip()
-
-    if suggested_role not in allowed_roles:
+    if not suggested_role or len(suggested_role) > 80:
         raise HTTPException(status_code=500, detail=f"Invalid suggested role returned: {suggested_role}")
 
     return {"suggested_role": suggested_role}
@@ -450,7 +726,9 @@ def optimize_resume(data: ResumeOptimizerInput):
         "or responsibilities not supported by the user's resume text. "
         "If a job description is provided, align the wording and keyword emphasis to it, but remain truthful. "
         "Adapt tone and style slightly to the target country/job market where appropriate, "
-        "while keeping the output ATS-friendly and professional."
+        "while keeping the output ATS-friendly and professional. "
+        "Use a clean ATS-safe structure, strong action verbs, clear role alignment, and keyword relevance. "
+        "Avoid tables, columns, icons, graphics, or decorative formatting guidance."
     )
 
     user_msg = f"""
@@ -530,7 +808,9 @@ def build_resume(data: ResumeBuilderInput):
         "Create a complete ATS-friendly resume from scratch using only the user's provided information. "
         "Do not invent employers, degrees, certifications, dates, projects, metrics, or experience. "
         "If the user is from a technical background but targeting a non-technical role, translate their strengths into relevant transferable skills. "
-        "Return a clean resume suitable for the selected target country/job market."
+        "Return a clean resume suitable for the selected target country/job market. "
+        "Use strong ATS-friendly structure, clear section headings, keyword-relevant phrasing, and clean recruiter-readable language. "
+        "Avoid tables, icons, columns, graphics, decorative elements, or invented facts."
     )
 
     user_msg = f"""
@@ -604,6 +884,30 @@ Instructions:
         )
 
     return parsed
+
+
+@app.post("/export-resume-docx")
+def export_resume_docx(data: ResumeExportInput):
+    buffer = build_docx_resume(data)
+    filename = f"{(data.full_name or data.target_role or 'resume').strip().replace(' ', '-').lower()}-resume.docx"
+    headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
+    return StreamingResponse(
+        buffer,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers=headers,
+    )
+
+
+@app.post("/export-resume-pdf")
+def export_resume_pdf(data: ResumeExportInput):
+    buffer = build_pdf_resume(data)
+    filename = f"{(data.full_name or data.target_role or 'resume').strip().replace(' ', '-').lower()}-resume.pdf"
+    headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
+    return StreamingResponse(
+        buffer,
+        media_type="application/pdf",
+        headers=headers,
+    )
 
 
 @app.post("/generate-hiring-messages", response_model=HiringMessageOutput)
