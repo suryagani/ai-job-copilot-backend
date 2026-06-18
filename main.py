@@ -198,21 +198,34 @@ class ResumeOptimizerInput(BaseModel):
     target_location: str = "United Kingdom"
 
 
-class ResumeBuilderInput(BaseModel):
+class ResumeIntelligenceInput(BaseModel):
     full_name: str = ""
     email: str = ""
     phone: str = ""
     location: str = ""
-    education: str
+    linkedin_url: str = ""
+    portfolio_url: str = ""
     target_role: str
+    target_country: str = "Global"
     target_industry: str = ""
-    career_path: str = "Non-Technical"
-    skills: str
+    career_direction: str = ""
+    experience_level: str = ""
+    current_background: str = ""
+    highest_qualification: str = ""
+    education_details: str = ""
+    work_experience: str = ""
+    internships: str = ""
     projects: str = ""
-    experience: str = ""
+    technical_skills: str = ""
+    transferable_skills: str = ""
+    tools_software: str = ""
     certifications: str = ""
-    career_objective: str = ""
-    target_country: str = "United Kingdom"
+    achievements: str = ""
+    leadership_experience: str = ""
+    career_change: str = "No"
+    current_field: str = ""
+    target_field: str = ""
+    preferred_resume_style: str = "Auto Recommend"
 
 
 class ResumeOptimizerOutput(BaseModel):
@@ -363,9 +376,6 @@ def build_docx_resume(export: ResumeExportInput) -> BytesIO:
       subtitle_run.italic = True
       subtitle_run.font.size = Pt(11)
 
-    country_line = document.add_paragraph()
-    country_line.add_run(f"Template: {export.target_country.strip() or 'United Kingdom'}")
-
     for section in sections:
         heading = document.add_paragraph()
         heading_run = heading.add_run(section.heading)
@@ -445,7 +455,6 @@ def build_pdf_resume(export: ResumeExportInput) -> BytesIO:
     if export.target_role.strip():
         story.append(Paragraph(export.target_role.strip(), subtitle_style))
 
-    story.append(Paragraph(f"Template: {export.target_country.strip() or 'United Kingdom'}", subtitle_style))
     story.append(Spacer(1, 8))
 
     for section in sections:
@@ -802,65 +811,122 @@ Return ONLY valid JSON in this exact format:
 
 
 @app.post("/build-resume")
-def build_resume(data: ResumeBuilderInput):
+def build_resume(data: ResumeIntelligenceInput):
     system_msg = (
-        "You are an expert professional resume writer. "
-        "Create a complete ATS-friendly resume from scratch using only the user's provided information. "
-        "Do not invent employers, degrees, certifications, dates, projects, metrics, or experience. "
-        "If the user is from a technical background but targeting a non-technical role, translate their strengths into relevant transferable skills. "
-        "Return a clean resume suitable for the selected target country/job market. "
-        "Use strong ATS-friendly structure, clear section headings, keyword-relevant phrasing, and clean recruiter-readable language. "
-        "Avoid tables, icons, columns, graphics, decorative elements, or invented facts."
+        "You are a senior professional resume writer, ATS specialist, and career strategist with 15 years of experience. "
+        "Your job is to create outstanding, recruiter-quality resumes that can compete with professional resume-writing services. "
+        "You must think like a hiring manager, recruiter, ATS system, and career coach before writing. "
+        "The resume must be tailored to the target role, target country, target industry, experience level, and career direction. "
+        "Do not create generic AI summaries. "
+        "Do not invent fake facts, employers, dates, degrees, certifications, metrics, achievements, or experience. "
+        "If information is missing, write honestly and make the candidate sound strong using only provided details. "
+        "If the user is changing careers, translate their previous background into transferable skills relevant to the target role. "
+        "Never include labels like Template: India or Template: UK in the resume. "
+        "Use clean ATS-friendly formatting with standard headings."
     )
 
     user_msg = f"""
-Create a complete professional resume from scratch.
+Create a professional resume using the following candidate information.
 
-Personal details:
-Full name: {data.full_name}
+Candidate Details:
+Full Name: {data.full_name}
 Email: {data.email}
 Phone: {data.phone}
 Location: {data.location}
+LinkedIn: {data.linkedin_url}
+Portfolio/GitHub: {data.portfolio_url}
 
-Target role: {data.target_role}
-Target industry: {data.target_industry}
-Career path: {data.career_path}
-Target country/job market: {data.target_country}
+Target Strategy:
+Target Role: {data.target_role}
+Target Country: {data.target_country}
+Target Industry: {data.target_industry}
+Career Direction: {data.career_direction}
+Experience Level: {data.experience_level}
+Preferred Resume Style: {data.preferred_resume_style}
 
-Education:
-{data.education}
+Background:
+Current Background: {data.current_background}
+Highest Qualification: {data.highest_qualification}
+Education Details:
+{data.education_details}
 
-Skills:
-{data.skills}
+Work Experience:
+{data.work_experience}
+
+Internships:
+{data.internships}
 
 Projects:
 {data.projects}
 
-Experience / Internship:
-{data.experience}
+Skills:
+Technical Skills:
+{data.technical_skills}
+
+Transferable Skills:
+{data.transferable_skills}
+
+Tools / Software:
+{data.tools_software}
 
 Certifications:
 {data.certifications}
 
-Career objective:
-{data.career_objective}
+Achievements:
+{data.achievements}
+
+Leadership / Team Experience:
+{data.leadership_experience}
+
+Career Change:
+Career Change: {data.career_change}
+Current Field: {data.current_field}
+Target Field: {data.target_field}
 
 Instructions:
-1. Create a complete ATS-friendly resume.
-2. Include sections: Contact Details, Professional Summary, Key Skills, Education, Projects, Experience/Internship, Certifications.
-3. If experience is missing, keep it fresher-friendly.
-4. If targeting non-technical roles, focus on communication, problem-solving, coordination, documentation, Excel, operations, analysis, customer handling, and transferable skills where supported by input.
-5. Do not invent facts.
-6. Use clean formatting.
-7. Return ONLY valid JSON in this format:
+1. First recommend the best resume style if preferred_resume_style is Auto Recommend.
+   Allowed resume styles:
+   - Graduate ATS Resume
+   - Technical Professional Resume
+   - Career Switcher Resume
+   - Senior Professional Resume
+   - Executive Resume
+   - One Page ATS Resume
+   - Country-Specific Professional Resume
+   If the user selects a specific style instead of Auto Recommend, keep the recommendation aligned to that chosen style.
+2. Explain briefly why that style is suitable.
+3. Generate a complete, polished, ATS-friendly resume.
+4. The resume should feel like it was written by a professional resume writer with 10–15 years of experience.
+5. The resume should be role-specific, country-aware, and market-ready.
+6. Use strong professional language, but remain truthful.
+7. Group skills into meaningful clusters.
+8. Convert weak responsibilities into achievement-style bullets where supported by input.
+9. If no metrics are provided, do not fabricate numbers. Use impact-based language without fake metrics.
+10. Use standard resume headings.
+11. Do not include hobbies unless highly relevant.
+12. Do not include "Template: country" text.
+13. Do not include developer or testing language.
+
+Resume section rules:
+- Header with name and contact details
+- Professional Title aligned to target role
+- Professional Summary
+- Core Competencies / Key Skills
+- Professional Experience or Relevant Experience
+- Projects
+- Education
+- Certifications
+- Additional Information only if useful
+
+Return ONLY valid JSON in this exact format:
 {{
+  "recommended_resume_style": "string",
+  "recommendation_reason": "string",
+  "professional_title": "string",
   "full_resume": "string",
-  "summary": "string",
-  "skills": "string",
-  "education": "string",
-  "projects": "string",
-  "experience": "string",
-  "certifications": "string"
+  "ats_keywords": ["keyword1", "keyword2"],
+  "strengths": ["strength1", "strength2"],
+  "improvement_suggestions": ["suggestion1", "suggestion2"]
 }}
 """
 
@@ -876,12 +942,28 @@ Instructions:
     content = (resp.choices[0].message.content or "").strip()
     parsed = parse_json_response(content)
 
-    required_keys = {"full_resume", "summary", "skills", "education", "projects", "experience", "certifications"}
+    required_keys = {
+        "recommended_resume_style",
+        "recommendation_reason",
+        "professional_title",
+        "full_resume",
+        "ats_keywords",
+        "strengths",
+        "improvement_suggestions",
+    }
+
     if not required_keys.issubset(parsed.keys()):
         raise HTTPException(
             status_code=500,
             detail=f"Missing keys in resume builder response. Required: {required_keys}. Got: {list(parsed.keys())}",
         )
+
+    if not isinstance(parsed["ats_keywords"], list):
+        parsed["ats_keywords"] = []
+    if not isinstance(parsed["strengths"], list):
+        parsed["strengths"] = []
+    if not isinstance(parsed["improvement_suggestions"], list):
+        parsed["improvement_suggestions"] = []
 
     return parsed
 
