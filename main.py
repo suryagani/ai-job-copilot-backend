@@ -229,10 +229,13 @@ class ResumeIntelligenceInput(BaseModel):
 
 
 class ResumeOptimizerOutput(BaseModel):
-    summary: str
-    experience: str
-    projects: str
+    recommended_resume_style: str
+    recommendation_reason: str
+    optimized_resume: str
     ats_keywords: list[str]
+    weaknesses_found: list[str]
+    improvement_suggestions: list[str]
+    ats_score_estimate: str
 
 
 class ResumeExportSection(BaseModel):
@@ -729,14 +732,15 @@ Return ONLY valid JSON in this exact format:
 @app.post("/optimize-resume", response_model=ResumeOptimizerOutput)
 def optimize_resume(data: ResumeOptimizerInput):
     system_msg = (
-        "You are an expert ATS resume optimizer for the user's target job market. "
-        "You improve resumes for recruiter readability and ATS alignment. "
-        "You must NEVER invent employers, dates, certifications, achievements, metrics, tools, projects, "
-        "or responsibilities not supported by the user's resume text. "
+        "You are a senior professional resume writer, ATS optimization specialist, and resume rebuilder with 15 years of experience. "
+        "Your job is to analyze an existing resume and rebuild it into a stronger, recruiter-quality, ATS-friendly resume. "
+        "You must think like a recruiter, hiring manager, ATS parser, and career strategist before writing. "
+        "You must NEVER invent employers, dates, certifications, achievements, metrics, tools, projects, or responsibilities not supported by the user's resume text. "
         "If a job description is provided, align the wording and keyword emphasis to it, but remain truthful. "
-        "Adapt tone and style slightly to the target country/job market where appropriate, "
-        "while keeping the output ATS-friendly and professional. "
-        "Use a clean ATS-safe structure, strong action verbs, clear role alignment, and keyword relevance. "
+        "Adapt tone and structure to the target role, target country, and likely seniority level suggested by the input. "
+        "Do not create generic AI summaries. Return a complete optimized resume, not just fragments. "
+        "Never include labels like Template: India, Template: UK, preview, backend, or test in the output. "
+        "Use clean ATS-safe structure, strong action verbs, clear role alignment, and keyword relevance. "
         "Avoid tables, columns, icons, graphics, or decorative formatting guidance."
     )
 
@@ -751,36 +755,42 @@ Optional Job Description:
 {data.job_description}
 
 Tasks:
-1. Create an ATS-friendly professional summary tailored to the target role and job market.
-2. Improve the experience section wording in a concise, recruiter-friendly way.
-3. Improve the projects section wording with stronger action verbs and clearer technical framing.
-4. Generate 12-18 ATS keywords based on the resume and job description if available.
-5. Do not invent facts.
-6. Do not use emojis.
-7. If job description is provided, prioritize matching terminology where truthful.
-8. Keep the style suitable for the selected country/job market.
+1. Analyze the current resume and identify the biggest weaknesses blocking recruiter impact or ATS performance.
+2. Recommend the best resume style for this candidate based on the content, target role, target country, and likely experience level inferred from the resume.
+3. Explain briefly why that style is suitable.
+4. Rewrite the entire resume professionally into a complete ATS-friendly version.
+5. Tailor the wording to the target role and job market.
+6. If a job description is provided, prioritize matching terminology where truthful.
+7. Group skills and competencies in a cleaner, more recruiter-friendly structure.
+8. Strengthen weak bullet points into clearer impact-oriented statements only when supported by the user's content.
+9. Do not invent facts.
+10. Do not use emojis.
+11. Do not include Template labels or developer/testing language.
 
-Summary rules:
-- 60 to 120 words
-- Role-aligned
-- Professional and clear
+Resume rebuild rules:
+- Include a clear header/contact section if details exist in the pasted resume
+- Include a professional title aligned to the target role when supported
+- Include a professional summary
+- Include key skills or core competencies
+- Include professional experience / relevant experience
+- Include projects if relevant content exists
+- Include education if present
+- Include certifications if present
+- Keep it ATS-friendly and paste-ready
 
-Experience rules:
-- Return as plain text suitable for pasting into a resume
-- Improve clarity and action verbs
-- Do not fabricate metrics
-
-Projects rules:
-- Return as plain text suitable for pasting into a resume
-- Highlight purpose, tools, and technical relevance when present
-- Do not fabricate outcomes
+ATS score estimate rules:
+- Provide a short estimate like "High ATS readiness (82-88/100 range)" or "Moderate ATS readiness (68-75/100 range)"
+- This is an internal estimate, not a guaranteed external ATS score
 
 Return ONLY valid JSON in this exact format:
 {{
-  "summary": "string",
-  "experience": "string",
-  "projects": "string",
-  "ats_keywords": ["keyword1", "keyword2", "keyword3"]
+  "recommended_resume_style": "string",
+  "recommendation_reason": "string",
+  "optimized_resume": "string",
+  "ats_keywords": ["keyword1", "keyword2", "keyword3"],
+  "weaknesses_found": ["weakness1", "weakness2"],
+  "improvement_suggestions": ["suggestion1", "suggestion2"],
+  "ats_score_estimate": "string"
 }}
 """
 
@@ -796,7 +806,15 @@ Return ONLY valid JSON in this exact format:
     content = (resp.choices[0].message.content or "").strip()
     parsed = parse_json_response(content)
 
-    required_keys = {"summary", "experience", "projects", "ats_keywords"}
+    required_keys = {
+        "recommended_resume_style",
+        "recommendation_reason",
+        "optimized_resume",
+        "ats_keywords",
+        "weaknesses_found",
+        "improvement_suggestions",
+        "ats_score_estimate",
+    }
     if not required_keys.issubset(parsed.keys()):
         raise HTTPException(
             status_code=500,
@@ -804,9 +822,15 @@ Return ONLY valid JSON in this exact format:
         )
 
     if not isinstance(parsed["ats_keywords"], list):
-        raise HTTPException(status_code=500, detail="ats_keywords must be a list.")
+        parsed["ats_keywords"] = []
+    if not isinstance(parsed["weaknesses_found"], list):
+        parsed["weaknesses_found"] = []
+    if not isinstance(parsed["improvement_suggestions"], list):
+        parsed["improvement_suggestions"] = []
 
     parsed["ats_keywords"] = [str(x).strip() for x in parsed["ats_keywords"] if str(x).strip()]
+    parsed["weaknesses_found"] = [str(x).strip() for x in parsed["weaknesses_found"] if str(x).strip()]
+    parsed["improvement_suggestions"] = [str(x).strip() for x in parsed["improvement_suggestions"] if str(x).strip()]
     return parsed
 
 
