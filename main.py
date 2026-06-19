@@ -233,9 +233,27 @@ class ResumeOptimizerOutput(BaseModel):
     recommendation_reason: str
     optimized_resume: str
     ats_keywords: list[str]
+    strengths: list[str]
     weaknesses_found: list[str]
     improvement_suggestions: list[str]
     ats_score_estimate: str
+
+
+class ResumeReviewerInput(BaseModel):
+    resume_text: str
+    target_role: str = ""
+    target_country: str = "Global ATS"
+    job_description: str = ""
+
+
+class ResumeReviewerOutput(BaseModel):
+    ats_score_estimate: str
+    score_reason: str
+    missing_keywords: list[str]
+    weak_sections: list[str]
+    strong_sections: list[str]
+    recruiter_feedback: str
+    improvement_suggestions: list[str]
 
 
 class ResumeExportSection(BaseModel):
@@ -339,6 +357,70 @@ def get_country_template_settings(country: str) -> dict:
         }
 
     return default_settings
+
+
+def get_country_rules(country: str) -> str:
+    normalized = (country or "").strip().lower()
+
+    if "united states" in normalized or normalized == "usa":
+        return (
+            "Use a concise, impact-first US style: sharp professional summary, strong action verbs, "
+            "keyword-dense skills, and a one-page preference unless seniority clearly justifies more."
+        )
+    if "canada" in normalized:
+        return (
+            "Use a clean Canadian professional style: strong summary, direct accomplishments, ATS-safe headings, "
+            "and clear relevance to the target role."
+        )
+    if "united kingdom" in normalized or normalized == "uk":
+        return (
+            "Use a UK recruiter-friendly style: polished summary, clear responsibilities translated into results, "
+            "and practical, professional wording without inflated claims."
+        )
+    if "australia" in normalized:
+        return (
+            "Use an Australia-ready style: practical professional summary, results-oriented bullet points, "
+            "and strong relevance to the local job market."
+        )
+    if "germany" in normalized:
+        return (
+            "Use a structured Germany-aware style: precise wording, orderly sectioning, and strong emphasis on qualifications, "
+            "technical credibility, and role alignment."
+        )
+    if "uae" in normalized or "united arab emirates" in normalized:
+        return (
+            "Use a UAE recruiter-friendly style: leadership, coordination, execution, and business impact should be clear, "
+            "with polished and professional language suited to international employers."
+        )
+
+    return (
+        "Use a global ATS-safe style: clean headings, role-first positioning, strong recruiter readability, "
+        "and broad market-ready language without regional template labels."
+    )
+
+
+def get_resume_length_rules(experience_level: str) -> str:
+    normalized = (experience_level or "").strip().lower()
+    if normalized in {"student", "fresher"}:
+        return "Maximum 1 page. Prioritize education, internships, projects, and the strongest role-relevant skills."
+    if normalized in {"1–3 years", "1-3 years", "3–5 years", "3-5 years"}:
+        return "Keep it to 1 page. Prioritize the most relevant experience, impact, and skills."
+    if normalized in {"5–10 years", "5-10 years"}:
+        return "Target 1 to 2 pages maximum. Keep only relevant experience and avoid repetition."
+    if normalized in {"10+ years", "10+ yrs", "10+ year"}:
+        return "Maximum 2 pages. Focus on leadership, strategic impact, and only the most relevant earlier experience."
+    return "Keep the resume concise, relevant, and ATS-friendly with no repetition."
+
+
+def get_resume_style_models() -> str:
+    return (
+        "Allowed resume styles:\n"
+        "- Graduate ATS Resume\n"
+        "- Technical Professional Resume\n"
+        "- Career Switcher Resume\n"
+        "- Business Professional Resume\n"
+        "- Executive Leadership Resume"
+    )
 
 
 def normalize_export_sections(sections: list[ResumeExportSection], country: str) -> list[ResumeExportSection]:
@@ -731,6 +813,7 @@ Return ONLY valid JSON in this exact format:
 
 @app.post("/optimize-resume", response_model=ResumeOptimizerOutput)
 def optimize_resume(data: ResumeOptimizerInput):
+    country_rules = get_country_rules(data.target_country)
     system_msg = (
         "You are a senior professional resume writer, ATS optimization specialist, and resume rebuilder with 15 years of experience. "
         "Your job is to analyze an existing resume and rebuild it into a stronger, recruiter-quality, ATS-friendly resume. "
@@ -754,6 +837,12 @@ Resume text:
 Optional Job Description:
 {data.job_description}
 
+Country Rules Engine:
+{country_rules}
+
+Resume Style Engine:
+{get_resume_style_models()}
+
 Tasks:
 1. Analyze the current resume and identify the biggest weaknesses blocking recruiter impact or ATS performance.
 2. Recommend the best resume style for this candidate based on the content, target role, target country, and likely experience level inferred from the resume.
@@ -766,6 +855,8 @@ Tasks:
 9. Do not invent facts.
 10. Do not use emojis.
 11. Do not include Template labels or developer/testing language.
+12. Group skills into logical clusters instead of listing them as a flat, repetitive skills block.
+13. Keep length discipline appropriate to the likely seniority level suggested by the resume.
 
 Resume rebuild rules:
 - Include a clear header/contact section if details exist in the pasted resume
@@ -778,6 +869,13 @@ Resume rebuild rules:
 - Include certifications if present
 - Keep it ATS-friendly and paste-ready
 
+Resume length rules:
+- Student / Fresher: maximum 1 page
+- 1-5 years: 1 page
+- 5-10 years: 1-2 pages
+- 10+ years: 2 pages maximum
+- Prioritize relevance and avoid repetition
+
 ATS score estimate rules:
 - Provide a short estimate like "High ATS readiness (82-88/100 range)" or "Moderate ATS readiness (68-75/100 range)"
 - This is an internal estimate, not a guaranteed external ATS score
@@ -788,6 +886,7 @@ Return ONLY valid JSON in this exact format:
   "recommendation_reason": "string",
   "optimized_resume": "string",
   "ats_keywords": ["keyword1", "keyword2", "keyword3"],
+  "strengths": ["strength1", "strength2"],
   "weaknesses_found": ["weakness1", "weakness2"],
   "improvement_suggestions": ["suggestion1", "suggestion2"],
   "ats_score_estimate": "string"
@@ -811,6 +910,7 @@ Return ONLY valid JSON in this exact format:
         "recommendation_reason",
         "optimized_resume",
         "ats_keywords",
+        "strengths",
         "weaknesses_found",
         "improvement_suggestions",
         "ats_score_estimate",
@@ -823,12 +923,15 @@ Return ONLY valid JSON in this exact format:
 
     if not isinstance(parsed["ats_keywords"], list):
         parsed["ats_keywords"] = []
+    if not isinstance(parsed["strengths"], list):
+        parsed["strengths"] = []
     if not isinstance(parsed["weaknesses_found"], list):
         parsed["weaknesses_found"] = []
     if not isinstance(parsed["improvement_suggestions"], list):
         parsed["improvement_suggestions"] = []
 
     parsed["ats_keywords"] = [str(x).strip() for x in parsed["ats_keywords"] if str(x).strip()]
+    parsed["strengths"] = [str(x).strip() for x in parsed["strengths"] if str(x).strip()]
     parsed["weaknesses_found"] = [str(x).strip() for x in parsed["weaknesses_found"] if str(x).strip()]
     parsed["improvement_suggestions"] = [str(x).strip() for x in parsed["improvement_suggestions"] if str(x).strip()]
     return parsed
@@ -836,6 +939,8 @@ Return ONLY valid JSON in this exact format:
 
 @app.post("/build-resume")
 def build_resume(data: ResumeIntelligenceInput):
+    country_rules = get_country_rules(data.target_country)
+    length_rules = get_resume_length_rules(data.experience_level)
     system_msg = (
         "You are a senior professional resume writer, ATS specialist, and career strategist with 15 years of experience. "
         "Your job is to create outstanding, recruiter-quality resumes that can compete with professional resume-writing services. "
@@ -867,6 +972,15 @@ Target Industry: {data.target_industry}
 Career Direction: {data.career_direction}
 Experience Level: {data.experience_level}
 Preferred Resume Style: {data.preferred_resume_style}
+
+Country Rules Engine:
+{country_rules}
+
+Resume Length Engine:
+{length_rules}
+
+Resume Style Engine:
+{get_resume_style_models()}
 
 Background:
 Current Background: {data.current_background}
@@ -913,10 +1027,8 @@ Instructions:
    - Graduate ATS Resume
    - Technical Professional Resume
    - Career Switcher Resume
-   - Senior Professional Resume
-   - Executive Resume
-   - One Page ATS Resume
-   - Country-Specific Professional Resume
+   - Business Professional Resume
+   - Executive Leadership Resume
    If the user selects a specific style instead of Auto Recommend, keep the recommendation aligned to that chosen style.
 2. Explain briefly why that style is suitable.
 3. Generate a complete, polished, ATS-friendly resume.
@@ -930,6 +1042,8 @@ Instructions:
 11. Do not include hobbies unless highly relevant.
 12. Do not include "Template: country" text.
 13. Do not include developer or testing language.
+14. Follow the resume length rules and keep only the highest-value content for the user's seniority level.
+15. Reorganize skills into logical role-priority clusters instead of a flat list.
 
 Resume section rules:
 - Header with name and contact details
@@ -988,6 +1102,97 @@ Return ONLY valid JSON in this exact format:
         parsed["strengths"] = []
     if not isinstance(parsed["improvement_suggestions"], list):
         parsed["improvement_suggestions"] = []
+
+    parsed["ats_keywords"] = [str(x).strip() for x in parsed["ats_keywords"] if str(x).strip()]
+    parsed["strengths"] = [str(x).strip() for x in parsed["strengths"] if str(x).strip()]
+    parsed["improvement_suggestions"] = [str(x).strip() for x in parsed["improvement_suggestions"] if str(x).strip()]
+
+    return parsed
+
+
+@app.post("/review-resume", response_model=ResumeReviewerOutput)
+def review_resume(data: ResumeReviewerInput):
+    country_rules = get_country_rules(data.target_country)
+    system_msg = (
+        "You are a senior ATS optimization specialist, recruiter, and resume reviewer with 15 years of experience. "
+        "Your job is to review an existing resume like a recruiter and ATS consultant would. "
+        "You must identify what is working, what is weak, which keywords are missing, and why the ATS estimate was given. "
+        "Do not invent facts from the resume. "
+        "Do not use generic AI wording. "
+        "Do not include template labels, preview, backend, or test language."
+    )
+
+    user_msg = f"""
+Review this resume like a professional resume reviewer.
+
+Target role: {data.target_role}
+Target country / job market: {data.target_country}
+Optional job description:
+{data.job_description}
+
+Country Rules Engine:
+{country_rules}
+
+Resume text:
+{data.resume_text}
+
+Tasks:
+1. Estimate ATS readiness.
+2. Explain clearly why that score estimate was given.
+3. Identify missing keywords for the target role when possible.
+4. Identify weak sections.
+5. Identify strong sections.
+6. Write recruiter feedback in a concise professional tone.
+7. Give practical improvement suggestions.
+8. Do not invent missing experiences, metrics, or employers.
+
+ATS score format rules:
+- Return ATS score in a professional estimate style such as "Low ATS readiness (30-40/100 range)" or "Moderate ATS readiness (60-70/100 range)"
+- Do not return a raw percentage only
+
+Return ONLY valid JSON in this exact format:
+{{
+  "ats_score_estimate": "string",
+  "score_reason": "string",
+  "missing_keywords": ["keyword1", "keyword2"],
+  "weak_sections": ["section1", "section2"],
+  "strong_sections": ["section1", "section2"],
+  "recruiter_feedback": "string",
+  "improvement_suggestions": ["suggestion1", "suggestion2"]
+}}
+"""
+
+    resp = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": user_msg},
+        ],
+        temperature=0.2,
+    )
+
+    content = (resp.choices[0].message.content or "").strip()
+    parsed = parse_json_response(content)
+
+    required_keys = {
+        "ats_score_estimate",
+        "score_reason",
+        "missing_keywords",
+        "weak_sections",
+        "strong_sections",
+        "recruiter_feedback",
+        "improvement_suggestions",
+    }
+    if not required_keys.issubset(parsed.keys()):
+        raise HTTPException(
+            status_code=500,
+            detail=f"Missing keys in resume review response. Required: {required_keys}. Got: {list(parsed.keys())}",
+        )
+
+    for key in ("missing_keywords", "weak_sections", "strong_sections", "improvement_suggestions"):
+        if not isinstance(parsed[key], list):
+            parsed[key] = []
+        parsed[key] = [str(x).strip() for x in parsed[key] if str(x).strip()]
 
     return parsed
 
