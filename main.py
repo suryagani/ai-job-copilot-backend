@@ -277,6 +277,7 @@ class ResumeBuildOutput(BaseModel):
     recommended_resume_style: str
     recommendation_reason: str
     professional_title: str
+    executive_summary: str
     resume_length_rule: str
     target_market_strategy: str
     recruiter_positioning: str
@@ -286,6 +287,10 @@ class ResumeBuildOutput(BaseModel):
     strengths: list[str]
     missing_information: list[str]
     improvement_suggestions: list[str]
+    writing_quality_score: str
+    resume_readability: str
+    ats_readiness: str
+    resume_confidence: str
 
 
 class ResumeOptimizerOutput(BaseModel):
@@ -1018,6 +1023,17 @@ def build_resume_intelligence_request(data: ResumeIntelligenceInput) -> ResumeIn
     )
 
 
+def get_resume_section_order(resume_style: str) -> str:
+    normalized = (resume_style or "").strip().lower()
+    if "graduate" in normalized:
+        return "Summary -> Education -> Projects -> Skills -> Internships -> Certifications -> Experience"
+    if "technical" in normalized:
+        return "Summary -> Core Skills -> Professional Experience -> Projects -> Certifications -> Education"
+    if "business" in normalized or "executive" in normalized or "career switcher" in normalized:
+        return "Summary -> Core Competencies -> Professional Experience -> Achievements -> Education"
+    return "Summary -> Skills -> Experience -> Projects -> Education -> Certifications"
+
+
 def normalize_export_sections(sections: list[ResumeExportSection], country: str) -> list[ResumeExportSection]:
     settings = get_country_template_settings(country)
     normalized = []
@@ -1542,20 +1558,21 @@ def build_resume(data: ResumeIntelligenceInput):
     intelligence_request = build_resume_intelligence_request(data)
     intelligence = generate_resume_intelligence(intelligence_request)
     skill_intelligence = generate_skill_intelligence(data, intelligence)
+    section_order = get_resume_section_order(intelligence["recommended_resume_model"])
 
     system_msg = (
-        "You are a senior professional resume writer, ATS specialist, and career strategist with 15 years of experience. "
-        "Your job is to create outstanding, recruiter-quality resumes that can compete with professional resume-writing services. "
-        "You must follow the supplied resume intelligence strategy before writing. "
-        "The final resume must be role-specific, country-aware, ATS-friendly, and aligned to the recommended resume model and length rule. "
-        "Do not create generic AI summaries. "
-        "Do not invent fake facts, employers, dates, degrees, certifications, metrics, achievements, or experience. "
-        "If information is missing, omit the section from the resume or address it only in missing_information and improvement_suggestions. "
-        "Never include placeholder text, template labels, test language, backend language, or preview language in the resume."
+        "You are Resume Writing Engine V2: a senior professional resume writer, ATS specialist, recruiter, and hiring-manager-minded career strategist with 15+ years of experience. "
+        "Your resumes must feel premium, natural, and human-written rather than AI-generated. "
+        "You must think first, then write. "
+        "Use the resume intelligence strategy, skill intelligence, and candidate information together before drafting. "
+        "Do not use generic AI clich?s such as 'motivated and detail-oriented', 'seeking an opportunity', 'hardworking individual', or repetitive filler language. "
+        "Do not invent employers, dates, metrics, achievements, certifications, projects, degrees, or company names. "
+        "Do not copy user responsibilities verbatim. Rewrite them professionally using strong action verbs while staying truthful. "
+        "If information is missing, hide the section instead of exposing placeholders."
     )
 
     user_msg = f"""
-Create a complete professional resume using the candidate information and the resume intelligence strategy below.
+Create a recruiter-quality professional resume using the candidate information, Resume Intelligence, and Skill Intelligence below.
 
 Candidate Details:
 Full Name: {data.full_name}
@@ -1611,45 +1628,47 @@ Career Change: {data.career_change}
 Current Field: {data.current_field}
 Target Field: {data.target_field}
 
-Resume Intelligence Analysis:
+Resume Intelligence:
 Recommended Resume Model: {intelligence['recommended_resume_model']}
 Resume Length Rule: {intelligence['resume_length_rule']}
 Target Market Strategy: {intelligence['target_market_strategy']}
 Recruiter Positioning: {intelligence['recruiter_positioning']}
 Priority Sections: {json.dumps(intelligence['priority_sections'])}
 Sections To Minimize Or Remove: {json.dumps(intelligence['sections_to_minimize_or_remove'])}
-Skill Grouping Strategy: {json.dumps(intelligence['skill_grouping_strategy'])}
-Skill Intelligence Groups To Use Exactly: {json.dumps(skill_intelligence['skill_groups'])}
+ATS Keyword Strategy: {json.dumps(intelligence['ats_keyword_strategy'])}
+Missing Information: {json.dumps(intelligence['missing_information'])}
+Writing Guidance: {intelligence['writing_guidance']}
+Recommended Section Order: {section_order}
+
+Skill Intelligence:
+Skill Groups To Use Exactly: {json.dumps(skill_intelligence['skill_groups'])}
 Priority Skills: {json.dumps(skill_intelligence['priority_skills'])}
 Missing Role Skills: {json.dumps(skill_intelligence['missing_role_skills'])}
 Skill Positioning Note: {skill_intelligence['skill_positioning_note']}
-ATS Keyword Strategy: {json.dumps(intelligence['ats_keyword_strategy'])}
-Missing Information To Keep Out Of Resume: {json.dumps(intelligence['missing_information'])}
-Content Risk Flags: {json.dumps(intelligence['content_risk_flags'])}
-Writing Guidance: {intelligence['writing_guidance']}
 
-Writing Rules:
-1. Follow the resume intelligence exactly.
-2. If resume_length_rule is One Page, create a concise one-page style resume.
-3. If the candidate has less than 10 years of experience, prioritize one-page structure unless content strongly justifies more.
-4. Skills must always be grouped using the supplied skill intelligence groups exactly, never as one flat list.
-5. Hide empty sections instead of showing placeholders.
-6. Do not include placeholder text like [No formal work experience], [Details not provided], [No certifications provided], or [Year not provided].
-7. Missing information should appear only in missing_information or improvement_suggestions, never inside the resume.
-8. For freshers, prioritize education, projects, internships, skills, and certifications.
-9. For career switchers, emphasize transferable skills and target-role relevance while minimizing irrelevant technical depth.
-10. For senior candidates, emphasize leadership, business outcomes, operations ownership, team management, strategy, and measurable impact where supported.
-11. If metrics are not provided, use impact-based language without fake numbers.
-12. Never include Template labels, test, backend, or preview wording.
-13. Use standard ATS-safe headings and clean formatting.
-14. Professional Title must align with the target role and intelligence strategy.
-15. If the user selected a specific preferred resume style instead of Auto Recommend, keep the final style aligned while still obeying the intelligence strategy.
+Resume Writing Engine V2 Rules:
+1. Write like a premium resume-writing agency, not a generic AI assistant.
+2. Professional Title must position the candidate for the target role. Examples: 'Physical Design Engineer', 'DevOps Engineer | Cloud & Automation', 'Business Analyst | Process Improvement | Data Analysis'. Avoid titles like 'B.Tech Graduate'.
+3. Executive Summary must be 70-120 words, natural, concise, and role-positioning. Never start with 'Motivated and detail-oriented', 'Seeking an opportunity', or similar clich?s.
+4. Use the recommended section order unless a small truth-preserving adjustment improves clarity.
+5. Skills must use the provided Skill Intelligence groups exactly. Never output one flat skill list.
+6. Experience bullets must rewrite the user's responsibilities professionally using strong action verbs such as Designed, Developed, Implemented, Collaborated, Optimized, Configured, Supported, Delivered, Improved, Led, Reduced, Automated, Enhanced, Coordinated.
+7. Do not fabricate numbers. If metrics are missing, use impact-based language without invented figures.
+8. Project entries must explain the problem, approach, technology, contribution, and result where the source details support that structure.
+9. Hide empty sections completely. Never show placeholders such as [No Certifications], [No Experience], or [Details Not Provided].
+10. For graduate resumes, prioritize education, projects, skills, internships, and certifications.
+11. For technical resumes, prioritize summary, core skills, experience, projects, certifications, and education.
+12. For business, executive, and career switcher resumes, prioritize summary, core competencies, experience, achievements, and education.
+13. Keep language professional, natural, concise, non-repetitive, and human-written.
+14. Never include Template labels, preview, backend, or test wording.
+15. Keep the final resume length aligned to the recommended length rule.
 
 Return ONLY valid JSON in this exact format:
 {{
   "recommended_resume_style": "string",
   "recommendation_reason": "string",
   "professional_title": "string",
+  "executive_summary": "string",
   "resume_length_rule": "string",
   "target_market_strategy": "string",
   "recruiter_positioning": "string",
@@ -1663,7 +1682,11 @@ Return ONLY valid JSON in this exact format:
   ],
   "strengths": ["strength1", "strength2"],
   "missing_information": ["missing1", "missing2"],
-  "improvement_suggestions": ["suggestion1", "suggestion2"]
+  "improvement_suggestions": ["suggestion1", "suggestion2"],
+  "writing_quality_score": "string",
+  "resume_readability": "string",
+  "ats_readiness": "string",
+  "resume_confidence": "string"
 }}
 """
 
@@ -1673,7 +1696,7 @@ Return ONLY valid JSON in this exact format:
             {"role": "system", "content": system_msg},
             {"role": "user", "content": user_msg},
         ],
-        temperature=0.2,
+        temperature=0.15,
     )
 
     content = (resp.choices[0].message.content or "").strip()
@@ -1683,6 +1706,7 @@ Return ONLY valid JSON in this exact format:
         "recommended_resume_style",
         "recommendation_reason",
         "professional_title",
+        "executive_summary",
         "resume_length_rule",
         "target_market_strategy",
         "recruiter_positioning",
@@ -1692,6 +1716,10 @@ Return ONLY valid JSON in this exact format:
         "strengths",
         "missing_information",
         "improvement_suggestions",
+        "writing_quality_score",
+        "resume_readability",
+        "ats_readiness",
+        "resume_confidence",
     }
 
     if not required_keys.issubset(parsed.keys()):
@@ -1703,6 +1731,7 @@ Return ONLY valid JSON in this exact format:
     parsed["recommended_resume_style"] = str(parsed.get("recommended_resume_style", "")).strip() or intelligence["recommended_resume_model"]
     parsed["recommendation_reason"] = str(parsed.get("recommendation_reason", "")).strip()
     parsed["professional_title"] = str(parsed.get("professional_title", "")).strip()
+    parsed["executive_summary"] = str(parsed.get("executive_summary", "")).strip()
     parsed["resume_length_rule"] = str(parsed.get("resume_length_rule") or intelligence["resume_length_rule"]).strip() or intelligence["resume_length_rule"]
     parsed["target_market_strategy"] = str(parsed.get("target_market_strategy") or intelligence["target_market_strategy"]).strip() or intelligence["target_market_strategy"]
     parsed["recruiter_positioning"] = str(parsed.get("recruiter_positioning") or intelligence["recruiter_positioning"]).strip() or intelligence["recruiter_positioning"]
@@ -1712,6 +1741,10 @@ Return ONLY valid JSON in this exact format:
     parsed["strengths"] = clean_string_list(parsed.get("strengths", []))
     parsed["missing_information"] = clean_string_list(parsed.get("missing_information", [])) or intelligence["missing_information"]
     parsed["improvement_suggestions"] = clean_string_list(parsed.get("improvement_suggestions", []))
+    parsed["writing_quality_score"] = str(parsed.get("writing_quality_score", "")).strip()
+    parsed["resume_readability"] = str(parsed.get("resume_readability", "")).strip()
+    parsed["ats_readiness"] = str(parsed.get("ats_readiness", "")).strip()
+    parsed["resume_confidence"] = str(parsed.get("resume_confidence", "")).strip()
 
     if skill_intelligence["missing_role_skills"]:
         parsed["improvement_suggestions"].append(
