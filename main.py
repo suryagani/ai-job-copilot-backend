@@ -291,6 +291,12 @@ class ResumeBuildOutput(BaseModel):
     resume_readability: str
     ats_readiness: str
     resume_confidence: str
+    quality_score: int
+    ats_readiness_score: int
+    recruiter_readability_score: int
+    role_alignment_score: int
+    quality_issues_found: list[str]
+    quality_fixes_applied: list[str]
 
 
 class ResumeOptimizerOutput(BaseModel):
@@ -1034,6 +1040,223 @@ def get_resume_section_order(resume_style: str) -> str:
     return "Summary -> Skills -> Experience -> Projects -> Education -> Certifications"
 
 
+def review_resume_quality(resume_text, candidate_data, intelligence, skill_intelligence):
+    text = str(resume_text or "")
+    lowered = text.lower()
+    issues_found = []
+    required_fixes = []
+
+    generic_phrases = [
+        "motivated and detail-oriented",
+        "hardworking individual",
+        "seeking an opportunity",
+        "passionate about learning",
+        "team player with good communication skills",
+        "eager to contribute",
+    ]
+    placeholder_markers = [
+        "[no formal work experience]",
+        "[details not provided]",
+        "[no certifications provided]",
+        "[year not provided]",
+        "not provided",
+    ]
+
+    quality_score = 100
+    ats_score = 100
+    readability_score = 100
+    role_alignment_score = 100
+
+    summary_text = ""
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    for idx, line in enumerate(lines):
+        if line.lower() in {"professional summary", "executive summary", "summary"} and idx + 1 < len(lines):
+            collected = []
+            for next_line in lines[idx + 1:]:
+                if next_line.isupper() or next_line.lower() in {"education", "projects", "skills", "technical skills", "core skills", "core competencies", "experience", "professional experience", "internships", "certifications", "achievements"}:
+                    break
+                collected.append(next_line)
+            summary_text = " ".join(collected).strip()
+            break
+
+    if not summary_text:
+        summary_text = text[:500]
+
+    summary_lower = summary_text.lower()
+    if any(phrase in summary_lower for phrase in generic_phrases):
+        issues_found.append("Professional summary uses generic AI-style phrasing.")
+        required_fixes.append("Rewrite the summary with sharper role positioning and natural language.")
+        quality_score -= 18
+        readability_score -= 10
+
+    if len(summary_text.split()) < 45 or len(summary_text.split()) > 140:
+        issues_found.append("Professional summary length is outside the preferred premium range.")
+        required_fixes.append("Keep the summary concise, role-specific, and around 70-120 words.")
+        quality_score -= 8
+        readability_score -= 5
+
+    placeholder_lines = [line.strip().lower() for line in text.splitlines() if line.strip()]
+    has_placeholder = any(marker in lowered for marker in placeholder_markers) or any(line in {"n/a", "na", "not provided"} for line in placeholder_lines)
+    if has_placeholder:
+        issues_found.append("Resume contains placeholders or missing-information markers.")
+        required_fixes.append("Remove placeholders and hide incomplete sections instead.")
+        quality_score -= 30
+        ats_score -= 25
+        readability_score -= 20
+
+    role_words = [word for word in str(getattr(candidate_data, "target_role", "")).lower().replace("/", " ").split() if len(word) > 2]
+    role_hits = sum(1 for word in role_words if word in lowered)
+    if role_words and role_hits == 0:
+        issues_found.append("Resume does not clearly align to the target role.")
+        required_fixes.append("Make the title, summary, and core content more role-specific.")
+        quality_score -= 18
+        role_alignment_score -= 22
+    elif role_words and role_hits < max(1, len(role_words) // 2):
+        role_alignment_score -= 10
+        quality_score -= 6
+
+    expected_keywords = clean_string_list(intelligence.get("ats_keyword_strategy", []))
+    keyword_hits = sum(1 for keyword in expected_keywords if keyword.lower() in lowered)
+    if expected_keywords:
+        keyword_ratio = keyword_hits / max(1, len(expected_keywords))
+        if keyword_ratio < 0.35:
+            issues_found.append("Target-role keywords are underrepresented.")
+            required_fixes.append("Integrate more role-relevant keywords naturally across summary, skills, and experience.")
+            ats_score -= 18
+            role_alignment_score -= 12
+            quality_score -= 10
+        elif keyword_ratio < 0.55:
+            ats_score -= 8
+            quality_score -= 4
+
+    expected_groups = clean_skill_groups(skill_intelligence.get("skill_groups", []))
+    grouped_categories_present = sum(1 for group in expected_groups if group["category"].lower() in lowered)
+    if expected_groups and grouped_categories_present < max(2, len(expected_groups) // 2):
+        issues_found.append("Skills are not clearly grouped using the Skill Intelligence structure.")
+        required_fixes.append("Rebuild the skills section using the provided grouped categories instead of a flat list.")
+        quality_score -= 15
+        ats_score -= 10
+
+    repeated_phrases = []
+    for phrase in ["proven ability", "strong ability", "responsible for", "team coordination", "service quality"]:
+        if lowered.count(phrase) > 2:
+            repeated_phrases.append(phrase)
+    if repeated_phrases:
+        issues_found.append("Resume contains repeated phrasing that weakens readability.")
+        required_fixes.append("Vary sentence openings and remove repetitive phrasing.")
+        quality_score -= 8
+        readability_score -= 10
+
+    expected_order = get_resume_section_order(intelligence.get("recommended_resume_model", ""))
+    expected_sections = [section.strip().lower() for section in expected_order.split("->")]
+    aliases = {
+        "summary": ["professional summary", "executive summary", "summary"],
+        "education": ["education"],
+        "projects": ["projects", "project experience"],
+        "skills": ["skills", "technical skills", "core skills", "core competencies", "skills & certifications"],
+        "internships": ["internships", "internship experience"],
+        "certifications": ["certifications", "licenses & certifications"],
+        "experience": ["experience", "professional experience", "relevant experience"],
+        "core skills": ["core skills", "technical skills"],
+        "core competencies": ["core competencies", "skills", "skills & certifications"],
+        "professional experience": ["professional experience", "experience", "relevant experience"],
+        "achievements": ["achievements", "key achievements", "leadership & achievements"],
+    }
+    positions = []
+    for section in expected_sections:
+        section_positions = []
+        for alias in aliases.get(section, [section]):
+            pos = lowered.find(alias)
+            if pos != -1:
+                section_positions.append(pos)
+        if section_positions:
+            positions.append(min(section_positions))
+    if positions and positions != sorted(positions):
+        issues_found.append("Section order does not fully follow the recommended resume model.")
+        required_fixes.append("Reorder the resume sections to match the recommended structure.")
+        quality_score -= 7
+        readability_score -= 6
+
+    word_count = len(text.split())
+    length_rule = str(intelligence.get("resume_length_rule", ""))
+    if length_rule == "One Page" and word_count > 900:
+        issues_found.append("Resume is too long for the recommended one-page format.")
+        required_fixes.append("Tighten the resume and remove lower-priority detail to fit a one-page style.")
+        quality_score -= 10
+        readability_score -= 8
+    elif length_rule == "Two Pages" and word_count < 280:
+        issues_found.append("Resume may be too thin for the recommended senior-level two-page style.")
+        required_fixes.append("Strengthen leadership, scope, and impact detail where supported by the input.")
+        quality_score -= 6
+        role_alignment_score -= 4
+
+    recruiter_value_fast = bool(str(getattr(candidate_data, "target_role", "")).strip()) and bool(summary_text.strip()) and len(summary_text.split()) >= 45
+    if not recruiter_value_fast:
+        issues_found.append("Candidate value is not immediately clear to a recruiter.")
+        required_fixes.append("Sharpen the professional title and summary so the target value is clear within seconds.")
+        quality_score -= 12
+        readability_score -= 8
+
+    quality_score = max(0, min(100, quality_score))
+    ats_score = max(0, min(100, ats_score))
+    readability_score = max(0, min(100, readability_score))
+    role_alignment_score = max(0, min(100, role_alignment_score))
+
+    if quality_score >= 88:
+        summary_quality = "Strong"
+    elif quality_score >= 72:
+        summary_quality = "Average"
+    else:
+        summary_quality = "Weak"
+
+    is_ready_for_user = quality_score >= 80 and not has_placeholder
+
+    return {
+        "quality_score": quality_score,
+        "ats_readiness_score": ats_score,
+        "recruiter_readability_score": readability_score,
+        "role_alignment_score": role_alignment_score,
+        "summary_quality": summary_quality,
+        "issues_found": clean_string_list(issues_found),
+        "required_fixes": clean_string_list(required_fixes),
+        "is_ready_for_user": is_ready_for_user,
+    }
+
+
+def normalize_build_resume_response(parsed: dict, intelligence: dict, skill_intelligence: dict, quality_report: dict, quality_fixes_applied: list[str]) -> dict:
+    parsed["recommended_resume_style"] = str(parsed.get("recommended_resume_style", "")).strip() or intelligence["recommended_resume_model"]
+    parsed["recommendation_reason"] = str(parsed.get("recommendation_reason", "")).strip()
+    parsed["professional_title"] = str(parsed.get("professional_title", "")).strip()
+    parsed["executive_summary"] = str(parsed.get("executive_summary", "")).strip()
+    parsed["resume_length_rule"] = str(parsed.get("resume_length_rule") or intelligence["resume_length_rule"]).strip() or intelligence["resume_length_rule"]
+    parsed["target_market_strategy"] = str(parsed.get("target_market_strategy") or intelligence["target_market_strategy"]).strip() or intelligence["target_market_strategy"]
+    parsed["recruiter_positioning"] = str(parsed.get("recruiter_positioning") or intelligence["recruiter_positioning"]).strip() or intelligence["recruiter_positioning"]
+    parsed["full_resume"] = sanitize_resume_text(str(parsed.get("full_resume", "")).strip())
+    parsed["ats_keywords"] = clean_string_list(parsed.get("ats_keywords", [])) or intelligence["ats_keyword_strategy"]
+    parsed["skill_groups"] = clean_skill_groups(skill_intelligence["skill_groups"])
+    parsed["strengths"] = clean_string_list(parsed.get("strengths", []))
+    parsed["missing_information"] = clean_string_list(parsed.get("missing_information", [])) or intelligence["missing_information"]
+    parsed["improvement_suggestions"] = clean_string_list(parsed.get("improvement_suggestions", []))
+    parsed["writing_quality_score"] = str(parsed.get("writing_quality_score", "")).strip()
+    parsed["resume_readability"] = str(parsed.get("resume_readability", "")).strip()
+    parsed["ats_readiness"] = str(parsed.get("ats_readiness", "")).strip()
+    parsed["resume_confidence"] = str(parsed.get("resume_confidence", "")).strip()
+    parsed["quality_score"] = int(quality_report["quality_score"])
+    parsed["ats_readiness_score"] = int(quality_report["ats_readiness_score"])
+    parsed["recruiter_readability_score"] = int(quality_report["recruiter_readability_score"])
+    parsed["role_alignment_score"] = int(quality_report["role_alignment_score"])
+    parsed["quality_issues_found"] = clean_string_list(quality_report.get("issues_found", []))
+    parsed["quality_fixes_applied"] = clean_string_list(quality_fixes_applied)
+
+    if skill_intelligence["missing_role_skills"]:
+        parsed["improvement_suggestions"].append(
+            f"Consider building stronger exposure in: {', '.join(skill_intelligence['missing_role_skills'])}."
+        )
+        parsed["improvement_suggestions"] = clean_string_list(parsed["improvement_suggestions"])
+
+    return parsed
+
+
 def normalize_export_sections(sections: list[ResumeExportSection], country: str) -> list[ResumeExportSection]:
     settings = get_country_template_settings(country)
     normalized = []
@@ -1565,13 +1788,13 @@ def build_resume(data: ResumeIntelligenceInput):
         "Your resumes must feel premium, natural, and human-written rather than AI-generated. "
         "You must think first, then write. "
         "Use the resume intelligence strategy, skill intelligence, and candidate information together before drafting. "
-        "Do not use generic AI clich?s such as 'motivated and detail-oriented', 'seeking an opportunity', 'hardworking individual', or repetitive filler language. "
+        "Do not use generic AI cliches such as 'motivated and detail-oriented', 'seeking an opportunity', 'hardworking individual', or repetitive filler language. "
         "Do not invent employers, dates, metrics, achievements, certifications, projects, degrees, or company names. "
         "Do not copy user responsibilities verbatim. Rewrite them professionally using strong action verbs while staying truthful. "
         "If information is missing, hide the section instead of exposing placeholders."
     )
 
-    user_msg = f"""
+    base_prompt = f"""
 Create a recruiter-quality professional resume using the candidate information, Resume Intelligence, and Skill Intelligence below.
 
 Candidate Details:
@@ -1649,13 +1872,13 @@ Skill Positioning Note: {skill_intelligence['skill_positioning_note']}
 Resume Writing Engine V2 Rules:
 1. Write like a premium resume-writing agency, not a generic AI assistant.
 2. Professional Title must position the candidate for the target role. Examples: 'Physical Design Engineer', 'DevOps Engineer | Cloud & Automation', 'Business Analyst | Process Improvement | Data Analysis'. Avoid titles like 'B.Tech Graduate'.
-3. Executive Summary must be 70-120 words, natural, concise, and role-positioning. Never start with 'Motivated and detail-oriented', 'Seeking an opportunity', or similar clich?s.
+3. Executive Summary must be 70-120 words, natural, concise, and role-positioning. Never start with generic phrases like 'Motivated and detail-oriented', 'Seeking an opportunity', 'Hardworking individual', or similar cliches.
 4. Use the recommended section order unless a small truth-preserving adjustment improves clarity.
 5. Skills must use the provided Skill Intelligence groups exactly. Never output one flat skill list.
 6. Experience bullets must rewrite the user's responsibilities professionally using strong action verbs such as Designed, Developed, Implemented, Collaborated, Optimized, Configured, Supported, Delivered, Improved, Led, Reduced, Automated, Enhanced, Coordinated.
 7. Do not fabricate numbers. If metrics are missing, use impact-based language without invented figures.
 8. Project entries must explain the problem, approach, technology, contribution, and result where the source details support that structure.
-9. Hide empty sections completely. Never show placeholders such as [No Certifications], [No Experience], or [Details Not Provided].
+9. Hide empty sections completely. Never show placeholders such as [No Certifications], [No Experience], [Details Not Provided], N/A, or Not provided.
 10. For graduate resumes, prioritize education, projects, skills, internships, and certifications.
 11. For technical resumes, prioritize summary, core skills, experience, projects, certifications, and education.
 12. For business, executive, and career switcher resumes, prioritize summary, core competencies, experience, achievements, and education.
@@ -1690,69 +1913,81 @@ Return ONLY valid JSON in this exact format:
 }}
 """
 
-    resp = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[
-            {"role": "system", "content": system_msg},
-            {"role": "user", "content": user_msg},
-        ],
-        temperature=0.15,
-    )
-
-    content = (resp.choices[0].message.content or "").strip()
-    parsed = parse_json_response(content)
-
-    required_keys = {
-        "recommended_resume_style",
-        "recommendation_reason",
-        "professional_title",
-        "executive_summary",
-        "resume_length_rule",
-        "target_market_strategy",
-        "recruiter_positioning",
-        "full_resume",
-        "ats_keywords",
-        "skill_groups",
-        "strengths",
-        "missing_information",
-        "improvement_suggestions",
-        "writing_quality_score",
-        "resume_readability",
-        "ats_readiness",
-        "resume_confidence",
-    }
-
-    if not required_keys.issubset(parsed.keys()):
-        raise HTTPException(
-            status_code=500,
-            detail=f"Missing keys in resume builder response. Required: {required_keys}. Got: {list(parsed.keys())}",
+    def generate_resume_payload(prompt_text: str) -> dict:
+        resp = client.chat.completions.create(
+            model="gpt-4.1-mini",
+            messages=[
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": prompt_text},
+            ],
+            temperature=0.15,
         )
+        content = (resp.choices[0].message.content or "").strip()
+        parsed = parse_json_response(content)
+        required_keys = {
+            "recommended_resume_style",
+            "recommendation_reason",
+            "professional_title",
+            "executive_summary",
+            "resume_length_rule",
+            "target_market_strategy",
+            "recruiter_positioning",
+            "full_resume",
+            "ats_keywords",
+            "skill_groups",
+            "strengths",
+            "missing_information",
+            "improvement_suggestions",
+            "writing_quality_score",
+            "resume_readability",
+            "ats_readiness",
+            "resume_confidence",
+        }
+        if not required_keys.issubset(parsed.keys()):
+            raise HTTPException(
+                status_code=500,
+                detail=f"Missing keys in resume builder response. Required: {required_keys}. Got: {list(parsed.keys())}",
+            )
+        return parsed
 
-    parsed["recommended_resume_style"] = str(parsed.get("recommended_resume_style", "")).strip() or intelligence["recommended_resume_model"]
-    parsed["recommendation_reason"] = str(parsed.get("recommendation_reason", "")).strip()
-    parsed["professional_title"] = str(parsed.get("professional_title", "")).strip()
-    parsed["executive_summary"] = str(parsed.get("executive_summary", "")).strip()
-    parsed["resume_length_rule"] = str(parsed.get("resume_length_rule") or intelligence["resume_length_rule"]).strip() or intelligence["resume_length_rule"]
-    parsed["target_market_strategy"] = str(parsed.get("target_market_strategy") or intelligence["target_market_strategy"]).strip() or intelligence["target_market_strategy"]
-    parsed["recruiter_positioning"] = str(parsed.get("recruiter_positioning") or intelligence["recruiter_positioning"]).strip() or intelligence["recruiter_positioning"]
+    parsed = generate_resume_payload(base_prompt)
     parsed["full_resume"] = sanitize_resume_text(str(parsed.get("full_resume", "")).strip())
-    parsed["ats_keywords"] = clean_string_list(parsed.get("ats_keywords", [])) or intelligence["ats_keyword_strategy"]
-    parsed["skill_groups"] = clean_skill_groups(skill_intelligence["skill_groups"])
-    parsed["strengths"] = clean_string_list(parsed.get("strengths", []))
-    parsed["missing_information"] = clean_string_list(parsed.get("missing_information", [])) or intelligence["missing_information"]
-    parsed["improvement_suggestions"] = clean_string_list(parsed.get("improvement_suggestions", []))
-    parsed["writing_quality_score"] = str(parsed.get("writing_quality_score", "")).strip()
-    parsed["resume_readability"] = str(parsed.get("resume_readability", "")).strip()
-    parsed["ats_readiness"] = str(parsed.get("ats_readiness", "")).strip()
-    parsed["resume_confidence"] = str(parsed.get("resume_confidence", "")).strip()
+    quality_report = review_resume_quality(parsed["full_resume"], data, intelligence, skill_intelligence)
+    quality_fixes_applied = []
 
-    if skill_intelligence["missing_role_skills"]:
-        parsed["improvement_suggestions"].append(
-            f"Consider building stronger exposure in: {', '.join(skill_intelligence['missing_role_skills'])}."
-        )
-        parsed["improvement_suggestions"] = clean_string_list(parsed["improvement_suggestions"])
+    if (not quality_report["is_ready_for_user"]) or quality_report["quality_score"] < 80:
+        rewrite_prompt = base_prompt + f"""
 
-    return parsed
+Rewrite the resume once using this first draft and quality review.
+
+First Draft Resume:
+{parsed['full_resume']}
+
+First Draft Executive Summary:
+{parsed.get('executive_summary', '')}
+
+Quality Issues Found:
+{json.dumps(quality_report['issues_found'])}
+
+Required Fixes:
+{json.dumps(quality_report['required_fixes'])}
+
+Rewrite Rules:
+- Fix every required issue.
+- Remove generic phrasing.
+- Remove placeholders.
+- Keep the resume truthful.
+- Preserve grouped skills.
+- Improve recruiter readability within 10 seconds.
+- Keep the output premium, concise, and ATS-friendly.
+- Return the same JSON format only.
+"""
+        quality_fixes_applied = clean_string_list(quality_report["required_fixes"])
+        parsed = generate_resume_payload(rewrite_prompt)
+        parsed["full_resume"] = sanitize_resume_text(str(parsed.get("full_resume", "")).strip())
+        quality_report = review_resume_quality(parsed["full_resume"], data, intelligence, skill_intelligence)
+
+    return normalize_build_resume_response(parsed, intelligence, skill_intelligence, quality_report, quality_fixes_applied)
 
 
 @app.post("/review-resume", response_model=ResumeReviewerOutput)
