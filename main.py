@@ -198,6 +198,14 @@ class ResumeOptimizerInput(BaseModel):
     target_location: str = "United Kingdom"
 
 
+class JobDescriptionRequest(BaseModel):
+    job_title: str = ""
+    company_name: str = ""
+    country: str = ""
+    industry: str = ""
+    job_description: str
+
+
 class ResumeIntelligenceRequest(BaseModel):
     target_role: str
     target_country: str = "Global"
@@ -249,6 +257,8 @@ class ResumeIntelligenceInput(BaseModel):
     current_field: str = ""
     target_field: str = ""
     preferred_resume_style: str = "Auto Recommend"
+    job_description: str = ""
+    company_name: str = ""
 
 
 class ResumeSkillGroup(BaseModel):
@@ -271,6 +281,30 @@ class ResumeIntelligenceAnalysisOutput(BaseModel):
     missing_information: list[str]
     content_risk_flags: list[str]
     writing_guidance: str
+
+
+class JobDescriptionAnalysisOutput(BaseModel):
+    job_level: str
+    career_direction: str
+    industry: str
+    experience_required: str
+    education_expectation: str
+    required_skills: list[str]
+    preferred_skills: list[str]
+    technical_skills: list[str]
+    soft_skills: list[str]
+    tools_and_platforms: list[str]
+    ats_keywords: list[str]
+    primary_responsibilities: list[str]
+    leadership_required: bool
+    communication_level: str
+    problem_solving_level: str
+    resume_focus_sections: list[str]
+    recommended_resume_model: str
+    important_certifications: list[str]
+    company_type_guess: str
+    hiring_priority_summary: str
+    candidate_fit_strategy: str
 
 
 class ResumeBuildOutput(BaseModel):
@@ -307,6 +341,11 @@ class ResumeBuildOutput(BaseModel):
     recommended_improvements: list[str]
     industry_keywords_missing: list[str]
     resume_competitiveness: str
+    skill_match_percentage: int
+    strong_matching_skills: list[str]
+    missing_required_skills: list[str]
+    missing_preferred_skills: list[str]
+    resume_alignment_strategy: str
 
 
 class ResumeOptimizerOutput(BaseModel):
@@ -328,6 +367,11 @@ class ResumeOptimizerOutput(BaseModel):
     recommended_improvements: list[str]
     industry_keywords_missing: list[str]
     resume_competitiveness: str
+    skill_match_percentage: int
+    strong_matching_skills: list[str]
+    missing_required_skills: list[str]
+    missing_preferred_skills: list[str]
+    resume_alignment_strategy: str
 
 
 class ResumeReviewerInput(BaseModel):
@@ -1321,6 +1365,185 @@ def normalize_recruiter_review(parsed: dict) -> dict:
     return parsed
 
 
+def normalize_job_description_analysis(parsed: dict) -> dict:
+    required_keys = {
+        "job_level",
+        "career_direction",
+        "industry",
+        "experience_required",
+        "education_expectation",
+        "required_skills",
+        "preferred_skills",
+        "technical_skills",
+        "soft_skills",
+        "tools_and_platforms",
+        "ats_keywords",
+        "primary_responsibilities",
+        "leadership_required",
+        "communication_level",
+        "problem_solving_level",
+        "resume_focus_sections",
+        "recommended_resume_model",
+        "important_certifications",
+        "company_type_guess",
+        "hiring_priority_summary",
+        "candidate_fit_strategy",
+    }
+    if not required_keys.issubset(parsed.keys()):
+        raise HTTPException(
+            status_code=500,
+            detail=f"Missing keys in job description analysis response. Required: {required_keys}. Got: {list(parsed.keys())}",
+        )
+
+    parsed["required_skills"] = clean_string_list(parsed.get("required_skills", []))
+    parsed["preferred_skills"] = clean_string_list(parsed.get("preferred_skills", []))
+    parsed["technical_skills"] = clean_string_list(parsed.get("technical_skills", []))
+    parsed["soft_skills"] = clean_string_list(parsed.get("soft_skills", []))
+    parsed["tools_and_platforms"] = clean_string_list(parsed.get("tools_and_platforms", []))
+    parsed["ats_keywords"] = clean_string_list(parsed.get("ats_keywords", []))
+    parsed["primary_responsibilities"] = clean_string_list(parsed.get("primary_responsibilities", []))
+    parsed["resume_focus_sections"] = clean_string_list(parsed.get("resume_focus_sections", []))
+    parsed["important_certifications"] = clean_string_list(parsed.get("important_certifications", []))
+    parsed["leadership_required"] = bool(parsed.get("leadership_required", False))
+    parsed["job_level"] = str(parsed.get("job_level", "")).strip()
+    parsed["career_direction"] = str(parsed.get("career_direction", "")).strip()
+    parsed["industry"] = str(parsed.get("industry", "")).strip()
+    parsed["experience_required"] = str(parsed.get("experience_required", "")).strip()
+    parsed["education_expectation"] = str(parsed.get("education_expectation", "")).strip()
+    parsed["communication_level"] = str(parsed.get("communication_level", "")).strip()
+    parsed["problem_solving_level"] = str(parsed.get("problem_solving_level", "")).strip()
+    parsed["recommended_resume_model"] = str(parsed.get("recommended_resume_model", "")).strip()
+    parsed["company_type_guess"] = str(parsed.get("company_type_guess", "")).strip()
+    parsed["hiring_priority_summary"] = str(parsed.get("hiring_priority_summary", "")).strip()
+    parsed["candidate_fit_strategy"] = str(parsed.get("candidate_fit_strategy", "")).strip()
+    return parsed
+
+
+def analyze_job_description_intelligence(data: JobDescriptionRequest) -> dict:
+    system_msg = (
+        "You are a Senior Recruiter, Hiring Manager, ATS Specialist, and Career Strategist. "
+        "Analyze the job description and extract structured intelligence about what the employer wants. "
+        "Do not rewrite the job description. Do not return generic summaries. Return only structured intelligence."
+    )
+
+    user_msg = f"""
+Analyze this job description and return structured job intelligence.
+
+Job title: {data.job_title}
+Company name: {data.company_name}
+Country: {data.country}
+Industry: {data.industry}
+Job description:
+{data.job_description}
+
+Return ONLY valid JSON in this exact format:
+{{
+"job_level": "",
+"career_direction": "",
+"industry": "",
+"experience_required": "",
+"education_expectation": "",
+"required_skills": [],
+"preferred_skills": [],
+"technical_skills": [],
+"soft_skills": [],
+"tools_and_platforms": [],
+"ats_keywords": [],
+"primary_responsibilities": [],
+"leadership_required": false,
+"communication_level": "",
+"problem_solving_level": "",
+"resume_focus_sections": [],
+"recommended_resume_model": "",
+"important_certifications": [],
+"company_type_guess": "",
+"hiring_priority_summary": "",
+"candidate_fit_strategy": ""
+}}
+"""
+
+    resp = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": user_msg},
+        ],
+        temperature=0.1,
+    )
+    content = (resp.choices[0].message.content or "").strip()
+    parsed = parse_json_response(content)
+    return normalize_job_description_analysis(parsed)
+
+
+def compare_candidate_to_job_description(candidate_data, job_intelligence: dict) -> dict:
+    candidate_skills = split_skills_text(
+        getattr(candidate_data, "technical_skills", ""),
+        getattr(candidate_data, "transferable_skills", ""),
+        getattr(candidate_data, "tools_software", ""),
+        getattr(candidate_data, "certifications", ""),
+        getattr(candidate_data, "projects", ""),
+        getattr(candidate_data, "work_experience", ""),
+        getattr(candidate_data, "internships", ""),
+    )
+    candidate_text = "\n".join(
+        [
+            getattr(candidate_data, "technical_skills", ""),
+            getattr(candidate_data, "transferable_skills", ""),
+            getattr(candidate_data, "tools_software", ""),
+            getattr(candidate_data, "certifications", ""),
+            getattr(candidate_data, "projects", ""),
+            getattr(candidate_data, "work_experience", ""),
+            getattr(candidate_data, "internships", ""),
+            getattr(candidate_data, "resume_text", ""),
+        ]
+    ).lower()
+    candidate_skill_map = {skill.lower(): skill for skill in candidate_skills}
+
+    def match_against(target_skills: list[str]) -> tuple[list[str], list[str]]:
+        strong = []
+        missing = []
+        for target in clean_string_list(target_skills):
+            target_lower = target.lower()
+            matched = None
+            for candidate_lower, original in candidate_skill_map.items():
+                if target_lower in candidate_lower or candidate_lower in target_lower:
+                    matched = original
+                    break
+            if not matched and target_lower in candidate_text:
+                matched = target
+            if matched:
+                strong.append(title_case_skill(matched))
+            else:
+                missing.append(target)
+        return clean_string_list(strong), clean_string_list(missing)
+
+    strong_required, missing_required = match_against(job_intelligence.get("required_skills", []))
+    strong_preferred, missing_preferred = match_against(job_intelligence.get("preferred_skills", []))
+    strong_matching_skills = clean_string_list(strong_required + strong_preferred)
+
+    total_targets = len(clean_string_list(job_intelligence.get("required_skills", []))) + len(clean_string_list(job_intelligence.get("preferred_skills", [])))
+    total_matches = len(set(skill.lower() for skill in strong_matching_skills))
+    if total_targets == 0:
+        skill_match_percentage = 0
+    else:
+        skill_match_percentage = int(round((total_matches / total_targets) * 100))
+
+    if missing_required:
+        resume_alignment_strategy = "Lead with the strongest matching skills, keep role-relevant evidence visible early, and address the missing required skills through truthful positioning or future upskilling suggestions."
+    elif missing_preferred:
+        resume_alignment_strategy = "Emphasize the strong core fit and align the resume language closely to employer priorities while treating preferred gaps as secondary development areas."
+    else:
+        resume_alignment_strategy = "The candidate already aligns well with the stated requirements, so the resume should focus on clarity, proof of capability, and ATS keyword coverage."
+
+    return {
+        "skill_match_percentage": max(0, min(100, skill_match_percentage)),
+        "strong_matching_skills": strong_matching_skills[:12],
+        "missing_required_skills": missing_required[:12],
+        "missing_preferred_skills": missing_preferred[:12],
+        "resume_alignment_strategy": resume_alignment_strategy,
+    }
+
+
 def recruiter_review(resume, candidate_data, intelligence):
     system_msg = (
         "You are an experienced recruiter and hiring reviewer with 15+ years of experience. "
@@ -1781,9 +2004,19 @@ def analyze_resume_intelligence(data: ResumeIntelligenceRequest):
     return generate_resume_intelligence(data)
 
 
+@app.post("/analyze-job-description", response_model=JobDescriptionAnalysisOutput)
+def analyze_job_description(data: JobDescriptionRequest):
+    return analyze_job_description_intelligence(data)
+
+
 @app.post("/optimize-resume", response_model=ResumeOptimizerOutput)
 def optimize_resume(data: ResumeOptimizerInput):
     country_rules = get_country_rules(data.target_country)
+    job_intelligence = None
+    skill_match = {"skill_match_percentage": 0, "strong_matching_skills": [], "missing_required_skills": [], "missing_preferred_skills": [], "resume_alignment_strategy": ""}
+    if str(data.job_description or "").strip():
+        job_intelligence = analyze_job_description_intelligence(JobDescriptionRequest(job_title=data.target_role, company_name="", country=data.target_country, industry="", job_description=data.job_description))
+        skill_match = compare_candidate_to_job_description(data, job_intelligence)
     system_msg = (
         "You are a senior professional resume writer, ATS optimization specialist, and resume rebuilder with 15 years of experience. "
         "Your job is to analyze an existing resume and rebuild it into a stronger, recruiter-quality, ATS-friendly resume. "
@@ -1806,6 +2039,11 @@ Resume text:
 
 Optional Job Description:
 {data.job_description}
+
+Job Description Intelligence:
+{json.dumps(job_intelligence) if job_intelligence else "Not provided"}
+Skill Match Intelligence:
+{json.dumps(skill_match)}
 
 Country Rules Engine:
 {country_rules}
@@ -1915,6 +2153,7 @@ Return ONLY valid JSON in this exact format:
     }
     recruiter_feedback = recruiter_review(parsed["optimized_resume"], data, recruiter_context)
     parsed.update(recruiter_feedback)
+    parsed.update(skill_match)
     return parsed
 
 
@@ -1923,6 +2162,13 @@ def build_resume(data: ResumeIntelligenceInput):
     intelligence_request = build_resume_intelligence_request(data)
     intelligence = generate_resume_intelligence(intelligence_request)
     skill_intelligence = generate_skill_intelligence(data, intelligence)
+    job_intelligence = None
+    skill_match = {"skill_match_percentage": 0, "strong_matching_skills": [], "missing_required_skills": [], "missing_preferred_skills": [], "resume_alignment_strategy": ""}
+    if str(data.job_description or "").strip():
+        job_intelligence = analyze_job_description_intelligence(JobDescriptionRequest(job_title=data.target_role, company_name=data.company_name, country=data.target_country, industry=data.target_industry, job_description=data.job_description))
+        skill_match = compare_candidate_to_job_description(data, job_intelligence)
+        if job_intelligence.get("recommended_resume_model"):
+            intelligence["recommended_resume_model"] = job_intelligence["recommended_resume_model"]
     section_order = get_resume_section_order(intelligence["recommended_resume_model"])
 
     system_msg = (
@@ -2011,6 +2257,11 @@ Priority Skills: {json.dumps(skill_intelligence['priority_skills'])}
 Missing Role Skills: {json.dumps(skill_intelligence['missing_role_skills'])}
 Skill Positioning Note: {skill_intelligence['skill_positioning_note']}
 
+Job Description Intelligence:
+{json.dumps(job_intelligence) if job_intelligence else "Not provided"}
+Skill Match Intelligence:
+{json.dumps(skill_match)}
+
 Resume Writing Engine V2 Rules:
 1. Write like a premium resume-writing agency, not a generic AI assistant.
 2. Professional Title must position the candidate for the target role. Examples: 'Physical Design Engineer', 'DevOps Engineer | Cloud & Automation', 'Business Analyst | Process Improvement | Data Analysis'. Avoid titles like 'B.Tech Graduate'.
@@ -2025,8 +2276,9 @@ Resume Writing Engine V2 Rules:
 11. For technical resumes, prioritize summary, core skills, experience, projects, certifications, and education.
 12. For business, executive, and career switcher resumes, prioritize summary, core competencies, experience, achievements, and education.
 13. Keep language professional, natural, concise, non-repetitive, and human-written.
-14. Never include Template labels, preview, backend, or test wording.
-15. Keep the final resume length aligned to the recommended length rule.
+14. When job description intelligence is provided, align the title, summary, keywords, and evidence to employer priorities without inventing missing skills.
+15. Never include Template labels, preview, backend, or test wording.
+16. Keep the final resume length aligned to the recommended length rule.
 
 Return ONLY valid JSON in this exact format:
 {{
@@ -2130,6 +2382,7 @@ Rewrite Rules:
         quality_report = review_resume_quality(parsed["full_resume"], data, intelligence, skill_intelligence)
 
     final_response = normalize_build_resume_response(parsed, intelligence, skill_intelligence, quality_report, quality_fixes_applied)
+    final_response.update(skill_match)
     recruiter_context = dict(intelligence)
     recruiter_context.update({
         "quality_score": quality_report["quality_score"],
