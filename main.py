@@ -524,7 +524,12 @@ def sanitize_resume_text(resume_text: str) -> str:
                 cleaned_lines.append("")
             continue
 
-        if any(marker.lower() in line.lower() for marker in banned_markers):
+        normalized_line = line.lower()
+        if any(marker.lower() in normalized_line for marker in banned_markers):
+            continue
+        if normalized_line.startswith("[") and normalized_line.endswith("]"):
+            continue
+        if "not provided" in normalized_line or "confidential" in normalized_line:
             continue
 
         cleaned_lines.append(raw_line.rstrip())
@@ -533,6 +538,188 @@ def sanitize_resume_text(resume_text: str) -> str:
         cleaned_lines.pop()
 
     return "\n".join(cleaned_lines)
+
+
+def split_skills_text(*values: str) -> list[str]:
+    raw_text = "\n".join(str(value or "") for value in values)
+    for separator in [",", ";", "|", "/"]:
+        raw_text = raw_text.replace(separator, "\n")
+
+    cleaned = []
+    seen = set()
+    for item in raw_text.splitlines():
+        skill = " ".join(item.strip().split())
+        if not skill:
+            continue
+        key = skill.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        cleaned.append(skill)
+    return cleaned
+
+
+def title_case_skill(skill: str) -> str:
+    value = str(skill or "").strip()
+    if not value:
+        return ""
+    acronym_map = {
+        "aws": "AWS",
+        "sql": "SQL",
+        "crm": "CRM",
+        "erp": "ERP",
+        "fpga": "FPGA",
+        "vlsi": "VLSI",
+        "cmos": "CMOS",
+        "rtl": "RTL",
+        "cadence": "Cadence",
+        "synopsys": "Synopsys",
+        "matlab": "MATLAB",
+        "git": "Git",
+        "linux": "Linux",
+    }
+    return acronym_map.get(value.lower(), value)
+
+
+def get_role_skill_targets(target_role: str, career_direction: str, target_industry: str) -> dict:
+    role_text = " ".join([target_role or "", career_direction or "", target_industry or ""]).lower()
+
+    if any(keyword in role_text for keyword in ["devops", "sre", "cloud", "platform"]):
+        return {
+            "categories": [
+                ("Cloud & Infrastructure", ["aws", "azure", "gcp", "docker", "kubernetes", "terraform", "ansible"]),
+                ("CI/CD & Automation", ["jenkins", "github actions", "gitlab ci", "bash", "powershell", "git"]),
+                ("Programming Languages", ["python", "java", "go", "javascript"]),
+                ("Databases", ["sql", "mysql", "postgresql", "mongodb"]),
+                ("Operating Systems", ["linux", "unix", "windows server"]),
+            ],
+            "missing": ["Terraform", "Kubernetes", "CI/CD pipelines", "Monitoring"],
+        }
+    if any(keyword in role_text for keyword in ["business analyst", "analyst", "reporting"]):
+        return {
+            "categories": [
+                ("Business & Productivity Tools", ["excel", "powerpoint", "google sheets", "power bi", "tableau"]),
+                ("Data & Analysis", ["sql", "python", "data analysis", "reporting", "dashboarding"]),
+                ("Communication & Documentation", ["communication", "documentation", "presentation", "stakeholder management"]),
+                ("Process & Coordination", ["coordination", "requirements gathering", "process improvement"]),
+            ],
+            "missing": ["Requirements gathering", "Stakeholder management", "Dashboarding"],
+        }
+    if any(keyword in role_text for keyword in ["vlsi", "embedded", "electronics", "ece"]):
+        return {
+            "categories": [
+                ("VLSI Tools", ["xilinx ise", "modelsim", "cadence", "synopsys", "matlab"]),
+                ("Design Flow", ["verilog", "vhdl", "vlsi basics", "cmos", "rtl", "timing analysis", "fpga"]),
+                ("Operating Systems", ["linux", "unix", "windows"]),
+                ("Core Electronics", ["digital electronics", "embedded c", "embedded systems", "circuit design"]),
+                ("Professional Skills", ["problem solving", "analytical thinking", "teamwork", "communication"]),
+            ],
+            "missing": ["RTL Design", "Timing Analysis", "Cadence", "Synopsys"],
+        }
+    if any(keyword in role_text for keyword in ["hr", "human resources", "recruit", "talent"]):
+        return {
+            "categories": [
+                ("Business Tools", ["excel", "powerpoint", "google sheets", "documentation", "presentation"]),
+                ("Communication & Stakeholder Management", ["communication", "coordination", "teamwork", "stakeholder management"]),
+                ("Operations & Coordination", ["scheduling", "onboarding", "event coordination", "coordination"]),
+                ("Reporting & Documentation", ["documentation", "reporting", "presentation"]),
+            ],
+            "missing": ["Employee onboarding", "HR operations", "Recruitment coordination"],
+        }
+    if any(keyword in role_text for keyword in ["operations manager", "operations", "logistics", "supply chain"]):
+        return {
+            "categories": [
+                ("Operations Management", ["staff scheduling", "inventory coordination", "vendor management", "shift leadership", "service quality management", "process improvement"]),
+                ("Leadership & Team Management", ["team supervision", "staff training", "customer handling", "team coordination"]),
+                ("Reporting & Business Tools", ["excel", "reporting", "pos systems", "inventory tracking systems"]),
+                ("Customer & Service Delivery", ["customer issue resolution", "service quality", "operations coordination"]),
+            ],
+            "missing": ["Cost control", "Budget oversight", "KPI reporting"],
+        }
+
+    if (career_direction or "").strip().lower() == "technical":
+        return {
+            "categories": [
+                ("Technical Skills", ["python", "java", "javascript", "sql", "aws", "docker", "linux"]),
+                ("Tools & Platforms", ["git", "excel", "power bi", "tableau", "matlab"]),
+                ("Professional Skills", ["problem solving", "analytical thinking", "teamwork", "communication"]),
+            ],
+            "missing": [],
+        }
+
+    return {
+        "categories": [
+            ("Business Tools", ["excel", "powerpoint", "google sheets", "crm", "erp"]),
+            ("Communication & Documentation", ["communication", "documentation", "presentation", "reporting"]),
+            ("Operations & Coordination", ["coordination", "scheduling", "stakeholder management", "teamwork"]),
+        ],
+        "missing": [],
+    }
+
+
+def generate_skill_intelligence(data, intelligence=None):
+    role_targets = get_role_skill_targets(
+        getattr(data, "target_role", ""),
+        getattr(data, "career_direction", "") or (intelligence or {}).get("career_direction_detected", ""),
+        getattr(data, "target_industry", ""),
+    )
+    all_skills = split_skills_text(
+        getattr(data, "technical_skills", ""),
+        getattr(data, "transferable_skills", ""),
+        getattr(data, "tools_software", ""),
+    )
+    skills_map = {skill.lower(): skill for skill in all_skills}
+    used = set()
+    skill_groups = []
+
+    for category, keywords in role_targets["categories"]:
+        category_skills = []
+        for keyword in keywords:
+            for skill_lower, original in skills_map.items():
+                if skill_lower in used:
+                    continue
+                if keyword in skill_lower or skill_lower in keyword:
+                    category_skills.append(title_case_skill(original))
+                    used.add(skill_lower)
+                    break
+        category_skills = clean_string_list(category_skills)[:8]
+        if category_skills:
+            skill_groups.append({"category": category, "skills": category_skills})
+
+    remaining = [title_case_skill(original) for skill_lower, original in skills_map.items() if skill_lower not in used]
+    remaining = clean_string_list(remaining)
+
+    career_change = str(getattr(data, "career_change", "No")).strip().lower() in {"yes", "true", "1"}
+    direction = ((intelligence or {}).get("career_direction_detected") or getattr(data, "career_direction", "") or "").strip().lower()
+    if remaining:
+        fallback_category = "Transferable Skills" if career_change or direction in {"non-technical", "management", "operations", "sales", "marketing", "finance", "customer support"} else "Additional Tools & Skills"
+        skill_groups.append({"category": fallback_category, "skills": remaining[:8]})
+
+    skill_groups = skill_groups[:6]
+    priority_skills = []
+    for group in skill_groups[:3]:
+        priority_skills.extend(group["skills"][:3])
+    priority_skills = clean_string_list(priority_skills)[:8]
+
+    missing_role_skills = []
+    for skill in role_targets.get("missing", []):
+        if skill.lower() not in skills_map:
+            missing_role_skills.append(skill)
+    missing_role_skills = clean_string_list(missing_role_skills)[:6]
+
+    if career_change:
+        skill_positioning_note = "Emphasize transferable skills and business-ready tools first, and keep unrelated technical details secondary unless they directly support the target role."
+    elif direction == "technical":
+        skill_positioning_note = "Lead with role-critical technical capabilities, then supporting tools, operating environments, and professional strengths."
+    else:
+        skill_positioning_note = "Prioritize business tools, coordination, communication, reporting, and role-relevant operational strengths ahead of less relevant technical detail."
+
+    return {
+        "skill_groups": clean_skill_groups(skill_groups),
+        "priority_skills": priority_skills,
+        "missing_role_skills": missing_role_skills,
+        "skill_positioning_note": skill_positioning_note,
+    }
 
 
 def detect_resume_length_label(experience_level: str) -> str:
@@ -1354,6 +1541,7 @@ Return ONLY valid JSON in this exact format:
 def build_resume(data: ResumeIntelligenceInput):
     intelligence_request = build_resume_intelligence_request(data)
     intelligence = generate_resume_intelligence(intelligence_request)
+    skill_intelligence = generate_skill_intelligence(data, intelligence)
 
     system_msg = (
         "You are a senior professional resume writer, ATS specialist, and career strategist with 15 years of experience. "
@@ -1431,6 +1619,10 @@ Recruiter Positioning: {intelligence['recruiter_positioning']}
 Priority Sections: {json.dumps(intelligence['priority_sections'])}
 Sections To Minimize Or Remove: {json.dumps(intelligence['sections_to_minimize_or_remove'])}
 Skill Grouping Strategy: {json.dumps(intelligence['skill_grouping_strategy'])}
+Skill Intelligence Groups To Use Exactly: {json.dumps(skill_intelligence['skill_groups'])}
+Priority Skills: {json.dumps(skill_intelligence['priority_skills'])}
+Missing Role Skills: {json.dumps(skill_intelligence['missing_role_skills'])}
+Skill Positioning Note: {skill_intelligence['skill_positioning_note']}
 ATS Keyword Strategy: {json.dumps(intelligence['ats_keyword_strategy'])}
 Missing Information To Keep Out Of Resume: {json.dumps(intelligence['missing_information'])}
 Content Risk Flags: {json.dumps(intelligence['content_risk_flags'])}
@@ -1440,7 +1632,7 @@ Writing Rules:
 1. Follow the resume intelligence exactly.
 2. If resume_length_rule is One Page, create a concise one-page style resume.
 3. If the candidate has less than 10 years of experience, prioritize one-page structure unless content strongly justifies more.
-4. Skills must always be grouped using the supplied skill_grouping_strategy.
+4. Skills must always be grouped using the supplied skill intelligence groups exactly, never as one flat list.
 5. Hide empty sections instead of showing placeholders.
 6. Do not include placeholder text like [No formal work experience], [Details not provided], [No certifications provided], or [Year not provided].
 7. Missing information should appear only in missing_information or improvement_suggestions, never inside the resume.
@@ -1516,10 +1708,16 @@ Return ONLY valid JSON in this exact format:
     parsed["recruiter_positioning"] = str(parsed.get("recruiter_positioning") or intelligence["recruiter_positioning"]).strip() or intelligence["recruiter_positioning"]
     parsed["full_resume"] = sanitize_resume_text(str(parsed.get("full_resume", "")).strip())
     parsed["ats_keywords"] = clean_string_list(parsed.get("ats_keywords", [])) or intelligence["ats_keyword_strategy"]
-    parsed["skill_groups"] = clean_skill_groups(parsed.get("skill_groups", [])) or intelligence["skill_grouping_strategy"]
+    parsed["skill_groups"] = clean_skill_groups(skill_intelligence["skill_groups"])
     parsed["strengths"] = clean_string_list(parsed.get("strengths", []))
     parsed["missing_information"] = clean_string_list(parsed.get("missing_information", [])) or intelligence["missing_information"]
     parsed["improvement_suggestions"] = clean_string_list(parsed.get("improvement_suggestions", []))
+
+    if skill_intelligence["missing_role_skills"]:
+        parsed["improvement_suggestions"].append(
+            f"Consider building stronger exposure in: {', '.join(skill_intelligence['missing_role_skills'])}."
+        )
+        parsed["improvement_suggestions"] = clean_string_list(parsed["improvement_suggestions"])
 
     return parsed
 
