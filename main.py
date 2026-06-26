@@ -297,6 +297,16 @@ class ResumeBuildOutput(BaseModel):
     role_alignment_score: int
     quality_issues_found: list[str]
     quality_fixes_applied: list[str]
+    interview_probability: int
+    recruiter_confidence: int
+    first_impression: str
+    shortlisting_decision: str
+    top_strengths: list[str]
+    top_concerns: list[str]
+    missing_high_value_information: list[str]
+    recommended_improvements: list[str]
+    industry_keywords_missing: list[str]
+    resume_competitiveness: str
 
 
 class ResumeOptimizerOutput(BaseModel):
@@ -308,6 +318,16 @@ class ResumeOptimizerOutput(BaseModel):
     weaknesses_found: list[str]
     improvement_suggestions: list[str]
     ats_score_estimate: str
+    interview_probability: int
+    recruiter_confidence: int
+    first_impression: str
+    shortlisting_decision: str
+    top_strengths: list[str]
+    top_concerns: list[str]
+    missing_high_value_information: list[str]
+    recommended_improvements: list[str]
+    industry_keywords_missing: list[str]
+    resume_competitiveness: str
 
 
 class ResumeReviewerInput(BaseModel):
@@ -1257,6 +1277,117 @@ def normalize_build_resume_response(parsed: dict, intelligence: dict, skill_inte
     return parsed
 
 
+def normalize_recruiter_review(parsed: dict) -> dict:
+    required_keys = {
+        "interview_probability",
+        "recruiter_confidence",
+        "first_impression",
+        "shortlisting_decision",
+        "top_strengths",
+        "top_concerns",
+        "missing_high_value_information",
+        "recommended_improvements",
+        "industry_keywords_missing",
+        "resume_competitiveness",
+    }
+    if not required_keys.issubset(parsed.keys()):
+        raise HTTPException(
+            status_code=500,
+            detail=f"Missing keys in recruiter review response. Required: {required_keys}. Got: {list(parsed.keys())}",
+        )
+
+    def clamp_score(value):
+        try:
+            return max(0, min(100, int(value)))
+        except Exception:
+            return 0
+
+    parsed["interview_probability"] = clamp_score(parsed.get("interview_probability", 0))
+    parsed["recruiter_confidence"] = clamp_score(parsed.get("recruiter_confidence", 0))
+    parsed["first_impression"] = str(parsed.get("first_impression", "")).strip()
+    decision = str(parsed.get("shortlisting_decision", "Maybe")).strip().title()
+    if decision not in {"Yes", "Maybe", "No"}:
+        decision = "Maybe"
+    parsed["shortlisting_decision"] = decision
+    parsed["top_strengths"] = clean_string_list(parsed.get("top_strengths", []))
+    parsed["top_concerns"] = clean_string_list(parsed.get("top_concerns", []))
+    parsed["missing_high_value_information"] = clean_string_list(parsed.get("missing_high_value_information", []))
+    parsed["recommended_improvements"] = clean_string_list(parsed.get("recommended_improvements", []))
+    parsed["industry_keywords_missing"] = clean_string_list(parsed.get("industry_keywords_missing", []))
+    competitiveness = str(parsed.get("resume_competitiveness", "Competitive")).strip().title()
+    if competitiveness not in {"Basic", "Competitive", "Strong", "Outstanding"}:
+        competitiveness = "Competitive"
+    parsed["resume_competitiveness"] = competitiveness
+    return parsed
+
+
+def recruiter_review(resume, candidate_data, intelligence):
+    system_msg = (
+        "You are an experienced recruiter and hiring reviewer with 15+ years of experience. "
+        "Review the resume as if you are deciding whether to shortlist the candidate. "
+        "Evaluate professional title, summary, experience, projects, skill grouping, ATS alignment, career progression, target role alignment, leadership, achievements, technical depth, transferable skills, and overall readability. "
+        "Do not invent facts. Do not expose chain-of-thought. Return only concise structured recruiter feedback."
+    )
+
+    user_msg = f"""
+Review this resume from the perspective of an experienced recruiter.
+
+Target role: {getattr(candidate_data, 'target_role', '')}
+Target country/job market: {getattr(candidate_data, 'target_country', getattr(candidate_data, 'target_location', ''))}
+Target industry: {getattr(candidate_data, 'target_industry', '')}
+Experience level: {getattr(candidate_data, 'experience_level', '')}
+Career direction: {getattr(candidate_data, 'career_direction', '')}
+
+Recruiter context:
+Recommended resume model: {intelligence.get('recommended_resume_model', intelligence.get('recommended_resume_style', ''))}
+Resume length rule: {intelligence.get('resume_length_rule', '')}
+Target market strategy: {intelligence.get('target_market_strategy', '')}
+Recruiter positioning: {intelligence.get('recruiter_positioning', '')}
+ATS keyword strategy: {json.dumps(intelligence.get('ats_keyword_strategy', []))}
+Quality score context: {intelligence.get('quality_score', '')}
+ATS readiness score context: {intelligence.get('ats_readiness_score', '')}
+Recruiter readability score context: {intelligence.get('recruiter_readability_score', '')}
+Role alignment score context: {intelligence.get('role_alignment_score', '')}
+
+Resume:
+{resume}
+
+Return ONLY valid JSON in this exact format:
+{{
+    "interview_probability": 0,
+    "recruiter_confidence": 0,
+    "first_impression": "",
+    "shortlisting_decision": "Yes | Maybe | No",
+    "top_strengths": ["strength1", "strength2"],
+    "top_concerns": ["concern1", "concern2"],
+    "missing_high_value_information": ["item1", "item2"],
+    "recommended_improvements": ["improvement1", "improvement2"],
+    "industry_keywords_missing": ["keyword1", "keyword2"],
+    "resume_competitiveness": "Basic | Competitive | Strong | Outstanding"
+}}
+
+Scoring rules:
+- interview_probability: 0-100
+- recruiter_confidence: 0-100
+- shortlisting_decision should reflect whether you would shortlist this profile now.
+- Be stricter when target role alignment is weak or the resume leaves important uncertainty.
+- If the resume feels strong and clear, reward it accordingly.
+"""
+
+    resp = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": user_msg},
+        ],
+        temperature=0.1,
+    )
+
+    content = (resp.choices[0].message.content or "").strip()
+    parsed = parse_json_response(content)
+    return normalize_recruiter_review(parsed)
+
+
 def normalize_export_sections(sections: list[ResumeExportSection], country: str) -> list[ResumeExportSection]:
     settings = get_country_template_settings(country)
     normalized = []
@@ -1769,10 +1900,21 @@ Return ONLY valid JSON in this exact format:
     if not isinstance(parsed["improvement_suggestions"], list):
         parsed["improvement_suggestions"] = []
 
+    parsed["optimized_resume"] = sanitize_resume_text(str(parsed.get("optimized_resume", "")).strip())
     parsed["ats_keywords"] = [str(x).strip() for x in parsed["ats_keywords"] if str(x).strip()]
     parsed["strengths"] = [str(x).strip() for x in parsed["strengths"] if str(x).strip()]
     parsed["weaknesses_found"] = [str(x).strip() for x in parsed["weaknesses_found"] if str(x).strip()]
     parsed["improvement_suggestions"] = [str(x).strip() for x in parsed["improvement_suggestions"] if str(x).strip()]
+
+    recruiter_context = {
+        "recommended_resume_style": parsed.get("recommended_resume_style", ""),
+        "resume_length_rule": "",
+        "target_market_strategy": country_rules,
+        "recruiter_positioning": parsed.get("recommendation_reason", ""),
+        "ats_keyword_strategy": parsed.get("ats_keywords", []),
+    }
+    recruiter_feedback = recruiter_review(parsed["optimized_resume"], data, recruiter_context)
+    parsed.update(recruiter_feedback)
     return parsed
 
 
@@ -1987,7 +2129,17 @@ Rewrite Rules:
         parsed["full_resume"] = sanitize_resume_text(str(parsed.get("full_resume", "")).strip())
         quality_report = review_resume_quality(parsed["full_resume"], data, intelligence, skill_intelligence)
 
-    return normalize_build_resume_response(parsed, intelligence, skill_intelligence, quality_report, quality_fixes_applied)
+    final_response = normalize_build_resume_response(parsed, intelligence, skill_intelligence, quality_report, quality_fixes_applied)
+    recruiter_context = dict(intelligence)
+    recruiter_context.update({
+        "quality_score": quality_report["quality_score"],
+        "ats_readiness_score": quality_report["ats_readiness_score"],
+        "recruiter_readability_score": quality_report["recruiter_readability_score"],
+        "role_alignment_score": quality_report["role_alignment_score"],
+    })
+    recruiter_feedback = recruiter_review(final_response["full_resume"], data, recruiter_context)
+    final_response.update(recruiter_feedback)
+    return final_response
 
 
 @app.post("/review-resume", response_model=ResumeReviewerOutput)
