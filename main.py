@@ -17,6 +17,7 @@ from reportlab.lib.pagesizes import A4, letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.enums import TA_LEFT
+from career_knowledge_engine import generate_career_knowledge
 
 # -----------------------
 # Setup
@@ -236,6 +237,16 @@ class ATSAnalysisRequest(BaseModel):
     work_experience: str = ""
 
 
+class CareerKnowledgeRequest(BaseModel):
+    target_role: str = ""
+    target_industry: str = ""
+    education: str = ""
+    highest_qualification: str = ""
+    current_background: str = ""
+    career_direction: str = ""
+    experience_level: str = ""
+
+
 class ResumeIntelligenceRequest(BaseModel):
     target_role: str
     target_country: str = "Global"
@@ -394,6 +405,17 @@ class ResumePersonalizationOutput(BaseModel):
     skills_strategy: str
     certification_strategy: str
     overall_personalization_note: str
+
+
+class CareerKnowledgeOutput(BaseModel):
+    recommended_roles: list[str]
+    recommended_industries: list[str]
+    recommended_certifications: list[str]
+    recommended_projects: list[str]
+    recommended_resume_model: str
+    career_transition_options: list[str]
+    future_growth_roles: list[str]
+    salary_progression_note: str
 
 
 class ResumeBuildOutput(BaseModel):
@@ -564,6 +586,25 @@ def load_json_file(path: Path) -> dict:
     if not path.exists():
         return {}
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def get_career_knowledge_context(candidate_data, **overrides) -> dict:
+    profile = {
+        "target_role": overrides.get("target_role", getattr(candidate_data, "target_role", "")),
+        "target_industry": overrides.get("target_industry", getattr(candidate_data, "target_industry", "")),
+        "education": overrides.get(
+            "education",
+            getattr(candidate_data, "education", "") or getattr(candidate_data, "education_details", ""),
+        ),
+        "highest_qualification": overrides.get("highest_qualification", getattr(candidate_data, "highest_qualification", "")),
+        "current_background": overrides.get(
+            "current_background",
+            getattr(candidate_data, "current_background", "") or getattr(candidate_data, "about", "") or getattr(candidate_data, "resume_text", ""),
+        ),
+        "career_direction": overrides.get("career_direction", getattr(candidate_data, "career_direction", "")),
+        "experience_level": overrides.get("experience_level", getattr(candidate_data, "experience_level", "")),
+    }
+    return generate_career_knowledge(profile)
 
 
 def get_country_template_settings(country: str) -> dict:
@@ -1524,6 +1565,17 @@ def normalize_job_description_analysis(parsed: dict) -> dict:
 
 
 def analyze_job_description_intelligence(data: JobDescriptionRequest) -> dict:
+    career_knowledge = generate_career_knowledge(
+        {
+            "target_role": data.job_title,
+            "target_industry": data.industry,
+            "education": "",
+            "highest_qualification": "",
+            "current_background": data.job_description,
+            "career_direction": "",
+            "experience_level": "",
+        }
+    )
     system_msg = (
         "You are a Senior Recruiter, Hiring Manager, ATS Specialist, and Career Strategist. "
         "Analyze the job description and extract structured intelligence about what the employer wants. "
@@ -1537,6 +1589,10 @@ Job title: {data.job_title}
 Company name: {data.company_name}
 Country: {data.country}
 Industry: {data.industry}
+Career knowledge graph:
+Recommended roles: {career_knowledge['recommended_roles']}
+Recommended industries: {career_knowledge['recommended_industries']}
+Recommended certifications: {career_knowledge['recommended_certifications']}
 Job description:
 {data.job_description}
 
@@ -2263,6 +2319,9 @@ Resume length rule: {intelligence.get('resume_length_rule', '')}
 Target market strategy: {intelligence.get('target_market_strategy', '')}
 Recruiter positioning: {intelligence.get('recruiter_positioning', '')}
 ATS keyword strategy: {json.dumps(intelligence.get('ats_keyword_strategy', []))}
+Career graph recommended roles: {json.dumps(intelligence.get('career_graph_roles', []))}
+Career graph recommended certifications: {json.dumps(intelligence.get('career_graph_certifications', []))}
+Career graph future growth roles: {json.dumps(intelligence.get('career_graph_growth_roles', []))}
 Quality score context: {intelligence.get('quality_score', '')}
 ATS readiness score context: {intelligence.get('ats_readiness_score', '')}
 Recruiter readability score context: {intelligence.get('recruiter_readability_score', '')}
@@ -2493,6 +2552,12 @@ def home():
 
 @app.post("/suggest-role")
 def suggest_role(data: RoleSuggestionInput):
+    career_knowledge = get_career_knowledge_context(
+        data,
+        current_background=data.about,
+        education=data.about,
+        highest_qualification=data.about,
+    )
     system_msg = (
         "You are a career assistant for job seekers across technical and non-technical fields. "
         "Read the user's About section and suggest the single best professional role title. "
@@ -2504,6 +2569,11 @@ def suggest_role(data: RoleSuggestionInput):
     user_msg = f"""
 Reference role catalog:
 {ROLE_CATALOG}
+
+Career knowledge graph suggestions:
+Recommended roles: {career_knowledge['recommended_roles']}
+Recommended industries: {career_knowledge['recommended_industries']}
+Career transitions: {career_knowledge['career_transition_options']}
 
 User About section:
 {data.about}
@@ -2530,6 +2600,13 @@ Return only the role name.
 
 @app.post("/optimize-profile", response_model=OptimizedProfile)
 def optimize_profile(data: ProfileInput):
+    career_knowledge = get_career_knowledge_context(
+        data,
+        current_background=data.about,
+        education=data.about,
+        highest_qualification=data.about,
+        target_industry="",
+    )
     system_msg = (
         "You are an expert LinkedIn profile strategist for the job market specified by the user. "
         "You optimize profiles for recruiter clarity, keyword relevance, and professional positioning. "
@@ -2542,6 +2619,12 @@ def optimize_profile(data: ProfileInput):
     user_msg = f"""
 Target role: {data.target_role}
 Target job market / country: {data.target_location}
+Career knowledge graph:
+Recommended roles: {career_knowledge['recommended_roles']}
+Recommended industries: {career_knowledge['recommended_industries']}
+Recommended certifications: {career_knowledge['recommended_certifications']}
+Recommended projects: {career_knowledge['recommended_projects']}
+Recommended resume model: {career_knowledge['recommended_resume_model']}
 
 Primary source input (About section):
 {data.about}
@@ -2608,6 +2691,13 @@ Return ONLY valid JSON in this exact format:
 
 @app.post("/generate-profile-from-scratch", response_model=OptimizedProfile)
 def generate_profile_from_scratch(data: ScratchProfileInput):
+    career_knowledge = get_career_knowledge_context(
+        data,
+        education=data.education,
+        current_background=f"{data.education}\n{data.experience}\n{data.projects}\n{data.career_goal}",
+        highest_qualification=data.education,
+        target_industry="",
+    )
     system_msg = (
         "You are an expert LinkedIn profile strategist for freshers, students, early-career professionals, "
         "and career switchers in the user's target job market. "
@@ -2620,6 +2710,12 @@ def generate_profile_from_scratch(data: ScratchProfileInput):
     user_msg = f"""
 Target role: {data.target_role}
 Target job market / country: {data.target_location}
+Career knowledge graph:
+Recommended roles: {career_knowledge['recommended_roles']}
+Recommended industries: {career_knowledge['recommended_industries']}
+Recommended certifications: {career_knowledge['recommended_certifications']}
+Recommended projects: {career_knowledge['recommended_projects']}
+Recommended resume model: {career_knowledge['recommended_resume_model']}
 
 User details:
 Education:
@@ -2705,6 +2801,21 @@ def analyze_job_description(data: JobDescriptionRequest):
     return analyze_job_description_intelligence(data)
 
 
+@app.post("/analyze-career-knowledge", response_model=CareerKnowledgeOutput)
+def analyze_career_knowledge(data: CareerKnowledgeRequest):
+    result = generate_career_knowledge(data.model_dump())
+    return {
+        "recommended_roles": result["recommended_roles"],
+        "recommended_industries": result["recommended_industries"],
+        "recommended_certifications": result["recommended_certifications"],
+        "recommended_projects": result["recommended_projects"],
+        "recommended_resume_model": result["recommended_resume_model"],
+        "career_transition_options": result["career_transition_options"],
+        "future_growth_roles": result["future_growth_roles"],
+        "salary_progression_note": result["salary_progression_note"],
+    }
+
+
 @app.post("/analyze-ats", response_model=ATSIntelligenceOutput)
 def analyze_ats(data: ATSAnalysisRequest):
     job_intelligence = None
@@ -2736,6 +2847,13 @@ def generate_achievements(data: AchievementRequest):
 @app.post("/optimize-resume", response_model=ResumeOptimizerOutput)
 def optimize_resume(data: ResumeOptimizerInput):
     country_rules = get_country_rules(data.target_country)
+    career_knowledge = get_career_knowledge_context(
+        data,
+        education=data.resume_text,
+        highest_qualification=data.resume_text,
+        current_background=data.resume_text,
+        target_industry="",
+    )
     job_intelligence = None
     skill_match = {"skill_match_percentage": 0, "strong_matching_skills": [], "missing_required_skills": [], "missing_preferred_skills": [], "resume_alignment_strategy": ""}
     if str(data.job_description or "").strip():
@@ -2815,6 +2933,8 @@ Skill Match Intelligence:
 {json.dumps(skill_match)}
 ATS Intelligence:
 {json.dumps(ats_intelligence)}
+Career Knowledge Graph:
+{json.dumps(career_knowledge)}
 Resume Personalization:
 {json.dumps(personalization)}
 Achievement Intelligence:
@@ -2844,6 +2964,7 @@ Tasks:
 15. Use the ATS Intelligence placement strategy to improve keyword coverage naturally without keyword stuffing.
 16. Missing keywords may guide suggestions, but must never be added as fake skills or unsupported experience.
 17. Follow the Resume Personalization strategy so the wording, emphasis, and structure match the target country, company type, and industry context.
+18. Use the Career Knowledge Graph to keep role language, certifications, projects, and growth positioning realistic and consistent.
 
 Resume rebuild rules:
 - Include a clear header/contact section if details exist in the pasted resume
@@ -3003,6 +3124,9 @@ Return ONLY valid JSON in this exact format:
         "target_market_strategy": country_rules,
         "recruiter_positioning": parsed.get("recommendation_reason", ""),
         "ats_keyword_strategy": parsed.get("ats_keywords", []),
+        "career_graph_roles": career_knowledge["recommended_roles"],
+        "career_graph_certifications": career_knowledge["recommended_certifications"],
+        "career_graph_growth_roles": career_knowledge["future_growth_roles"],
     }
     recruiter_feedback = recruiter_review(parsed["optimized_resume"], data, recruiter_context)
     parsed.update(recruiter_feedback)
@@ -3017,6 +3141,13 @@ Return ONLY valid JSON in this exact format:
 def build_resume(data: ResumeIntelligenceInput):
     intelligence_request = build_resume_intelligence_request(data)
     intelligence = generate_resume_intelligence(intelligence_request)
+    career_knowledge = get_career_knowledge_context(
+        data,
+        education=data.education_details,
+        highest_qualification=data.highest_qualification,
+        current_background=data.current_background,
+        target_industry=data.target_industry,
+    )
     skill_intelligence = generate_skill_intelligence(data, intelligence)
     job_intelligence = None
     skill_match = {"skill_match_percentage": 0, "strong_matching_skills": [], "missing_required_skills": [], "missing_preferred_skills": [], "resume_alignment_strategy": ""}
@@ -3134,6 +3265,8 @@ Skill Match Intelligence:
 {json.dumps(skill_match)}
 ATS Intelligence:
 {json.dumps(ats_intelligence)}
+Career Knowledge Graph:
+{json.dumps(career_knowledge)}
 Resume Personalization:
 {json.dumps(personalization)}
 Achievement Intelligence:
@@ -3161,6 +3294,7 @@ Resume Writing Engine V2 Rules:
 19. Use the ATS Intelligence placement guidance to place matching keywords naturally in the right sections without keyword stuffing.
 20. Never add missing keywords as fake skills; leave them for improvement suggestions only.
 21. Follow the Resume Personalization strategy so the tone, section emphasis, and language match the target country, company type, industry, and seniority context.
+22. Use the Career Knowledge Graph to keep role families, certifications, projects, and future-path positioning realistic and internally consistent.
 
 Return ONLY valid JSON in this exact format:
 {{
@@ -3313,6 +3447,9 @@ Rewrite Rules:
         "ats_readiness_score": quality_report["ats_readiness_score"],
         "recruiter_readability_score": quality_report["recruiter_readability_score"],
         "role_alignment_score": quality_report["role_alignment_score"],
+        "career_graph_roles": career_knowledge["recommended_roles"],
+        "career_graph_certifications": career_knowledge["recommended_certifications"],
+        "career_graph_growth_roles": career_knowledge["future_growth_roles"],
     })
     recruiter_feedback = recruiter_review(final_response["full_resume"], data, recruiter_context)
     final_response.update(recruiter_feedback)
