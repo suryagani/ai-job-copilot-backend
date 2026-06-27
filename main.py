@@ -18,6 +18,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.enums import TA_LEFT
 from career_knowledge_engine import generate_career_knowledge
+from resume_models import select_resume_model
+from resume_models.runtime import configure_runtime
 
 # -----------------------
 # Setup
@@ -29,6 +31,7 @@ if not api_key:
     raise RuntimeError("OPENAI_API_KEY not found. Put it in your .env file.")
 
 client = OpenAI(api_key=api_key)
+configure_runtime(client, lambda content: parse_json_response(content))
 
 app = FastAPI(title="AI Job Copilot", version="1.0.0")
 
@@ -1268,6 +1271,10 @@ def review_resume_quality(resume_text, candidate_data, intelligence, skill_intel
         "[details not provided]",
         "[no certifications provided]",
         "[year not provided]",
+        "[current employer]",
+        "[dates]",
+        "[institution]",
+        "[company]",
         "not provided",
     ]
 
@@ -1456,6 +1463,18 @@ def normalize_build_resume_response(parsed: dict, intelligence: dict, skill_inte
     parsed["role_alignment_score"] = int(quality_report["role_alignment_score"])
     parsed["quality_issues_found"] = clean_string_list(quality_report.get("issues_found", []))
     parsed["quality_fixes_applied"] = clean_string_list(quality_fixes_applied)
+
+    if not parsed["writing_quality_score"]:
+        parsed["writing_quality_score"] = f"{quality_report['quality_score']}/100"
+    if not parsed["resume_readability"]:
+        readability = int(quality_report["recruiter_readability_score"])
+        parsed["resume_readability"] = "High" if readability >= 85 else "Moderate" if readability >= 70 else "Needs improvement"
+    if not parsed["ats_readiness"]:
+        ats = int(quality_report["ats_readiness_score"])
+        parsed["ats_readiness"] = "High" if ats >= 85 else "Moderate" if ats >= 70 else "Needs improvement"
+    if not parsed["resume_confidence"]:
+        confidence = int(quality_report["quality_score"])
+        parsed["resume_confidence"] = "Strong" if confidence >= 85 else "Promising" if confidence >= 70 else "Developing"
 
     if skill_intelligence["missing_role_skills"]:
         parsed["improvement_suggestions"].append(
@@ -3171,246 +3190,75 @@ def build_resume(data: ResumeIntelligenceInput):
         recruiter_intelligence=None,
     )
     achievement_intelligence = generate_achievement_intelligence(data, intelligence, job_intelligence)
-    section_order = get_resume_section_order(intelligence["recommended_resume_model"])
+    intelligence["career_graph_roles"] = career_knowledge["recommended_roles"]
+    intelligence["career_graph_certifications"] = career_knowledge["recommended_certifications"]
+    intelligence["career_graph_growth_roles"] = career_knowledge["future_growth_roles"]
+    intelligence["target_role"] = data.target_role
+    intelligence["experience_level"] = data.experience_level
+    selected_resume_style, resume_model_module = select_resume_model(intelligence)
+    intelligence["recommended_resume_model"] = selected_resume_style
 
-    system_msg = (
-        "You are Resume Writing Engine V2: a senior professional resume writer, ATS specialist, recruiter, and hiring-manager-minded career strategist with 15+ years of experience. "
-        "Your resumes must feel premium, natural, and human-written rather than AI-generated. "
-        "You must think first, then write. "
-        "Use the resume intelligence strategy, skill intelligence, and candidate information together before drafting. "
-        "Do not use generic AI cliches such as 'motivated and detail-oriented', 'seeking an opportunity', 'hardworking individual', or repetitive filler language. "
-        "Do not invent employers, dates, metrics, achievements, certifications, projects, degrees, or company names. "
-        "Do not copy user responsibilities verbatim. Rewrite them professionally using strong action verbs while staying truthful. "
-        "If information is missing, hide the section instead of exposing placeholders."
+    recommendation_reason = (
+        f"Selected {selected_resume_style} based on the candidate profile type '{intelligence.get('candidate_profile_type', '')}', "
+        f"career direction '{intelligence.get('career_direction_detected', '')}', and target role alignment for {data.target_role}."
     )
 
-    base_prompt = f"""
-Create a recruiter-quality professional resume using the candidate information, Resume Intelligence, and Skill Intelligence below.
+    def build_strengths() -> list[str]:
+        strengths = []
+        strengths.extend(skill_intelligence.get("priority_skills", [])[:3])
+        strengths.extend(item.get("improved", "") for item in achievement_intelligence.get("experience_bullets", [])[:2])
+        strengths.extend(item.get("project_value", "") for item in achievement_intelligence.get("project_bullets", [])[:1])
+        return clean_string_list(strengths)[:6]
 
-Candidate Details:
-Full Name: {data.full_name}
-Email: {data.email}
-Phone: {data.phone}
-Location: {data.location}
-LinkedIn: {data.linkedin_url}
-Portfolio/GitHub: {data.portfolio_url}
-
-Target Strategy:
-Target Role: {data.target_role}
-Target Country: {data.target_country}
-Target Industry: {data.target_industry}
-Career Direction: {data.career_direction}
-Experience Level: {data.experience_level}
-Preferred Resume Style: {data.preferred_resume_style}
-
-Background:
-Current Background: {data.current_background}
-Highest Qualification: {data.highest_qualification}
-Education Details:
-{data.education_details}
-
-Work Experience:
-{data.work_experience}
-
-Internships:
-{data.internships}
-
-Projects:
-{data.projects}
-
-Technical Skills:
-{data.technical_skills}
-
-Transferable Skills:
-{data.transferable_skills}
-
-Tools / Software:
-{data.tools_software}
-
-Certifications:
-{data.certifications}
-
-Achievements:
-{data.achievements}
-
-Leadership / Team Experience:
-{data.leadership_experience}
-
-Career Change:
-Career Change: {data.career_change}
-Current Field: {data.current_field}
-Target Field: {data.target_field}
-
-Resume Intelligence:
-Recommended Resume Model: {intelligence['recommended_resume_model']}
-Resume Length Rule: {intelligence['resume_length_rule']}
-Target Market Strategy: {intelligence['target_market_strategy']}
-Recruiter Positioning: {intelligence['recruiter_positioning']}
-Priority Sections: {json.dumps(intelligence['priority_sections'])}
-Sections To Minimize Or Remove: {json.dumps(intelligence['sections_to_minimize_or_remove'])}
-ATS Keyword Strategy: {json.dumps(intelligence['ats_keyword_strategy'])}
-Missing Information: {json.dumps(intelligence['missing_information'])}
-Writing Guidance: {intelligence['writing_guidance']}
-Recommended Section Order: {section_order}
-
-Skill Intelligence:
-Skill Groups To Use Exactly: {json.dumps(skill_intelligence['skill_groups'])}
-Priority Skills: {json.dumps(skill_intelligence['priority_skills'])}
-Missing Role Skills: {json.dumps(skill_intelligence['missing_role_skills'])}
-Skill Positioning Note: {skill_intelligence['skill_positioning_note']}
-
-Job Description Intelligence:
-{json.dumps(job_intelligence) if job_intelligence else "Not provided"}
-Skill Match Intelligence:
-{json.dumps(skill_match)}
-ATS Intelligence:
-{json.dumps(ats_intelligence)}
-Career Knowledge Graph:
-{json.dumps(career_knowledge)}
-Resume Personalization:
-{json.dumps(personalization)}
-Achievement Intelligence:
-{json.dumps(achievement_intelligence)}
-
-Resume Writing Engine V2 Rules:
-1. Write like a premium resume-writing agency, not a generic AI assistant.
-2. Professional Title must position the candidate for the target role. Examples: 'Physical Design Engineer', 'DevOps Engineer | Cloud & Automation', 'Business Analyst | Process Improvement | Data Analysis'. Avoid titles like 'B.Tech Graduate'.
-3. Executive Summary must be 70-120 words, natural, concise, and role-positioning. Never start with generic phrases like 'Motivated and detail-oriented', 'Seeking an opportunity', 'Hardworking individual', or similar cliches.
-4. Use the recommended section order unless a small truth-preserving adjustment improves clarity.
-5. Skills must use the provided Skill Intelligence groups exactly. Never output one flat skill list.
-6. Experience bullets must rewrite the user's responsibilities professionally using strong action verbs such as Designed, Developed, Implemented, Collaborated, Optimized, Configured, Supported, Delivered, Improved, Led, Reduced, Automated, Enhanced, Coordinated.
-7. Do not fabricate numbers. If metrics are missing, use impact-based language without invented figures.
-8. Project entries must explain the problem, approach, technology, contribution, and result where the source details support that structure.
-9. Hide empty sections completely. Never show placeholders such as [No Certifications], [No Experience], [Details Not Provided], N/A, or Not provided.
-10. For graduate resumes, prioritize education, projects, skills, internships, and certifications.
-11. For technical resumes, prioritize summary, core skills, experience, projects, certifications, and education.
-12. For business, executive, and career switcher resumes, prioritize summary, core competencies, experience, achievements, and education.
-13. Keep language professional, natural, concise, non-repetitive, and human-written.
-14. When job description intelligence is provided, align the title, summary, keywords, and evidence to employer priorities without inventing missing skills.
-15. Never include Template labels, preview, backend, or test wording.
-16. Keep the final resume length aligned to the recommended length rule.
-17. Use the Achievement Intelligence output to improve experience, internship, project, leadership, and transferable-skill bullets while staying fully truthful.
-18. When achievement bullets are provided, prefer those improved statements over the weaker raw wording.
-19. Use the ATS Intelligence placement guidance to place matching keywords naturally in the right sections without keyword stuffing.
-20. Never add missing keywords as fake skills; leave them for improvement suggestions only.
-21. Follow the Resume Personalization strategy so the tone, section emphasis, and language match the target country, company type, industry, and seniority context.
-22. Use the Career Knowledge Graph to keep role families, certifications, projects, and future-path positioning realistic and internally consistent.
-
-Return ONLY valid JSON in this exact format:
-{{
-  "recommended_resume_style": "string",
-  "recommendation_reason": "string",
-  "professional_title": "string",
-  "executive_summary": "string",
-  "resume_length_rule": "string",
-  "target_market_strategy": "string",
-  "recruiter_positioning": "string",
-  "full_resume": "string",
-  "ats_keywords": ["keyword1", "keyword2"],
-  "skill_groups": [
-    {{
-      "category": "string",
-      "skills": ["skill1", "skill2"]
-    }}
-  ],
-  "strengths": ["strength1", "strength2"],
-  "missing_information": ["missing1", "missing2"],
-  "improvement_suggestions": ["suggestion1", "suggestion2"],
-  "writing_quality_score": "string",
-  "resume_readability": "string",
-  "ats_readiness": "string",
-  "resume_confidence": "string",
-  "ats_score_estimate": 0,
-  "ats_readiness_level": "string",
-  "matching_keywords": ["keyword1", "keyword2"],
-  "missing_keywords": ["keyword1", "keyword2"],
-  "ats_improvement_actions": ["action1", "action2"],
-  "personalization_score": 0,
-  "personalization_strategy": "string",
-  "personalization_notes": ["note1", "note2"]
-}}
-"""
-
-    def generate_resume_payload(prompt_text: str) -> dict:
-        resp = client.chat.completions.create(
-            model="gpt-4.1-mini",
-            messages=[
-                {"role": "system", "content": system_msg},
-                {"role": "user", "content": prompt_text},
-            ],
-            temperature=0.15,
+    def generate_resume_payload(rewrite_context: dict | None = None) -> dict:
+        runtime_intelligence = dict(intelligence)
+        if rewrite_context:
+            runtime_intelligence["rewrite_context"] = rewrite_context
+        model_output = resume_model_module.generate_resume(
+            data,
+            runtime_intelligence,
+            skill_intelligence,
+            achievement_intelligence,
+            ats_intelligence,
+            rewrite_context or {},
+            job_intelligence,
+            personalization,
         )
-        content = (resp.choices[0].message.content or "").strip()
-        parsed = parse_json_response(content)
-        required_keys = {
-            "recommended_resume_style",
-            "recommendation_reason",
-            "professional_title",
-            "executive_summary",
-            "resume_length_rule",
-            "target_market_strategy",
-            "recruiter_positioning",
-            "full_resume",
-            "ats_keywords",
-            "skill_groups",
-            "strengths",
-            "missing_information",
-            "improvement_suggestions",
-            "writing_quality_score",
-            "resume_readability",
-            "ats_readiness",
-            "resume_confidence",
-            "ats_score_estimate",
-            "ats_readiness_level",
-            "matching_keywords",
-            "missing_keywords",
-            "ats_improvement_actions",
-            "personalization_score",
-            "personalization_strategy",
-            "personalization_notes",
+        return {
+            "recommended_resume_style": selected_resume_style,
+            "recommendation_reason": recommendation_reason,
+            "professional_title": model_output.get("professional_title", ""),
+            "executive_summary": model_output.get("summary", ""),
+            "resume_length_rule": intelligence["resume_length_rule"],
+            "target_market_strategy": intelligence["target_market_strategy"],
+            "recruiter_positioning": intelligence["recruiter_positioning"],
+            "full_resume": model_output.get("resume", ""),
+            "ats_keywords": ats_intelligence.get("required_keywords", []),
+            "skill_groups": skill_intelligence.get("skill_groups", []),
+            "strengths": build_strengths(),
+            "missing_information": intelligence.get("missing_information", []),
+            "improvement_suggestions": [],
+            "writing_quality_score": "",
+            "resume_readability": "",
+            "ats_readiness": ats_intelligence.get("ats_readiness_level", ""),
+            "resume_confidence": "",
         }
-        if not required_keys.issubset(parsed.keys()):
-            raise HTTPException(
-                status_code=500,
-                detail=f"Missing keys in resume builder response. Required: {required_keys}. Got: {list(parsed.keys())}",
-            )
-        return parsed
 
-    parsed = generate_resume_payload(base_prompt)
+    parsed = generate_resume_payload()
     parsed["full_resume"] = sanitize_resume_text(str(parsed.get("full_resume", "")).strip())
     quality_report = review_resume_quality(parsed["full_resume"], data, intelligence, skill_intelligence)
     quality_fixes_applied = []
 
     if (not quality_report["is_ready_for_user"]) or quality_report["quality_score"] < 80:
-        rewrite_prompt = base_prompt + f"""
-
-Rewrite the resume once using this first draft and quality review.
-
-First Draft Resume:
-{parsed['full_resume']}
-
-First Draft Executive Summary:
-{parsed.get('executive_summary', '')}
-
-Quality Issues Found:
-{json.dumps(quality_report['issues_found'])}
-
-Required Fixes:
-{json.dumps(quality_report['required_fixes'])}
-
-Rewrite Rules:
-- Fix every required issue.
-- Remove generic phrasing.
-- Remove placeholders.
-- Keep the resume truthful.
-- Preserve grouped skills.
-- Preserve and strengthen the achievement-oriented bullet quality.
-- Improve recruiter readability within 10 seconds.
-- Keep the output premium, concise, and ATS-friendly.
-- Return the same JSON format only.
-"""
         quality_fixes_applied = clean_string_list(quality_report["required_fixes"])
-        parsed = generate_resume_payload(rewrite_prompt)
+        parsed = generate_resume_payload(
+            {
+                "draft_resume": parsed["full_resume"],
+                "draft_summary": parsed.get("executive_summary", ""),
+                "issues_found": quality_report["issues_found"],
+                "required_fixes": quality_report["required_fixes"],
+            }
+        )
         parsed["full_resume"] = sanitize_resume_text(str(parsed.get("full_resume", "")).strip())
         quality_report = review_resume_quality(parsed["full_resume"], data, intelligence, skill_intelligence)
 
