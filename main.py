@@ -380,6 +380,22 @@ class ATSIntelligenceOutput(BaseModel):
     ats_strategy_note: str
 
 
+class ResumePersonalizationOutput(BaseModel):
+    tone: str
+    writing_style: str
+    resume_strategy: str
+    priority_sections: list[str]
+    de_emphasize_sections: list[str]
+    industry_language: list[str]
+    recommended_order: list[str]
+    summary_strategy: str
+    experience_strategy: str
+    project_strategy: str
+    skills_strategy: str
+    certification_strategy: str
+    overall_personalization_note: str
+
+
 class ResumeBuildOutput(BaseModel):
     recommended_resume_style: str
     recommendation_reason: str
@@ -424,6 +440,9 @@ class ResumeBuildOutput(BaseModel):
     matching_keywords: list[str]
     missing_keywords: list[str]
     ats_improvement_actions: list[str]
+    personalization_score: int
+    personalization_strategy: str
+    personalization_notes: list[str]
 
 
 class ResumeOptimizerOutput(BaseModel):
@@ -439,6 +458,9 @@ class ResumeOptimizerOutput(BaseModel):
     matching_keywords: list[str]
     missing_keywords: list[str]
     ats_improvement_actions: list[str]
+    personalization_score: int
+    personalization_strategy: str
+    personalization_notes: list[str]
     interview_probability: int
     recruiter_confidence: int
     first_impression: str
@@ -2013,6 +2035,211 @@ def generate_ats_intelligence(candidate_data, resume_text="", job_intelligence=N
     }
 
 
+def guess_company_type(candidate_data, job_intelligence=None) -> str:
+    job_intelligence = job_intelligence or {}
+    guessed = str(job_intelligence.get("company_type_guess", "")).strip()
+    if guessed:
+        return guessed
+
+    combined = " ".join(
+        [
+            str(getattr(candidate_data, "target_role", "") or ""),
+            str(getattr(candidate_data, "target_industry", "") or ""),
+            str(getattr(candidate_data, "job_description", "") or ""),
+        ]
+    ).lower()
+
+    mapping = [
+        ("Government", ["government", "public sector", "compliance", "administration"]),
+        ("Research", ["research", "laboratory", "r&d", "innovation", "scientist"]),
+        ("Healthcare", ["healthcare", "hospital", "clinical", "medical"]),
+        ("Hospitality", ["restaurant", "hospitality", "hotel", "food service"]),
+        ("Manufacturing", ["manufacturing", "plant", "production", "factory", "industrial"]),
+        ("Retail", ["retail", "store", "merchandising", "customer floor"]),
+        ("Consultancy", ["consulting", "consultancy", "advisory", "client delivery"]),
+        ("Product Company", ["product", "platform", "saas", "software product"]),
+        ("Enterprise", ["enterprise", "global", "large scale", "standards", "cross-functional"]),
+        ("Startup", ["startup", "fast-paced", "0-1", "ownership", "wear multiple hats"]),
+    ]
+    for label, keywords in mapping:
+        if any(keyword in combined for keyword in keywords):
+            return label
+    return "Corporate"
+
+
+def generate_resume_personalization(candidate_data, job_intelligence=None, intelligence=None, ats_intelligence=None, recruiter_intelligence=None):
+    job_intelligence = job_intelligence or {}
+    intelligence = intelligence or {}
+    ats_intelligence = ats_intelligence or {}
+    recruiter_intelligence = recruiter_intelligence or {}
+
+    target_country = str(getattr(candidate_data, "target_country", "Global")).strip().lower()
+    target_role = str(getattr(candidate_data, "target_role", "")).strip()
+    target_industry = str(getattr(candidate_data, "target_industry", "")).strip()
+    experience_level = str(getattr(candidate_data, "experience_level", "")).strip().lower()
+    role_direction = str(
+        getattr(candidate_data, "career_direction", "")
+        or intelligence.get("career_direction_detected", "")
+        or job_intelligence.get("career_direction", "")
+    ).strip()
+    company_type = guess_company_type(candidate_data, job_intelligence)
+    recommended_order = clean_string_list(intelligence.get("priority_sections", []))
+
+    tone = "Business"
+    writing_style = "Concise, professional, and ATS-safe."
+    resume_strategy = "Balance role alignment, recruiter clarity, and truthful ATS keyword coverage."
+    summary_strategy = "Lead with target-role alignment, strongest matching capabilities, and market-ready positioning."
+    experience_strategy = "Prioritize role-relevant experience and rewrite evidence with clear impact language."
+    project_strategy = "Use projects to demonstrate practical proof of skills when they strengthen the target-role story."
+    skills_strategy = "Group skills logically and surface the most role-relevant capabilities first."
+    certification_strategy = "Include certifications that strengthen credibility for the target role or market expectations."
+    priority_sections = recommended_order[:] or ["Professional Summary", "Skills", "Experience"]
+    de_emphasize_sections = []
+    industry_language = clean_string_list(ats_intelligence.get("matching_keywords", []))[:6]
+    notes = []
+    score = 70
+
+    if role_direction.lower() == "technical":
+        tone = "Technical"
+        writing_style = "Precise, evidence-driven, and technically credible without inflated claims."
+        skills_strategy = "Lead with technical skill groups, tools, platforms, and the strongest role-aligned capabilities."
+        project_strategy = "Use projects as proof of technical problem-solving, implementation approach, and relevant tool exposure."
+        score += 6
+    elif role_direction.lower() in {"management", "operations", "sales", "marketing", "finance", "customer support"}:
+        tone = "Leadership" if role_direction.lower() in {"management", "operations"} else "Business"
+        writing_style = "Commercially clear, outcome-focused, and easy for recruiters and hiring managers to scan."
+        experience_strategy = "Emphasize delivery, coordination, communication, process ownership, and business impact."
+        score += 5
+
+    if any(token in target_role.lower() for token in ["manager", "head", "director", "lead", "operations manager"]):
+        tone = "Executive"
+        writing_style = "Authority-led, concise, and focused on leadership, ownership, and business outcomes."
+        summary_strategy = "Position the candidate as a leader with operational scope, decision-making value, and strategic relevance."
+        experience_strategy = "Highlight team leadership, standards, operational control, and senior-level decision ownership."
+        score += 8
+    elif experience_level in {"student", "fresher"}:
+        tone = "Academic" if tone == "Technical" else tone
+        summary_strategy = "Position the candidate through education, projects, internships, certifications, and learning agility."
+        priority_sections = clean_string_list(["Professional Summary", "Education", "Projects", "Skills", "Internships", "Certifications"])
+        de_emphasize_sections.append("Extended Experience")
+        score += 4
+
+    if "startup" in company_type.lower():
+        tone = "Startup" if tone not in {"Executive", "Technical"} else tone
+        resume_strategy = "Emphasize ownership, adaptability, learning speed, problem solving, and hands-on delivery."
+        priority_sections = clean_string_list(priority_sections + ["Projects"])
+        de_emphasize_sections.append("Heavy Process Detail")
+        notes.append("Startup positioning favors ownership, adaptability, and practical contribution over overly formal wording.")
+        score += 7
+    elif "enterprise" in company_type.lower() or "corporate" in company_type.lower() or "product company" in company_type.lower():
+        resume_strategy = "Emphasize scalable execution, collaboration, documentation, standards, and cross-functional readiness."
+        notes.append("Enterprise-style positioning favors clarity, process awareness, and structured execution.")
+        score += 6
+    elif "government" in company_type.lower():
+        resume_strategy = "Emphasize reliability, compliance, communication, procedure adherence, and consistent delivery."
+        summary_strategy = "Position the candidate as dependable, process-aware, and aligned to structured environments."
+        notes.append("Government-style personalization prioritizes compliance, reliability, and formal clarity.")
+        score += 6
+    elif "research" in company_type.lower():
+        tone = "Academic" if tone != "Executive" else tone
+        resume_strategy = "Emphasize experimentation, analytical depth, documentation, and innovation-oriented thinking."
+        project_strategy = "Use projects to show experimentation, analysis, tools, methods, and structured findings."
+        notes.append("Research positioning favors innovation, experimentation, and analytical rigor.")
+        score += 6
+    elif "manufacturing" in company_type.lower():
+        resume_strategy = "Emphasize process control, reliability, standards, quality, and operational consistency."
+        notes.append("Manufacturing positioning should sound structured, practical, and process-aware.")
+        score += 5
+    elif "hospitality" in company_type.lower() or "retail" in company_type.lower():
+        resume_strategy = "Emphasize customer experience, service delivery, coordination, operational consistency, and issue resolution."
+        notes.append("Service-sector positioning should highlight coordination, customer handling, and operational consistency.")
+        score += 5
+
+    if "united states" in target_country or target_country == "usa":
+        writing_style = "Achievement-first, direct, and concise with strong action-led phrasing."
+        notes.append("US personalization favors fast value communication and sharp achievement-led wording.")
+        score += 5
+    elif "canada" in target_country:
+        writing_style = "Balanced and professional, combining clear capability statements with grounded evidence."
+        notes.append("Canada personalization balances polish, evidence, and readability.")
+        score += 4
+    elif "united kingdom" in target_country or target_country == "uk":
+        writing_style = "Concise, practical, and recruiter-friendly without overstatement."
+        notes.append("UK personalization favors concise, practical, and professional wording.")
+        score += 4
+    elif "australia" in target_country:
+        writing_style = "Evidence-based and clear, with practical relevance surfaced early."
+        notes.append("Australia personalization favors evidence-based claims and direct relevance.")
+        score += 4
+    elif "germany" in target_country:
+        writing_style = "Structured, precise, and qualification-focused with orderly sectioning."
+        notes.append("Germany personalization benefits from precision, structure, and qualifications visibility.")
+        score += 5
+    elif "uae" in target_country or "united arab emirates" in target_country:
+        writing_style = "Polished and leadership-aware, with clear operations and execution language."
+        notes.append("UAE personalization favors polished language with leadership and operational clarity.")
+        score += 5
+    elif "india" in target_country:
+        writing_style = "Balanced and practical, giving visible weight to skills, projects, and applied readiness."
+        notes.append("India personalization often works best with a balanced emphasis on skills, projects, and readiness.")
+        score += 4
+
+    industry_text = " ".join([target_industry.lower(), target_role.lower(), str(job_intelligence.get("industry", "")).lower()])
+    if any(token in industry_text for token in ["semiconductor", "vlsi", "electronics", "embedded"]):
+        industry_language = clean_string_list(industry_language + ["Design Flow", "Verification", "Linux", "Digital Design", "Implementation"])
+        summary_strategy = "Position the candidate through technical credibility, tool exposure, and role-aligned design or verification capability."
+        score += 4
+    elif any(token in industry_text for token in ["analytics", "business analyst", "data"]):
+        industry_language = clean_string_list(industry_language + ["Analysis", "Reporting", "SQL", "Documentation", "Stakeholder Communication"])
+        score += 4
+    elif any(token in industry_text for token in ["hr", "human resources", "talent"]):
+        industry_language = clean_string_list(industry_language + ["Recruitment Support", "Documentation", "Coordination", "Communication", "Onboarding"])
+        de_emphasize_sections.append("Deep Technical Detail")
+        score += 4
+    elif any(token in industry_text for token in ["operations", "supply chain", "restaurant", "hospitality"]):
+        industry_language = clean_string_list(industry_language + ["Operations", "Inventory Control", "Service Delivery", "Coordination", "Team Management"])
+        score += 4
+
+    if str(getattr(candidate_data, "career_change", "No")).strip().lower() in {"yes", "true", "1"}:
+        resume_strategy = "Use a career-switcher narrative that translates prior strengths into target-role value without forcing unrelated detail."
+        experience_strategy = "Emphasize transferable achievements, stakeholder impact, and adjacent capability instead of unrelated depth."
+        de_emphasize_sections.append("Legacy Domain Detail")
+        notes.append("Career-change positioning should translate transferable strengths and reduce unrelated detail.")
+        score += 5
+
+    if ats_intelligence.get("missing_keywords"):
+        notes.append("Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.")
+        score += 2
+    if recruiter_intelligence.get("top_concerns"):
+        notes.append("Recruiter concerns should influence emphasis and clarity in the final wording.")
+        score += 2
+
+    priority_sections = clean_string_list(priority_sections)[:8]
+    de_emphasize_sections = clean_string_list(de_emphasize_sections)[:6]
+    recommended_order = clean_string_list(recommended_order or priority_sections)[:8]
+    industry_language = clean_string_list(industry_language)[:8]
+    overall_note = " ".join(clean_string_list(notes)) or "Tailor the resume tone, emphasis, and section order to the target market and employer context while staying fully truthful."
+
+    return {
+        "tone": tone,
+        "writing_style": writing_style,
+        "resume_strategy": resume_strategy,
+        "priority_sections": priority_sections,
+        "de_emphasize_sections": de_emphasize_sections,
+        "industry_language": industry_language,
+        "recommended_order": recommended_order,
+        "summary_strategy": summary_strategy,
+        "experience_strategy": experience_strategy,
+        "project_strategy": project_strategy,
+        "skills_strategy": skills_strategy,
+        "certification_strategy": certification_strategy,
+        "overall_personalization_note": overall_note,
+        "personalization_score": max(50, min(98, score)),
+        "personalization_strategy": resume_strategy,
+        "personalization_notes": clean_string_list(notes)[:8],
+    }
+
+
 def recruiter_review(resume, candidate_data, intelligence):
     system_msg = (
         "You are an experienced recruiter and hiring reviewer with 15+ years of experience. "
@@ -2534,6 +2761,13 @@ def optimize_resume(data: ResumeOptimizerInput):
         intelligence=None,
         skill_intelligence=None,
     )
+    personalization = generate_resume_personalization(
+        data,
+        job_intelligence=job_intelligence,
+        intelligence=None,
+        ats_intelligence=ats_intelligence,
+        recruiter_intelligence=None,
+    )
     achievement_intelligence = generate_achievement_intelligence(
         AchievementRequest(
             target_role=data.target_role,
@@ -2581,6 +2815,8 @@ Skill Match Intelligence:
 {json.dumps(skill_match)}
 ATS Intelligence:
 {json.dumps(ats_intelligence)}
+Resume Personalization:
+{json.dumps(personalization)}
 Achievement Intelligence:
 {json.dumps(achievement_intelligence)}
 
@@ -2607,6 +2843,7 @@ Tasks:
 14. Keep length discipline appropriate to the likely seniority level suggested by the resume.
 15. Use the ATS Intelligence placement strategy to improve keyword coverage naturally without keyword stuffing.
 16. Missing keywords may guide suggestions, but must never be added as fake skills or unsupported experience.
+17. Follow the Resume Personalization strategy so the wording, emphasis, and structure match the target country, company type, and industry context.
 
 Resume rebuild rules:
 - Include a clear header/contact section if details exist in the pasted resume
@@ -2643,7 +2880,10 @@ Return ONLY valid JSON in this exact format:
   "ats_readiness_level": "string",
   "matching_keywords": ["keyword1", "keyword2"],
   "missing_keywords": ["keyword1", "keyword2"],
-  "ats_improvement_actions": ["action1", "action2"]
+  "ats_improvement_actions": ["action1", "action2"],
+  "personalization_score": 0,
+  "personalization_strategy": "string",
+  "personalization_notes": ["note1", "note2"]
 }}
 """
 
@@ -2672,6 +2912,9 @@ Return ONLY valid JSON in this exact format:
         "matching_keywords",
         "missing_keywords",
         "ats_improvement_actions",
+        "personalization_score",
+        "personalization_strategy",
+        "personalization_notes",
     }
     if not required_keys.issubset(parsed.keys()):
         raise HTTPException(
@@ -2693,13 +2936,20 @@ Return ONLY valid JSON in this exact format:
         parsed["missing_keywords"] = []
     if not isinstance(parsed["ats_improvement_actions"], list):
         parsed["ats_improvement_actions"] = []
+    if not isinstance(parsed["personalization_notes"], list):
+        parsed["personalization_notes"] = []
 
     parsed["optimized_resume"] = sanitize_resume_text(str(parsed.get("optimized_resume", "")).strip())
     try:
         parsed["ats_score_estimate"] = int(parsed.get("ats_score_estimate", 0))
     except Exception:
         parsed["ats_score_estimate"] = 0
+    try:
+        parsed["personalization_score"] = int(parsed.get("personalization_score", 0))
+    except Exception:
+        parsed["personalization_score"] = 0
     parsed["ats_readiness_level"] = str(parsed.get("ats_readiness_level", "")).strip()
+    parsed["personalization_strategy"] = str(parsed.get("personalization_strategy", "")).strip()
     parsed["ats_keywords"] = [str(x).strip() for x in parsed["ats_keywords"] if str(x).strip()]
     parsed["strengths"] = [str(x).strip() for x in parsed["strengths"] if str(x).strip()]
     parsed["weaknesses_found"] = [str(x).strip() for x in parsed["weaknesses_found"] if str(x).strip()]
@@ -2707,6 +2957,7 @@ Return ONLY valid JSON in this exact format:
     parsed["matching_keywords"] = [str(x).strip() for x in parsed["matching_keywords"] if str(x).strip()]
     parsed["missing_keywords"] = [str(x).strip() for x in parsed["missing_keywords"] if str(x).strip()]
     parsed["ats_improvement_actions"] = [str(x).strip() for x in parsed["ats_improvement_actions"] if str(x).strip()]
+    parsed["personalization_notes"] = [str(x).strip() for x in parsed["personalization_notes"] if str(x).strip()]
 
     final_ats = generate_ats_intelligence(
         ATSAnalysisRequest(
@@ -2735,6 +2986,16 @@ Return ONLY valid JSON in this exact format:
     parsed["ats_improvement_actions"] = final_ats["ats_improvement_actions"]
     parsed["ats_keywords"] = clean_string_list(parsed["ats_keywords"] or final_ats["required_keywords"])
     parsed["improvement_suggestions"] = clean_string_list(parsed["improvement_suggestions"] + final_ats["ats_improvement_actions"])
+    final_personalization = generate_resume_personalization(
+        data,
+        job_intelligence=job_intelligence,
+        intelligence=None,
+        ats_intelligence=final_ats,
+        recruiter_intelligence=None,
+    )
+    parsed["personalization_score"] = final_personalization["personalization_score"]
+    parsed["personalization_strategy"] = final_personalization["personalization_strategy"]
+    parsed["personalization_notes"] = final_personalization["personalization_notes"]
 
     recruiter_context = {
         "recommended_resume_style": parsed.get("recommended_resume_style", ""),
@@ -2746,6 +3007,9 @@ Return ONLY valid JSON in this exact format:
     recruiter_feedback = recruiter_review(parsed["optimized_resume"], data, recruiter_context)
     parsed.update(recruiter_feedback)
     parsed.update(skill_match)
+    parsed["personalization_notes"] = clean_string_list(
+        parsed["personalization_notes"] + [f"Overall: {final_personalization['overall_personalization_note']}"]
+    )
     return parsed
 
 
@@ -2767,6 +3031,13 @@ def build_resume(data: ResumeIntelligenceInput):
         job_intelligence=job_intelligence,
         intelligence=intelligence,
         skill_intelligence=skill_intelligence,
+    )
+    personalization = generate_resume_personalization(
+        data,
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        ats_intelligence=ats_intelligence,
+        recruiter_intelligence=None,
     )
     achievement_intelligence = generate_achievement_intelligence(data, intelligence, job_intelligence)
     section_order = get_resume_section_order(intelligence["recommended_resume_model"])
@@ -2863,6 +3134,8 @@ Skill Match Intelligence:
 {json.dumps(skill_match)}
 ATS Intelligence:
 {json.dumps(ats_intelligence)}
+Resume Personalization:
+{json.dumps(personalization)}
 Achievement Intelligence:
 {json.dumps(achievement_intelligence)}
 
@@ -2887,6 +3160,7 @@ Resume Writing Engine V2 Rules:
 18. When achievement bullets are provided, prefer those improved statements over the weaker raw wording.
 19. Use the ATS Intelligence placement guidance to place matching keywords naturally in the right sections without keyword stuffing.
 20. Never add missing keywords as fake skills; leave them for improvement suggestions only.
+21. Follow the Resume Personalization strategy so the tone, section emphasis, and language match the target country, company type, industry, and seniority context.
 
 Return ONLY valid JSON in this exact format:
 {{
@@ -2916,7 +3190,10 @@ Return ONLY valid JSON in this exact format:
   "ats_readiness_level": "string",
   "matching_keywords": ["keyword1", "keyword2"],
   "missing_keywords": ["keyword1", "keyword2"],
-  "ats_improvement_actions": ["action1", "action2"]
+  "ats_improvement_actions": ["action1", "action2"],
+  "personalization_score": 0,
+  "personalization_strategy": "string",
+  "personalization_notes": ["note1", "note2"]
 }}
 """
 
@@ -2954,6 +3231,9 @@ Return ONLY valid JSON in this exact format:
             "matching_keywords",
             "missing_keywords",
             "ats_improvement_actions",
+            "personalization_score",
+            "personalization_strategy",
+            "personalization_notes",
         }
         if not required_keys.issubset(parsed.keys()):
             raise HTTPException(
@@ -3014,6 +3294,18 @@ Rewrite Rules:
     final_response["missing_keywords"] = final_ats["missing_keywords"]
     final_response["ats_improvement_actions"] = final_ats["ats_improvement_actions"]
     final_response["improvement_suggestions"] = clean_string_list(final_response["improvement_suggestions"] + final_ats["ats_improvement_actions"])
+    final_personalization = generate_resume_personalization(
+        data,
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        ats_intelligence=final_ats,
+        recruiter_intelligence=None,
+    )
+    final_response["personalization_score"] = final_personalization["personalization_score"]
+    final_response["personalization_strategy"] = final_personalization["personalization_strategy"]
+    final_response["personalization_notes"] = clean_string_list(
+        final_personalization["personalization_notes"] + [f"Overall: {final_personalization['overall_personalization_note']}"]
+    )
     final_response.update(skill_match)
     recruiter_context = dict(intelligence)
     recruiter_context.update({
