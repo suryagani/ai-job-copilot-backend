@@ -206,6 +206,21 @@ class JobDescriptionRequest(BaseModel):
     job_description: str
 
 
+class AchievementRequest(BaseModel):
+    target_role: str = ""
+    target_country: str = "Global"
+    experience_level: str = ""
+    career_direction: str = ""
+    work_experience: str = ""
+    internships: str = ""
+    projects: str = ""
+    achievements: str = ""
+    leadership_experience: str = ""
+    technical_skills: str = ""
+    transferable_skills: str = ""
+    resume_text: str = ""
+
+
 class ResumeIntelligenceRequest(BaseModel):
     target_role: str
     target_country: str = "Global"
@@ -305,6 +320,28 @@ class JobDescriptionAnalysisOutput(BaseModel):
     company_type_guess: str
     hiring_priority_summary: str
     candidate_fit_strategy: str
+
+
+class ExperienceAchievementOutput(BaseModel):
+    original: str
+    improved: str
+    impact_type: str
+    confidence: str
+
+
+class ProjectAchievementOutput(BaseModel):
+    project_name: str
+    improved_bullets: list[str]
+    technologies_detected: list[str]
+    project_value: str
+
+
+class AchievementIntelligenceOutput(BaseModel):
+    experience_bullets: list[ExperienceAchievementOutput]
+    project_bullets: list[ProjectAchievementOutput]
+    leadership_bullets: list[str]
+    transferable_achievement_bullets: list[str]
+    missing_impact_questions: list[str]
 
 
 class ResumeBuildOutput(BaseModel):
@@ -1544,6 +1581,161 @@ def compare_candidate_to_job_description(candidate_data, job_intelligence: dict)
     }
 
 
+def normalize_achievement_intelligence(parsed: dict) -> dict:
+    required_keys = {
+        "experience_bullets",
+        "project_bullets",
+        "leadership_bullets",
+        "transferable_achievement_bullets",
+        "missing_impact_questions",
+    }
+    if not required_keys.issubset(parsed.keys()):
+        raise HTTPException(
+            status_code=500,
+            detail=f"Missing keys in achievement intelligence response. Required: {required_keys}. Got: {list(parsed.keys())}",
+        )
+
+    cleaned_experience = []
+    for item in parsed.get("experience_bullets", []):
+        if not isinstance(item, dict):
+            continue
+        original = str(item.get("original", "")).strip()
+        improved = str(item.get("improved", "")).strip()
+        impact_type = str(item.get("impact_type", "")).strip()
+        confidence = str(item.get("confidence", "")).strip()
+        if original or improved:
+            cleaned_experience.append(
+                {
+                    "original": original,
+                    "improved": improved,
+                    "impact_type": impact_type,
+                    "confidence": confidence,
+                }
+            )
+
+    cleaned_projects = []
+    for item in parsed.get("project_bullets", []):
+        if not isinstance(item, dict):
+            continue
+        project_name = str(item.get("project_name", "")).strip()
+        improved_bullets = clean_string_list(item.get("improved_bullets", []))
+        technologies_detected = clean_string_list(item.get("technologies_detected", []))
+        project_value = str(item.get("project_value", "")).strip()
+        if project_name or improved_bullets:
+            cleaned_projects.append(
+                {
+                    "project_name": project_name,
+                    "improved_bullets": improved_bullets,
+                    "technologies_detected": technologies_detected,
+                    "project_value": project_value,
+                }
+            )
+
+    parsed["experience_bullets"] = cleaned_experience
+    parsed["project_bullets"] = cleaned_projects
+    parsed["leadership_bullets"] = clean_string_list(parsed.get("leadership_bullets", []))
+    parsed["transferable_achievement_bullets"] = clean_string_list(parsed.get("transferable_achievement_bullets", []))
+    parsed["missing_impact_questions"] = clean_string_list(parsed.get("missing_impact_questions", []))
+    return parsed
+
+
+def generate_achievement_intelligence(candidate_data, intelligence=None, job_intelligence=None):
+    intelligence = intelligence or {}
+    job_intelligence = job_intelligence or {}
+    system_msg = (
+        "You are an Achievement Intelligence Engine for professional resumes. "
+        "Convert weak responsibilities, projects, internships, and leadership statements into strong, truthful, achievement-oriented bullets. "
+        "Do not invent fake numbers, fake metrics, fake companies, fake dates, fake tools, or fake achievements. "
+        "If impact is implied but not measured, use honest impact-based wording without exaggeration."
+    )
+
+    user_msg = f"""
+Generate achievement intelligence from this candidate information.
+
+Target role: {getattr(candidate_data, 'target_role', '')}
+Target country: {getattr(candidate_data, 'target_country', 'Global')}
+Experience level: {getattr(candidate_data, 'experience_level', '')}
+Career direction: {getattr(candidate_data, 'career_direction', '')}
+
+Resume intelligence:
+Recommended resume model: {intelligence.get('recommended_resume_model', '')}
+Recruiter positioning: {intelligence.get('recruiter_positioning', '')}
+Priority sections: {json.dumps(intelligence.get('priority_sections', []))}
+
+Job description intelligence:
+{json.dumps(job_intelligence) if job_intelligence else 'Not provided'}
+
+Raw experience content:
+Work experience:
+{getattr(candidate_data, 'work_experience', getattr(candidate_data, 'resume_text', ''))}
+
+Internships:
+{getattr(candidate_data, 'internships', '')}
+
+Projects:
+{getattr(candidate_data, 'projects', getattr(candidate_data, 'resume_text', ''))}
+
+Achievements:
+{getattr(candidate_data, 'achievements', '')}
+
+Leadership experience:
+{getattr(candidate_data, 'leadership_experience', '')}
+
+Technical skills:
+{getattr(candidate_data, 'technical_skills', '')}
+
+Transferable skills:
+{getattr(candidate_data, 'transferable_skills', '')}
+
+Return ONLY valid JSON in this exact format:
+{{
+  "experience_bullets": [
+    {{
+      "original": "string",
+      "improved": "string",
+      "impact_type": "Technical | Business | Operational | Customer | Leadership | Academic | Transferable",
+      "confidence": "High | Medium | Low"
+    }}
+  ],
+  "project_bullets": [
+    {{
+      "project_name": "string",
+      "improved_bullets": ["bullet1", "bullet2"],
+      "technologies_detected": ["tech1", "tech2"],
+      "project_value": "string"
+    }}
+  ],
+  "leadership_bullets": ["bullet1", "bullet2"],
+  "transferable_achievement_bullets": ["bullet1", "bullet2"],
+  "missing_impact_questions": ["question1", "question2"]
+}}
+
+Rules:
+1. Do not invent numbers.
+2. If no measurable result is provided, use impact-based wording without fake metrics.
+3. Convert responsibilities into achievement-style bullets.
+4. Use strong action verbs.
+5. Avoid generic wording.
+6. Avoid phrases like responsible for, worked on, helped with, involved in.
+7. Do not overstate fresher experience.
+8. For students and freshers, convert projects, internships, and academic work into professional bullets.
+9. For career switchers, convert previous experience into transferable achievements.
+10. For senior professionals, emphasize leadership, ownership, strategic impact, team management, operations, delivery, and process improvement where supported.
+"""
+
+    resp = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {"role": "system", "content": system_msg},
+            {"role": "user", "content": user_msg},
+        ],
+        temperature=0.15,
+    )
+    content = (resp.choices[0].message.content or "").strip()
+    parsed = parse_json_response(content)
+    return normalize_achievement_intelligence(parsed)
+
+
 def recruiter_review(resume, candidate_data, intelligence):
     system_msg = (
         "You are an experienced recruiter and hiring reviewer with 15+ years of experience. "
@@ -2009,6 +2201,11 @@ def analyze_job_description(data: JobDescriptionRequest):
     return analyze_job_description_intelligence(data)
 
 
+@app.post("/generate-achievements", response_model=AchievementIntelligenceOutput)
+def generate_achievements(data: AchievementRequest):
+    return generate_achievement_intelligence(data)
+
+
 @app.post("/optimize-resume", response_model=ResumeOptimizerOutput)
 def optimize_resume(data: ResumeOptimizerInput):
     country_rules = get_country_rules(data.target_country)
@@ -2017,6 +2214,24 @@ def optimize_resume(data: ResumeOptimizerInput):
     if str(data.job_description or "").strip():
         job_intelligence = analyze_job_description_intelligence(JobDescriptionRequest(job_title=data.target_role, company_name="", country=data.target_country, industry="", job_description=data.job_description))
         skill_match = compare_candidate_to_job_description(data, job_intelligence)
+    achievement_intelligence = generate_achievement_intelligence(
+        AchievementRequest(
+            target_role=data.target_role,
+            target_country=data.target_country,
+            experience_level="",
+            career_direction="",
+            work_experience=data.resume_text,
+            internships="",
+            projects=data.resume_text,
+            achievements="",
+            leadership_experience="",
+            technical_skills="",
+            transferable_skills="",
+            resume_text=data.resume_text,
+        ),
+        intelligence=None,
+        job_intelligence=job_intelligence,
+    )
     system_msg = (
         "You are a senior professional resume writer, ATS optimization specialist, and resume rebuilder with 15 years of experience. "
         "Your job is to analyze an existing resume and rebuild it into a stronger, recruiter-quality, ATS-friendly resume. "
@@ -2044,6 +2259,8 @@ Job Description Intelligence:
 {json.dumps(job_intelligence) if job_intelligence else "Not provided"}
 Skill Match Intelligence:
 {json.dumps(skill_match)}
+Achievement Intelligence:
+{json.dumps(achievement_intelligence)}
 
 Country Rules Engine:
 {country_rules}
@@ -2060,11 +2277,12 @@ Tasks:
 6. If a job description is provided, prioritize matching terminology where truthful.
 7. Group skills and competencies in a cleaner, more recruiter-friendly structure.
 8. Strengthen weak bullet points into clearer impact-oriented statements only when supported by the user's content.
-9. Do not invent facts.
-10. Do not use emojis.
-11. Do not include Template labels or developer/testing language.
-12. Group skills into logical clusters instead of listing them as a flat, repetitive skills block.
-13. Keep length discipline appropriate to the likely seniority level suggested by the resume.
+9. Reuse the Achievement Intelligence to rebuild weak responsibilities, projects, and experience bullets into stronger truthful statements.
+10. Do not invent facts.
+11. Do not use emojis.
+12. Do not include Template labels or developer/testing language.
+13. Group skills into logical clusters instead of listing them as a flat, repetitive skills block.
+14. Keep length discipline appropriate to the likely seniority level suggested by the resume.
 
 Resume rebuild rules:
 - Include a clear header/contact section if details exist in the pasted resume
@@ -2169,6 +2387,7 @@ def build_resume(data: ResumeIntelligenceInput):
         skill_match = compare_candidate_to_job_description(data, job_intelligence)
         if job_intelligence.get("recommended_resume_model"):
             intelligence["recommended_resume_model"] = job_intelligence["recommended_resume_model"]
+    achievement_intelligence = generate_achievement_intelligence(data, intelligence, job_intelligence)
     section_order = get_resume_section_order(intelligence["recommended_resume_model"])
 
     system_msg = (
@@ -2261,6 +2480,8 @@ Job Description Intelligence:
 {json.dumps(job_intelligence) if job_intelligence else "Not provided"}
 Skill Match Intelligence:
 {json.dumps(skill_match)}
+Achievement Intelligence:
+{json.dumps(achievement_intelligence)}
 
 Resume Writing Engine V2 Rules:
 1. Write like a premium resume-writing agency, not a generic AI assistant.
@@ -2279,6 +2500,8 @@ Resume Writing Engine V2 Rules:
 14. When job description intelligence is provided, align the title, summary, keywords, and evidence to employer priorities without inventing missing skills.
 15. Never include Template labels, preview, backend, or test wording.
 16. Keep the final resume length aligned to the recommended length rule.
+17. Use the Achievement Intelligence output to improve experience, internship, project, leadership, and transferable-skill bullets while staying fully truthful.
+18. When achievement bullets are provided, prefer those improved statements over the weaker raw wording.
 
 Return ONLY valid JSON in this exact format:
 {{
@@ -2372,6 +2595,7 @@ Rewrite Rules:
 - Remove placeholders.
 - Keep the resume truthful.
 - Preserve grouped skills.
+- Preserve and strengthen the achievement-oriented bullet quality.
 - Improve recruiter readability within 10 seconds.
 - Keep the output premium, concise, and ATS-friendly.
 - Return the same JSON format only.
