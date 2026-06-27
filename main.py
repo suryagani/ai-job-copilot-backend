@@ -221,6 +221,21 @@ class AchievementRequest(BaseModel):
     resume_text: str = ""
 
 
+class ATSAnalysisRequest(BaseModel):
+    target_role: str
+    target_country: str = "Global"
+    target_industry: str = ""
+    experience_level: str = ""
+    career_direction: str = ""
+    resume_text: str = ""
+    job_description: str = ""
+    technical_skills: str = ""
+    transferable_skills: str = ""
+    tools_software: str = ""
+    projects: str = ""
+    work_experience: str = ""
+
+
 class ResumeIntelligenceRequest(BaseModel):
     target_role: str
     target_country: str = "Global"
@@ -344,6 +359,27 @@ class AchievementIntelligenceOutput(BaseModel):
     missing_impact_questions: list[str]
 
 
+class ATSKeywordPlacementOutput(BaseModel):
+    summary: list[str]
+    skills: list[str]
+    experience: list[str]
+    projects: list[str]
+
+
+class ATSIntelligenceOutput(BaseModel):
+    ats_score_estimate: int
+    ats_readiness_level: str
+    required_keywords: list[str]
+    matching_keywords: list[str]
+    missing_keywords: list[str]
+    keyword_placement_strategy: ATSKeywordPlacementOutput
+    formatting_risks: list[str]
+    section_risks: list[str]
+    keyword_stuffing_risk: str
+    ats_improvement_actions: list[str]
+    ats_strategy_note: str
+
+
 class ResumeBuildOutput(BaseModel):
     recommended_resume_style: str
     recommendation_reason: str
@@ -383,6 +419,11 @@ class ResumeBuildOutput(BaseModel):
     missing_required_skills: list[str]
     missing_preferred_skills: list[str]
     resume_alignment_strategy: str
+    ats_score_estimate: int
+    ats_readiness_level: str
+    matching_keywords: list[str]
+    missing_keywords: list[str]
+    ats_improvement_actions: list[str]
 
 
 class ResumeOptimizerOutput(BaseModel):
@@ -393,7 +434,11 @@ class ResumeOptimizerOutput(BaseModel):
     strengths: list[str]
     weaknesses_found: list[str]
     improvement_suggestions: list[str]
-    ats_score_estimate: str
+    ats_score_estimate: int
+    ats_readiness_level: str
+    matching_keywords: list[str]
+    missing_keywords: list[str]
+    ats_improvement_actions: list[str]
     interview_probability: int
     recruiter_confidence: int
     first_impression: str
@@ -1736,6 +1781,238 @@ Rules:
     return normalize_achievement_intelligence(parsed)
 
 
+def generate_ats_intelligence(candidate_data, resume_text="", job_intelligence=None, intelligence=None, skill_intelligence=None):
+    job_intelligence = job_intelligence or {}
+    intelligence = intelligence or {}
+    skill_intelligence = skill_intelligence or {}
+
+    target_role = str(getattr(candidate_data, "target_role", "")).strip()
+    target_country = str(getattr(candidate_data, "target_country", "Global")).strip()
+    target_industry = str(getattr(candidate_data, "target_industry", "")).strip()
+    experience_level = str(getattr(candidate_data, "experience_level", "")).strip()
+    career_direction = str(getattr(candidate_data, "career_direction", "")).strip()
+
+    role_targets = get_role_skill_targets(target_role, career_direction, target_industry)
+    library_keywords = []
+    for _, keywords in role_targets.get("categories", []):
+        library_keywords.extend(keywords)
+    library_keywords.extend(role_targets.get("missing", []))
+
+    if job_intelligence:
+        required_keywords = clean_string_list(
+            job_intelligence.get("required_skills", [])
+            + job_intelligence.get("technical_skills", [])
+            + job_intelligence.get("tools_and_platforms", [])
+            + job_intelligence.get("soft_skills", [])
+            + job_intelligence.get("ats_keywords", [])
+        )
+    else:
+        required_keywords = clean_string_list(
+            intelligence.get("ats_keyword_strategy", [])
+            + library_keywords
+            + [target_role, target_industry]
+        )
+
+    deduped_required = []
+    seen_required = set()
+    for keyword in required_keywords:
+        key = keyword.lower()
+        if not key or key in seen_required:
+            continue
+        seen_required.add(key)
+        deduped_required.append(title_case_skill(keyword))
+    required_keywords = deduped_required[:18]
+
+    candidate_text = "\n".join(
+        [
+            resume_text,
+            getattr(candidate_data, "technical_skills", ""),
+            getattr(candidate_data, "transferable_skills", ""),
+            getattr(candidate_data, "tools_software", ""),
+            getattr(candidate_data, "projects", ""),
+            getattr(candidate_data, "work_experience", ""),
+        ]
+    ).lower()
+    candidate_skill_pool = split_skills_text(
+        getattr(candidate_data, "technical_skills", ""),
+        getattr(candidate_data, "transferable_skills", ""),
+        getattr(candidate_data, "tools_software", ""),
+    )
+    candidate_skill_map = {skill.lower(): title_case_skill(skill) for skill in candidate_skill_pool}
+
+    matching_keywords = []
+    missing_keywords = []
+    for keyword in required_keywords:
+        keyword_lower = keyword.lower()
+        matched_value = None
+        for candidate_lower, original in candidate_skill_map.items():
+            if keyword_lower in candidate_lower or candidate_lower in keyword_lower:
+                matched_value = original
+                break
+        if not matched_value and keyword_lower and keyword_lower in candidate_text:
+            matched_value = keyword
+        if matched_value:
+            matching_keywords.append(title_case_skill(keyword if keyword_lower in candidate_text else matched_value))
+        else:
+            missing_keywords.append(keyword)
+
+    matching_keywords = clean_string_list(matching_keywords)
+    missing_keywords = clean_string_list(missing_keywords)
+
+    def dedupe_preserve(values: list[str]) -> list[str]:
+        cleaned = []
+        seen = set()
+        for value in clean_string_list(values):
+            key = value.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            cleaned.append(value)
+        return cleaned
+
+    if not resume_text:
+        base_summary = matching_keywords[:4]
+        base_skills = matching_keywords[:6]
+        base_experience = matching_keywords[:4]
+        base_projects = matching_keywords[:4]
+    else:
+        lowered_resume = resume_text.lower()
+        present = [keyword for keyword in required_keywords if keyword.lower() in lowered_resume]
+        absent_but_owned = [keyword for keyword in matching_keywords if keyword.lower() not in lowered_resume]
+        base_summary = clean_string_list(present[:3] + absent_but_owned[:2])
+        base_skills = clean_string_list(present[:4] + absent_but_owned[:3])
+        base_experience = clean_string_list(present[:4])
+        base_projects = clean_string_list(
+            [keyword for keyword in present if any(token in keyword.lower() for token in ["python", "sql", "docker", "linux", "verilog", "cadence", "aws", "excel", "power bi", "analysis", "design"])]
+        )[:4]
+
+    if experience_level.strip().lower() in {"student", "fresher", "1-3 years", "1â€“3 years"}:
+        keyword_placement_strategy = {
+            "summary": dedupe_preserve(base_summary)[:4],
+            "skills": dedupe_preserve(base_skills)[:6],
+            "experience": dedupe_preserve(base_experience)[:3],
+            "projects": dedupe_preserve(base_projects[:4] + matching_keywords[:2])[:5],
+        }
+    else:
+        keyword_placement_strategy = {
+            "summary": dedupe_preserve(base_summary)[:3],
+            "skills": dedupe_preserve(base_skills)[:6],
+            "experience": dedupe_preserve(base_experience[:5] + matching_keywords[:2])[:6],
+            "projects": dedupe_preserve(base_projects)[:4],
+        }
+
+    formatting_risks = []
+    if resume_text:
+        for marker, message in [
+            ("|", "Possible table-style formatting detected; ATS parsers can misread table layouts."),
+            ("•", "Decorative bullet characters may reduce ATS consistency in some systems."),
+            ("★", "Decorative symbols or icons can create ATS parsing risk."),
+            ("\t", "Tab-based alignment can create ATS formatting issues."),
+        ]:
+            if marker in resume_text:
+                formatting_risks.append(message)
+        if any(token in resume_text.lower() for token in ["header", "footer", "text box", "icon"]):
+            formatting_risks.append("Resume may rely on headers, footers, icons, or text-box style content that ATS tools can miss.")
+    formatting_risks = clean_string_list(formatting_risks)
+
+    lowered_resume = str(resume_text or "").lower()
+    section_risks = []
+    standard_headings = ["professional summary", "skills", "experience", "projects", "education", "certifications"]
+    if resume_text:
+        if not any(heading in lowered_resume for heading in ["professional summary", "executive summary", "summary"]):
+            section_risks.append("Professional Summary heading is missing or non-standard.")
+        if not any(heading in lowered_resume for heading in ["skills", "core skills", "core competencies", "technical skills"]):
+            section_risks.append("Skills section is missing or not clearly labeled.")
+        if not any(heading in lowered_resume for heading in ["experience", "professional experience", "relevant experience"]):
+            section_risks.append("Experience section is missing or not clearly labeled.")
+        if getattr(candidate_data, "projects", "") and "projects" not in lowered_resume:
+            section_risks.append("Projects content exists but the Projects section is not clearly surfaced.")
+        if getattr(candidate_data, "technical_skills", "") and skill_intelligence and len(clean_skill_groups(skill_intelligence.get("skill_groups", []))) == 0:
+            section_risks.append("Skills are not grouped clearly, which can weaken ATS and recruiter readability.")
+    else:
+        if experience_level.strip().lower() in {"student", "fresher"}:
+            section_risks.append("For fresher resumes, Projects and Skills sections should appear prominently for ATS alignment.")
+    section_risks = clean_string_list(section_risks)
+
+    keyword_stuffing_risk = "Low"
+    if resume_text:
+        overused = 0
+        for keyword in required_keywords[:12]:
+            count = lowered_resume.count(keyword.lower())
+            if count >= 5:
+                overused += 1
+        if overused >= 3:
+            keyword_stuffing_risk = "High"
+        elif overused >= 1:
+            keyword_stuffing_risk = "Medium"
+
+    total_required = len(required_keywords)
+    match_ratio = len(set(keyword.lower() for keyword in matching_keywords)) / max(1, total_required)
+    base_score = int(round(match_ratio * 100))
+    ats_score_estimate = base_score
+    ats_score_estimate -= min(12, len(formatting_risks) * 4)
+    ats_score_estimate -= min(12, len(section_risks) * 4)
+    if keyword_stuffing_risk == "Medium":
+        ats_score_estimate -= 6
+    elif keyword_stuffing_risk == "High":
+        ats_score_estimate -= 14
+    ats_score_estimate = max(35 if matching_keywords else 20, min(98, ats_score_estimate))
+
+    if ats_score_estimate >= 90:
+        ats_readiness_level = "Excellent"
+    elif ats_score_estimate >= 78:
+        ats_readiness_level = "High"
+    elif ats_score_estimate >= 60:
+        ats_readiness_level = "Medium"
+    else:
+        ats_readiness_level = "Low"
+
+    ats_improvement_actions = []
+    if missing_keywords:
+        ats_improvement_actions.append(
+            f"Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: {', '.join(missing_keywords[:6])}."
+        )
+    if keyword_placement_strategy["summary"]:
+        ats_improvement_actions.append(
+            f"Place the strongest role keywords naturally in the Professional Summary: {', '.join(keyword_placement_strategy['summary'][:4])}."
+        )
+    if keyword_placement_strategy["skills"]:
+        ats_improvement_actions.append(
+            f"Keep the Skills section ATS-safe and grouped, highlighting: {', '.join(keyword_placement_strategy['skills'][:5])}."
+        )
+    if formatting_risks:
+        ats_improvement_actions.append("Use simple ATS-safe formatting with standard headings and avoid tables, icons, columns, and decorative layouts.")
+    if section_risks:
+        ats_improvement_actions.append("Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.")
+    if job_intelligence:
+        ats_strategy_note = "Prioritize employer keywords from the job description, but only where the candidate has real supporting evidence."
+    else:
+        ats_strategy_note = "Use target-role and industry terminology naturally across summary, grouped skills, projects, and experience without keyword stuffing."
+    if experience_level.strip().lower() in {"student", "fresher"}:
+        ats_strategy_note += " For fresher profiles, concentrate more ATS evidence in Summary, Skills, Projects, and Education."
+    elif str(getattr(candidate_data, "career_change", "No")).strip().lower() in {"yes", "true", "1"}:
+        ats_strategy_note += " For career-change profiles, emphasize transferable language that is supported by real experience."
+
+    return {
+        "ats_score_estimate": ats_score_estimate,
+        "ats_readiness_level": ats_readiness_level,
+        "required_keywords": required_keywords,
+        "matching_keywords": dedupe_preserve(matching_keywords)[:12],
+        "missing_keywords": dedupe_preserve(missing_keywords)[:12],
+        "keyword_placement_strategy": {
+            "summary": clean_string_list(keyword_placement_strategy["summary"])[:6],
+            "skills": clean_string_list(keyword_placement_strategy["skills"])[:8],
+            "experience": clean_string_list(keyword_placement_strategy["experience"])[:6],
+            "projects": clean_string_list(keyword_placement_strategy["projects"])[:6],
+        },
+        "formatting_risks": formatting_risks[:8],
+        "section_risks": section_risks[:8],
+        "keyword_stuffing_risk": keyword_stuffing_risk,
+        "ats_improvement_actions": clean_string_list(ats_improvement_actions)[:8],
+        "ats_strategy_note": ats_strategy_note,
+    }
+
+
 def recruiter_review(resume, candidate_data, intelligence):
     system_msg = (
         "You are an experienced recruiter and hiring reviewer with 15+ years of experience. "
@@ -2201,6 +2478,29 @@ def analyze_job_description(data: JobDescriptionRequest):
     return analyze_job_description_intelligence(data)
 
 
+@app.post("/analyze-ats", response_model=ATSIntelligenceOutput)
+def analyze_ats(data: ATSAnalysisRequest):
+    job_intelligence = None
+    if str(data.job_description or "").strip():
+        job_intelligence = analyze_job_description_intelligence(
+            JobDescriptionRequest(
+                job_title=data.target_role,
+                company_name="",
+                country=data.target_country,
+                industry=data.target_industry,
+                job_description=data.job_description,
+            )
+        )
+    skill_intelligence = generate_skill_intelligence(data, intelligence=None)
+    return generate_ats_intelligence(
+        data,
+        resume_text=data.resume_text,
+        job_intelligence=job_intelligence,
+        intelligence=None,
+        skill_intelligence=skill_intelligence,
+    )
+
+
 @app.post("/generate-achievements", response_model=AchievementIntelligenceOutput)
 def generate_achievements(data: AchievementRequest):
     return generate_achievement_intelligence(data)
@@ -2214,6 +2514,26 @@ def optimize_resume(data: ResumeOptimizerInput):
     if str(data.job_description or "").strip():
         job_intelligence = analyze_job_description_intelligence(JobDescriptionRequest(job_title=data.target_role, company_name="", country=data.target_country, industry="", job_description=data.job_description))
         skill_match = compare_candidate_to_job_description(data, job_intelligence)
+    ats_intelligence = generate_ats_intelligence(
+        ATSAnalysisRequest(
+            target_role=data.target_role,
+            target_country=data.target_country,
+            target_industry="",
+            experience_level="",
+            career_direction="",
+            resume_text=data.resume_text,
+            job_description=data.job_description,
+            technical_skills="",
+            transferable_skills="",
+            tools_software="",
+            projects=data.resume_text,
+            work_experience=data.resume_text,
+        ),
+        resume_text=data.resume_text,
+        job_intelligence=job_intelligence,
+        intelligence=None,
+        skill_intelligence=None,
+    )
     achievement_intelligence = generate_achievement_intelligence(
         AchievementRequest(
             target_role=data.target_role,
@@ -2259,6 +2579,8 @@ Job Description Intelligence:
 {json.dumps(job_intelligence) if job_intelligence else "Not provided"}
 Skill Match Intelligence:
 {json.dumps(skill_match)}
+ATS Intelligence:
+{json.dumps(ats_intelligence)}
 Achievement Intelligence:
 {json.dumps(achievement_intelligence)}
 
@@ -2283,6 +2605,8 @@ Tasks:
 12. Do not include Template labels or developer/testing language.
 13. Group skills into logical clusters instead of listing them as a flat, repetitive skills block.
 14. Keep length discipline appropriate to the likely seniority level suggested by the resume.
+15. Use the ATS Intelligence placement strategy to improve keyword coverage naturally without keyword stuffing.
+16. Missing keywords may guide suggestions, but must never be added as fake skills or unsupported experience.
 
 Resume rebuild rules:
 - Include a clear header/contact section if details exist in the pasted resume
@@ -2315,7 +2639,11 @@ Return ONLY valid JSON in this exact format:
   "strengths": ["strength1", "strength2"],
   "weaknesses_found": ["weakness1", "weakness2"],
   "improvement_suggestions": ["suggestion1", "suggestion2"],
-  "ats_score_estimate": "string"
+  "ats_score_estimate": 0,
+  "ats_readiness_level": "string",
+  "matching_keywords": ["keyword1", "keyword2"],
+  "missing_keywords": ["keyword1", "keyword2"],
+  "ats_improvement_actions": ["action1", "action2"]
 }}
 """
 
@@ -2340,6 +2668,10 @@ Return ONLY valid JSON in this exact format:
         "weaknesses_found",
         "improvement_suggestions",
         "ats_score_estimate",
+        "ats_readiness_level",
+        "matching_keywords",
+        "missing_keywords",
+        "ats_improvement_actions",
     }
     if not required_keys.issubset(parsed.keys()):
         raise HTTPException(
@@ -2355,12 +2687,54 @@ Return ONLY valid JSON in this exact format:
         parsed["weaknesses_found"] = []
     if not isinstance(parsed["improvement_suggestions"], list):
         parsed["improvement_suggestions"] = []
+    if not isinstance(parsed["matching_keywords"], list):
+        parsed["matching_keywords"] = []
+    if not isinstance(parsed["missing_keywords"], list):
+        parsed["missing_keywords"] = []
+    if not isinstance(parsed["ats_improvement_actions"], list):
+        parsed["ats_improvement_actions"] = []
 
     parsed["optimized_resume"] = sanitize_resume_text(str(parsed.get("optimized_resume", "")).strip())
+    try:
+        parsed["ats_score_estimate"] = int(parsed.get("ats_score_estimate", 0))
+    except Exception:
+        parsed["ats_score_estimate"] = 0
+    parsed["ats_readiness_level"] = str(parsed.get("ats_readiness_level", "")).strip()
     parsed["ats_keywords"] = [str(x).strip() for x in parsed["ats_keywords"] if str(x).strip()]
     parsed["strengths"] = [str(x).strip() for x in parsed["strengths"] if str(x).strip()]
     parsed["weaknesses_found"] = [str(x).strip() for x in parsed["weaknesses_found"] if str(x).strip()]
     parsed["improvement_suggestions"] = [str(x).strip() for x in parsed["improvement_suggestions"] if str(x).strip()]
+    parsed["matching_keywords"] = [str(x).strip() for x in parsed["matching_keywords"] if str(x).strip()]
+    parsed["missing_keywords"] = [str(x).strip() for x in parsed["missing_keywords"] if str(x).strip()]
+    parsed["ats_improvement_actions"] = [str(x).strip() for x in parsed["ats_improvement_actions"] if str(x).strip()]
+
+    final_ats = generate_ats_intelligence(
+        ATSAnalysisRequest(
+            target_role=data.target_role,
+            target_country=data.target_country,
+            target_industry="",
+            experience_level="",
+            career_direction="",
+            resume_text=parsed["optimized_resume"],
+            job_description=data.job_description,
+            technical_skills="",
+            transferable_skills="",
+            tools_software="",
+            projects=parsed["optimized_resume"],
+            work_experience=parsed["optimized_resume"],
+        ),
+        resume_text=parsed["optimized_resume"],
+        job_intelligence=job_intelligence,
+        intelligence=None,
+        skill_intelligence=None,
+    )
+    parsed["ats_score_estimate"] = final_ats["ats_score_estimate"]
+    parsed["ats_readiness_level"] = final_ats["ats_readiness_level"]
+    parsed["matching_keywords"] = final_ats["matching_keywords"]
+    parsed["missing_keywords"] = final_ats["missing_keywords"]
+    parsed["ats_improvement_actions"] = final_ats["ats_improvement_actions"]
+    parsed["ats_keywords"] = clean_string_list(parsed["ats_keywords"] or final_ats["required_keywords"])
+    parsed["improvement_suggestions"] = clean_string_list(parsed["improvement_suggestions"] + final_ats["ats_improvement_actions"])
 
     recruiter_context = {
         "recommended_resume_style": parsed.get("recommended_resume_style", ""),
@@ -2387,6 +2761,13 @@ def build_resume(data: ResumeIntelligenceInput):
         skill_match = compare_candidate_to_job_description(data, job_intelligence)
         if job_intelligence.get("recommended_resume_model"):
             intelligence["recommended_resume_model"] = job_intelligence["recommended_resume_model"]
+    ats_intelligence = generate_ats_intelligence(
+        data,
+        resume_text="",
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        skill_intelligence=skill_intelligence,
+    )
     achievement_intelligence = generate_achievement_intelligence(data, intelligence, job_intelligence)
     section_order = get_resume_section_order(intelligence["recommended_resume_model"])
 
@@ -2480,6 +2861,8 @@ Job Description Intelligence:
 {json.dumps(job_intelligence) if job_intelligence else "Not provided"}
 Skill Match Intelligence:
 {json.dumps(skill_match)}
+ATS Intelligence:
+{json.dumps(ats_intelligence)}
 Achievement Intelligence:
 {json.dumps(achievement_intelligence)}
 
@@ -2502,6 +2885,8 @@ Resume Writing Engine V2 Rules:
 16. Keep the final resume length aligned to the recommended length rule.
 17. Use the Achievement Intelligence output to improve experience, internship, project, leadership, and transferable-skill bullets while staying fully truthful.
 18. When achievement bullets are provided, prefer those improved statements over the weaker raw wording.
+19. Use the ATS Intelligence placement guidance to place matching keywords naturally in the right sections without keyword stuffing.
+20. Never add missing keywords as fake skills; leave them for improvement suggestions only.
 
 Return ONLY valid JSON in this exact format:
 {{
@@ -2526,7 +2911,12 @@ Return ONLY valid JSON in this exact format:
   "writing_quality_score": "string",
   "resume_readability": "string",
   "ats_readiness": "string",
-  "resume_confidence": "string"
+  "resume_confidence": "string",
+  "ats_score_estimate": 0,
+  "ats_readiness_level": "string",
+  "matching_keywords": ["keyword1", "keyword2"],
+  "missing_keywords": ["keyword1", "keyword2"],
+  "ats_improvement_actions": ["action1", "action2"]
 }}
 """
 
@@ -2559,6 +2949,11 @@ Return ONLY valid JSON in this exact format:
             "resume_readability",
             "ats_readiness",
             "resume_confidence",
+            "ats_score_estimate",
+            "ats_readiness_level",
+            "matching_keywords",
+            "missing_keywords",
+            "ats_improvement_actions",
         }
         if not required_keys.issubset(parsed.keys()):
             raise HTTPException(
@@ -2606,6 +3001,19 @@ Rewrite Rules:
         quality_report = review_resume_quality(parsed["full_resume"], data, intelligence, skill_intelligence)
 
     final_response = normalize_build_resume_response(parsed, intelligence, skill_intelligence, quality_report, quality_fixes_applied)
+    final_ats = generate_ats_intelligence(
+        data,
+        resume_text=final_response["full_resume"],
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        skill_intelligence=skill_intelligence,
+    )
+    final_response["ats_score_estimate"] = final_ats["ats_score_estimate"]
+    final_response["ats_readiness_level"] = final_ats["ats_readiness_level"]
+    final_response["matching_keywords"] = final_ats["matching_keywords"]
+    final_response["missing_keywords"] = final_ats["missing_keywords"]
+    final_response["ats_improvement_actions"] = final_ats["ats_improvement_actions"]
+    final_response["improvement_suggestions"] = clean_string_list(final_response["improvement_suggestions"] + final_ats["ats_improvement_actions"])
     final_response.update(skill_match)
     recruiter_context = dict(intelligence)
     recruiter_context.update({
