@@ -18,6 +18,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.enums import TA_LEFT
 from career_knowledge_engine import generate_career_knowledge
+from resume_designer import render_resume_package
+from resume_designer.regression_runner import run_regression_suite
 from resume_models import select_resume_model
 from resume_models.runtime import configure_runtime
 
@@ -468,6 +470,11 @@ class ResumeBuildOutput(BaseModel):
     personalization_score: int
     personalization_strategy: str
     personalization_notes: list[str]
+    resume_pdf_path: str
+    resume_docx_path: str
+    selected_theme: str
+    page_count: int
+    render_quality_score: int
 
 
 class ResumeOptimizerOutput(BaseModel):
@@ -486,6 +493,11 @@ class ResumeOptimizerOutput(BaseModel):
     personalization_score: int
     personalization_strategy: str
     personalization_notes: list[str]
+    resume_pdf_path: str
+    resume_docx_path: str
+    selected_theme: str
+    page_count: int
+    render_quality_score: int
     interview_probability: int
     recruiter_confidence: int
     first_impression: str
@@ -530,6 +542,8 @@ class ResumeExportInput(BaseModel):
     target_role: str = ""
     target_country: str = "United Kingdom"
     sections: list[ResumeExportSection]
+    selected_theme: str = ""
+    experience_level: str = ""
 
 
 class HiringMessageInput(BaseModel):
@@ -608,6 +622,75 @@ def get_career_knowledge_context(candidate_data, **overrides) -> dict:
         "experience_level": overrides.get("experience_level", getattr(candidate_data, "experience_level", "")),
     }
     return generate_career_knowledge(profile)
+
+
+def resume_text_to_sections(resume_text: str) -> list[ResumeExportSection]:
+    known_headings = {
+        "professional summary",
+        "executive summary",
+        "summary",
+        "education",
+        "projects",
+        "project experience",
+        "technical skills",
+        "core skills",
+        "core competencies",
+        "skills",
+        "experience",
+        "professional experience",
+        "relevant experience",
+        "internships",
+        "certifications",
+        "leadership & achievements",
+        "leadership and achievements",
+        "achievements",
+        "career highlights",
+        "leadership competencies",
+        "strategic achievements",
+    }
+    lines = [line.rstrip() for line in str(resume_text or "").splitlines()]
+    if not lines:
+        return []
+
+    sections: list[ResumeExportSection] = []
+    current_heading = "Professional Summary"
+    current_lines: list[str] = []
+    started = False
+
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        normalized = stripped.lower()
+        if normalized in known_headings or (stripped.isupper() and len(stripped.split()) <= 4):
+            if current_lines:
+                sections.append(ResumeExportSection(heading=current_heading.title(), body="\n".join(current_lines)))
+            current_heading = stripped.title()
+            current_lines = []
+            started = True
+            continue
+        if not started and "|" in stripped:
+            continue
+        if not started and stripped == lines[0].strip():
+            continue
+        current_lines.append(stripped)
+        started = True
+
+    if current_lines:
+        sections.append(ResumeExportSection(heading=current_heading.title(), body="\n".join(current_lines)))
+
+    return sections
+
+
+def build_export_input_from_resume_response(response: dict, candidate_data, resume_key: str = "full_resume") -> ResumeExportInput:
+    return ResumeExportInput(
+        full_name=str(getattr(candidate_data, "full_name", "")).strip(),
+        target_role=str(getattr(candidate_data, "target_role", "")).strip(),
+        target_country=str(getattr(candidate_data, "target_country", "United Kingdom")).strip(),
+        sections=resume_text_to_sections(response.get(resume_key, "")),
+        selected_theme=str(response.get("selected_theme", "")).strip(),
+        experience_level=str(getattr(candidate_data, "experience_level", "")).strip(),
+    )
 
 
 def get_country_template_settings(country: str) -> dict:
@@ -2402,7 +2485,7 @@ def normalize_export_sections(sections: list[ResumeExportSection], country: str)
     return normalized
 
 
-def build_docx_resume(export: ResumeExportInput) -> BytesIO:
+def build_docx_resume_legacy(export: ResumeExportInput) -> BytesIO:
     settings = get_country_template_settings(export.target_country)
     sections = normalize_export_sections(export.sections, export.target_country)
 
@@ -2444,7 +2527,7 @@ def build_docx_resume(export: ResumeExportInput) -> BytesIO:
     return buffer
 
 
-def build_pdf_resume(export: ResumeExportInput) -> BytesIO:
+def build_pdf_resume_legacy(export: ResumeExportInput) -> BytesIO:
     settings = get_country_template_settings(export.target_country)
     sections = normalize_export_sections(export.sections, export.target_country)
     buffer = BytesIO()
@@ -2518,6 +2601,16 @@ def build_pdf_resume(export: ResumeExportInput) -> BytesIO:
     doc.build(story)
     buffer.seek(0)
     return buffer
+
+
+def build_docx_resume(export: ResumeExportInput) -> BytesIO:
+    rendered = render_resume_package(export, preferred_theme=export.selected_theme)
+    return rendered["docx_buffer"]
+
+
+def build_pdf_resume(export: ResumeExportInput) -> BytesIO:
+    rendered = render_resume_package(export, preferred_theme=export.selected_theme)
+    return rendered["pdf_buffer"]
 
 
 def build_job_alert_preview(data: JobAlertInput) -> tuple[str, str]:
@@ -3153,6 +3246,24 @@ Return ONLY valid JSON in this exact format:
     parsed["personalization_notes"] = clean_string_list(
         parsed["personalization_notes"] + [f"Overall: {final_personalization['overall_personalization_note']}"]
     )
+    optimized_export = ResumeExportInput(
+        full_name="",
+        target_role=data.target_role,
+        target_country=data.target_country,
+        sections=resume_text_to_sections(parsed["optimized_resume"]),
+        selected_theme="",
+        experience_level="",
+    )
+    rendered = render_resume_package(
+        optimized_export,
+        resume_model=parsed["recommended_resume_style"],
+        preferred_theme="",
+    )
+    parsed["resume_pdf_path"] = rendered["resume_pdf_path"]
+    parsed["resume_docx_path"] = rendered["resume_docx_path"]
+    parsed["selected_theme"] = rendered["selected_theme"]
+    parsed["page_count"] = rendered["page_count"]
+    parsed["render_quality_score"] = rendered["render_quality_score"]
     return parsed
 
 
@@ -3301,6 +3412,16 @@ def build_resume(data: ResumeIntelligenceInput):
     })
     recruiter_feedback = recruiter_review(final_response["full_resume"], data, recruiter_context)
     final_response.update(recruiter_feedback)
+    rendered = render_resume_package(
+        build_export_input_from_resume_response(final_response, data, "full_resume"),
+        resume_model=final_response["recommended_resume_style"],
+        preferred_theme="",
+    )
+    final_response["resume_pdf_path"] = rendered["resume_pdf_path"]
+    final_response["resume_docx_path"] = rendered["resume_docx_path"]
+    final_response["selected_theme"] = rendered["selected_theme"]
+    final_response["page_count"] = rendered["page_count"]
+    final_response["render_quality_score"] = rendered["render_quality_score"]
     return final_response
 
 
