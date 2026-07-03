@@ -19,6 +19,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.enums import TA_LEFT
 from career_knowledge_engine import generate_career_knowledge
 from cover_letter import generate_cover_letter_package
+from linkedin_engine import generate_linkedin_optimization_package
 from resume_designer import render_resume_package
 from resume_designer.regression_runner import run_regression_suite
 from resume_models import select_resume_model
@@ -306,6 +307,31 @@ class ResumeIntelligenceInput(BaseModel):
     preferred_resume_style: str = "Auto Recommend"
     job_description: str = ""
     company_name: str = ""
+
+
+class LinkedInOptimizationInput(ResumeIntelligenceInput):
+    resume_text: str = ""
+    current_linkedin: str = ""
+    current_headline: str = ""
+    current_about: str = ""
+
+
+class LinkedInOptimizationOutput(BaseModel):
+    professional_headline: str
+    about_section: str
+    experience_rewrite: list[str]
+    featured_section: list[str]
+    skills_order: list[str]
+    top_50_recruiter_keywords: list[str]
+    headline_score: int
+    linkedin_score: int
+    recruiter_visibility_score: int
+    creator_profile_suggestions: list[str]
+    networking_suggestions: list[str]
+    quality_notes: list[str]
+    visibility_explanation: str
+    linkedin_report_pdf_path: str
+    linkedin_report_docx_path: str
 
 
 class ResumeSkillGroup(BaseModel):
@@ -2918,6 +2944,69 @@ Return ONLY valid JSON in this exact format:
 
     parsed["top_keywords"] = [str(x).strip() for x in parsed["top_keywords"] if str(x).strip()]
     return parsed
+
+
+@app.post("/optimize-linkedin", response_model=LinkedInOptimizationOutput)
+def optimize_linkedin(data: LinkedInOptimizationInput):
+    intelligence_request = build_resume_intelligence_request(data)
+    intelligence = generate_resume_intelligence(intelligence_request)
+    career_knowledge = get_career_knowledge_context(
+        data,
+        education=data.education_details,
+        highest_qualification=data.highest_qualification,
+        current_background=data.current_background or data.current_about or data.resume_text,
+        target_industry=data.target_industry,
+    )
+    skill_intelligence = generate_skill_intelligence(data, intelligence)
+    job_intelligence = None
+    if str(data.job_description or "").strip():
+        job_intelligence = analyze_job_description_intelligence(
+            JobDescriptionRequest(
+                job_title=data.target_role,
+                company_name=data.company_name,
+                country=data.target_country,
+                industry=data.target_industry,
+                job_description=data.job_description,
+            )
+        )
+        if job_intelligence.get("recommended_resume_model"):
+            intelligence["recommended_resume_model"] = job_intelligence["recommended_resume_model"]
+    ats_intelligence = generate_ats_intelligence(
+        data,
+        resume_text=str(data.resume_text or data.current_about or ""),
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        skill_intelligence=skill_intelligence,
+    )
+    personalization = generate_resume_personalization(
+        data,
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        ats_intelligence=ats_intelligence,
+        recruiter_intelligence=None,
+    )
+    recruiter_source = "\n".join(part for part in [data.resume_text, data.current_about, data.work_experience, data.projects, data.achievements] if str(part or "").strip())
+    recruiter_context = dict(intelligence)
+    recruiter_context.update({
+        "ats_keyword_strategy": ats_intelligence.get("required_keywords", []),
+        "target_market_strategy": intelligence.get("target_market_strategy", ""),
+        "recruiter_positioning": intelligence.get("recruiter_positioning", ""),
+        "career_graph_roles": career_knowledge.get("recommended_roles", []),
+        "career_graph_certifications": career_knowledge.get("recommended_certifications", []),
+    })
+    recruiter_feedback = recruiter_review(recruiter_source, data, recruiter_context)
+    return generate_linkedin_optimization_package(
+        candidate_data=data,
+        intelligence=intelligence,
+        skill_intelligence=skill_intelligence,
+        job_intelligence=job_intelligence,
+        recruiter_intelligence=recruiter_feedback,
+        ats_intelligence=ats_intelligence,
+        personalization=personalization,
+        career_knowledge=career_knowledge,
+        client=client,
+        parse_json_response=parse_json_response,
+    )
 
 
 @app.post("/analyze-resume-intelligence", response_model=ResumeIntelligenceAnalysisOutput)
