@@ -1,0 +1,37 @@
+{
+  "professional_bio": "DevOps Engineer profile based on available resume details.",
+  "about_me": "Computer Science graduate with internship exposure to Linux administration and CI/CD workflows.",
+  "personal_tagline": "DevOps Engineer | Technology",
+  "project_showcase": [
+    "Built a containerized CI/CD pipeline demo using Docker, GitHub Actions, and AWS EC2"
+  ],
+  "project_case_studies": [
+    "Problem: Brief context. Solution: Candidate contribution. Technology: Mentioned tools. Contribution: Honest summary. Outcome: Practical learning. Lessons Learned: Key takeaway."
+  ],
+  "github_readme": "# Anita Rao\n\n## Introduction\nComputer Science graduate with internship exposure to Linux administration and CI/CD workflows.",
+  "personal_website_content": "Computer Science graduate with internship exposure to Linux administration and CI/CD workflows.",
+  "skills_section": [
+    "Python",
+    "AWS",
+    "Docker",
+    "GitHub Actions",
+    "Linux",
+    "Bash"
+  ],
+  "timeline": [
+    "B.Tech in Computer Science, VTU, 2026",
+    "DevOps internship covering CI/CD fundamentals, Linux administration, and deployment support."
+  ],
+  "contact_section": [
+    "anita.rao@example.com",
+    "+91 98765 12345",
+    "Bengaluru, India",
+    "https://www.linkedin.com/in/anita-rao"
+  ],
+  "professional_footer": "Prepared for DevOps Engineer opportunities.",
+  "seo_meta_title": "Anita Rao | DevOps Engineer",
+  "seo_meta_description": "Portfolio profile for DevOps Engineer opportunities in India.",
+  "selected_theme": "Minimal",
+  "portfolio_score": 58,
+  "recruiter_score": 55
+}

@@ -1,0 +1,37 @@
+{
+  "professional_bio": "VLSI Design Engineer profile based on available resume details.",
+  "about_me": "ECE graduate with project exposure to digital design and physical design tools.",
+  "personal_tagline": "VLSI Design Engineer | Semiconductors",
+  "project_showcase": [
+    "Designed a low-power arithmetic logic unit and studied physical design flow concepts using academic tool exposure"
+  ],
+  "project_case_studies": [
+    "Problem: Brief context. Solution: Candidate contribution. Technology: Mentioned tools. Contribution: Honest summary. Outcome: Practical learning. Lessons Learned: Key takeaway."
+  ],
+  "github_readme": "# Rahul Sharma\n\n## Introduction\nECE graduate with project exposure to digital design and physical design tools.",
+  "personal_website_content": "ECE graduate with project exposure to digital design and physical design tools.",
+  "skills_section": [
+    "Verilog",
+    "Linux",
+    "ICC",
+    "STA basics",
+    "digital electronics",
+    "physical design flow"
+  ],
+  "timeline": [
+    "B.Tech in ECE, JNTU, 2026",
+    "Completed a VLSI internship focused on digital design flow, Linux-based workflows, and timing basics."
+  ],
+  "contact_section": [
+    "rahul.sharma@example.com",
+    "+91 91234 56789",
+    "Hyderabad, India",
+    "https://www.linkedin.com/in/rahul-sharma"
+  ],
+  "professional_footer": "Prepared for VLSI Design Engineer opportunities.",
+  "seo_meta_title": "Rahul Sharma | VLSI Design Engineer",
+  "seo_meta_description": "Portfolio profile for VLSI Design Engineer opportunities in India.",
+  "selected_theme": "Minimal",
+  "portfolio_score": 58,
+  "recruiter_score": 55
+}

@@ -1,0 +1,62 @@
+{
+  "professional_bio": "Rahul Sharma is a motivated Electronics and Communication Engineering graduate with a strong foundation in VLSI design engineering. He has hands-on experience in RTL design, digital and physical design flows, and timing analysis gained through academic projects and a focused internship. Skilled in Verilog, Linux workflows, ICC, STA basics, and Cadence academic tools, Rahul is eager to contribute to semiconductor design teams in India by applying his technical knowledge and collaborative skills.",
+  "about_me": "I am an Electronics and Communication Engineering graduate passionate about VLSI design engineering. My academic and internship experiences have equipped me with practical skills in RTL design, digital and physical design flows, and timing analysis. I have designed a low-power arithmetic logic unit using Verilog and explored physical design methodologies through academic tools. I am proficient with Linux workflows and familiar with industry-relevant tools such as ModelSim and Cadence academic tools. I thrive in collaborative environments and have demonstrated leadership in academic projects through module allocation and review discussions. I am seeking opportunities in India\u2019s semiconductor industry to grow as a VLSI Design Engineer and contribute to innovative design projects.",
+  "personal_tagline": "Aspiring VLSI Design Engineer | Skilled in RTL & Physical Design Flow | Passionate about Semiconductor Innovation",
+  "project_showcase": [
+    "Low-Power Arithmetic Logic Unit Design using Verilog",
+    "VLSI Mini-Project Presentation at Department Technical Showcase"
+  ],
+  "project_case_studies": [
+    "Problem: Design a low-power arithmetic logic unit (ALU) to optimize power consumption while maintaining performance.\nSolution: Implemented the ALU design using Verilog, focusing on low-power techniques and efficient RTL coding practices.\nTechnology: Verilog, Cadence Academic Tools, ModelSim\nContribution: Led the design and implementation of the ALU, applying RTL design principles and verifying functionality through simulation.\nOutcome: Successfully developed a functional low-power ALU prototype demonstrating practical RTL design skills and power optimization concepts.\nLessons Learned: Gained hands-on experience in RTL coding, power-aware design considerations, and the importance of thorough simulation and verification.",
+    "Problem: Understand and apply physical design flow concepts in semiconductor design through academic exposure.\nSolution: Studied physical design methodologies and timing basics using academic tools, integrating knowledge with digital design projects.\nTechnology: ICC, STA basics, Cadence Academic Tools\nContribution: Explored physical design flow steps and timing analysis fundamentals to complement RTL design knowledge.\nOutcome: Enhanced understanding of semiconductor design processes, bridging theoretical concepts with practical tool usage.\nLessons Learned: Recognized the critical role of timing analysis and physical design in ensuring chip performance and reliability."
+  ],
+  "github_readme": "# Rahul Sharma - VLSI Design Engineer Portfolio\n\nWelcome to my GitHub portfolio! I am an Electronics and Communication Engineering graduate with a focus on VLSI design engineering. This repository showcases my projects and learning related to RTL design, digital and physical design flows, and timing analysis.\n\n## Skills & Tools\n- Verilog\n- ModelSim\n- Cadence Academic Tools\n- Linux Workflows\n- ICC & STA Basics\n\n## Projects\n- Low-Power Arithmetic Logic Unit Design: RTL implementation and simulation.\n- Physical Design Flow Exploration: Academic tool-based study of timing and layout concepts.\n\n## About Me\nI am passionate about semiconductor design and eager to apply my academic and internship experience to real-world challenges. I am continuously learning and adapting to new tools and methodologies in the VLSI domain.\n\nFeel free to explore my projects and connect with me for collaboration or opportunities.",
+  "personal_website_content": "### Hero\nHi, I'm Rahul Sharma, an aspiring VLSI Design Engineer with a strong foundation in RTL and physical design flows. Passionate about semiconductor innovation and low-power design.\n\n### About\nI am an Electronics and Communication Engineering graduate with hands-on experience in digital and physical design methodologies. My internship and academic projects have equipped me with skills in Verilog, Linux workflows, timing analysis, and industry-relevant tools like ModelSim and Cadence academic tools.\n\n### Skills\n- Hardware Description Languages & Digital Design: Verilog, Digital Electronics\n- Physical Design & Timing Analysis: ICC, STA basics, Physical Design Flow\n- Tools & Software: ModelSim, Cadence Academic Tools, Linux\n- Transferable Skills: Analytical Thinking, Teamwork, Technical Documentation\n\n### Projects\n- Low-Power Arithmetic Logic Unit Design: Designed and simulated a low-power ALU using Verilog, demonstrating RTL design skills.\n- Physical Design Flow Concepts: Explored timing and layout methodologies using academic tools.\n\n### Experience\n- VLSI Internship: Gained practical exposure to digital design flow, Linux-based workflows, and timing analysis fundamentals.\n- Academic Leadership: Led module allocation and review discussions in final-year design projects.\n\n### Achievements\n- Presented VLSI mini-project at department technical showcase.\n\n### Education\n- B.Tech in Electronics and Communication Engineering, JNTU, 2026\n\n### Contact\nFeel free to reach out via email or LinkedIn to discuss opportunities or collaborations.",
+  "skills_section": [
+    "Verilog",
+    "Digital Electronics",
+    "ICC",
+    "STA basics",
+    "Physical Design Flow",
+    "ModelSim",
+    "Cadence Academic Tools",
+    "Linux",
+    "Analytical Thinking",
+    "Teamwork",
+    "Technical Documentation"
+  ],
+  "timeline": [
+    "2023-2024: Completed VLSI internship focused on digital design flow, Linux workflows, and timing basics.",
+    "2022-2026: Pursuing B.Tech in Electronics and Communication Engineering at JNTU.",
+    "2025: Designed low-power arithmetic logic unit as part of academic projects.",
+    "2025: Led module allocation and review discussions in final-year design project.",
+    "2025: Presented VLSI mini-project at department technical showcase."
+  ],
+  "contact_section": [
+    "Email: rahul.sharma@example.com",
+    "LinkedIn: linkedin.com/in/rahul-sharma-vlsi",
+    "Phone: +91-XXXXXXXXXX",
+    "Location: India"
+  ],
+  "professional_footer": "\u00a9 2024 Rahul Sharma | VLSI Design Engineer | Electronics & Communication Graduate | All rights reserved.",
+  "seo_meta_title": "Rahul Sharma - VLSI Design Engineer Portfolio | RTL & Physical Design Specialist",
+  "seo_meta_description": "Explore Rahul Sharma's professional portfolio showcasing expertise in VLSI design engineering, RTL and physical design flows, timing analysis, and semiconductor projects. Electronics and Communication graduate with hands-on internship experience and academic project leadership.",
+  "selected_theme": "Developer",
+  "portfolio_score": 82,
+  "recruiter_score": 80,
+  "quality_notes": [
+    "Portfolio content is well-structured with clear sections including professional bio, about me, projects, skills, timeline, and contact information.",
+    "Technical skills are grouped logically and cover key tools and concepts relevant to VLSI design engineering such as Verilog, ICC, STA basics, Cadence tools, and Linux workflows.",
+    "Project case studies provide detailed problem statements, solutions, technologies used, contributions, outcomes, and lessons learned, enhancing readability and demonstrating applied knowledge.",
+    "Personal tagline and SEO meta tags are well-crafted to improve online discoverability and recruiter impression.",
+    "Contact information is complete and clearly presented, facilitating recruiter engagement.",
+    "The portfolio uses concise, professional language appropriate for a fresher targeting semiconductor roles in India.",
+    "GitHub README and personal website content align well with the target role and reinforce technical competencies and motivation.",
+    "Timeline section effectively summarizes key academic and internship milestones, supporting career narrative.",
+    "Some minor gaps remain in quantifying achievements and explicitly highlighting measurable impact from projects and internship.",
+    "No certifications are listed, which could strengthen credibility in semiconductor roles.",
+    "While leadership is mentioned, it is limited to academic project contexts and could be more prominently integrated.",
+    "The portfolio could benefit from a dedicated, clearly labeled technical skills section on all platforms to improve ATS keyword matching.",
+    "Professional summary or objective statement is present but could be more concise and impact-focused to capture recruiter attention quickly."
+  ]
+}

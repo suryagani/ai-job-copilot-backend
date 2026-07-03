@@ -1,0 +1,54 @@
+{
+  "professional_bio": "Anita Rao is a motivated and technically skilled DevOps Engineer based in India, with a B.Tech in Computer Science from VTU (2026). She has hands-on internship experience in Linux administration, CI/CD workflows, and AWS-based deployment support. Anita has demonstrated her capabilities by designing and implementing a containerized CI/CD pipeline using Docker, GitHub Actions, and AWS EC2, showcasing her proficiency in automation and cloud deployment. She is proficient in scripting languages such as Bash and Python and is currently pursuing AWS Cloud Practitioner certification to deepen her cloud expertise.",
+  "about_me": "I am a passionate Computer Science graduate with focused internship experience in DevOps engineering, specializing in cloud infrastructure, containerization, and automation. During my internship, I gained practical exposure to Linux system administration, CI/CD workflows, and AWS deployment support. I successfully built a containerized CI/CD pipeline demo integrating Docker, GitHub Actions, and AWS EC2 to automate application deployment workflows. I coordinated a four-member team for my final-year deployment automation project, which I presented to faculty and peers, highlighting my collaboration and communication skills. I am eager to contribute as a DevOps Engineer by leveraging my technical skills and hands-on experience to support cloud infrastructure and streamline deployment processes.",
+  "personal_tagline": "DevOps Engineer | Cloud & Automation Enthusiast | Skilled in AWS, Docker, CI/CD Pipelines & Linux Administration",
+  "project_showcase": [
+    "Containerized CI/CD Pipeline Demo: Automated deployment workflows using Docker, GitHub Actions, and AWS EC2.",
+    "Final-Year Deployment Automation Project: Led a team to design and implement deployment automation, presented to academic stakeholders."
+  ],
+  "project_case_studies": [
+    "{'project_name': 'Containerized CI/CD Pipeline Demo', 'problem': 'Manual deployment processes were time-consuming and error-prone, limiting scalability and repeatability.', 'solution': 'Designed and implemented an automated CI/CD pipeline using containerization and cloud services to streamline deployment.', 'technology': 'Docker, GitHub Actions, AWS EC2', 'contribution': 'Developed Docker container images, configured GitHub Actions workflows for continuous integration and deployment, and integrated AWS EC2 instances for hosting and deployment automation.', 'outcome': 'Demonstrated a scalable and repeatable deployment pipeline that reduced manual intervention and aligned with modern DevOps practices.', 'lessons_learned': 'Gained practical experience in integrating containerization with cloud infrastructure and automating deployment workflows, enhancing my understanding of CI/CD pipelines and cloud deployment.'}"
+  ],
+  "github_readme": "# Anita Rao - DevOps Engineer\n\nWelcome to my GitHub profile! I am a Computer Science graduate with hands-on experience in DevOps engineering, focusing on cloud infrastructure, containerization, and automation.\n\n## Key Skills\n- AWS Cloud Deployment\n- Docker Containerization\n- CI/CD Pipelines with GitHub Actions\n- Linux Administration\n- Bash and Python Scripting\n\n## Featured Project\n### Containerized CI/CD Pipeline Demo\n- Automated build, test, and deployment workflows using Docker containers and GitHub Actions.\n- Integrated AWS EC2 instances to host applications with scalable deployment automation.\n\n## Connect with Me\n- Portfolio: [https://anitarao.dev](https://anitarao.dev)\n- LinkedIn: [LinkedIn Profile](https://www.linkedin.com/in/anita-rao)\n\nFeel free to explore my repositories showcasing projects and scripts related to DevOps and cloud automation.",
+  "personal_website_content": "### Hero Section\nHi, I'm Anita Rao \u2014 a passionate DevOps Engineer specializing in cloud infrastructure, automation, and containerization. I build scalable CI/CD pipelines and streamline deployment processes using AWS, Docker, and Linux.\n\n### About\nI am a Computer Science graduate from VTU with internship experience in Linux administration, CI/CD workflows, and AWS deployment support. I have developed a containerized CI/CD pipeline demo that automates application deployments using Docker, GitHub Actions, and AWS EC2. I enjoy collaborating with teams and solving complex problems through automation and cloud technologies.\n\n### Skills\n- **Cloud & Containerization:** AWS, Docker\n- **CI/CD & Automation:** GitHub Actions, Bash\n- **Programming & Scripting:** Python\n- **Operating Systems:** Linux\n- **Version Control & IDE:** Git, VS Code\n\n### Projects\n- **Containerized CI/CD Pipeline Demo:** Automated deployment pipeline integrating Docker containers, GitHub Actions workflows, and AWS EC2 instances.\n- **Final-Year Deployment Automation Project:** Led a team of four to design and implement deployment automation solutions, presented successfully to faculty and peers.\n\n### Experience\n- **DevOps Intern:** Gained practical experience in Linux system administration, CI/CD fundamentals, and AWS deployment support.\n\n### Education\n- B.Tech in Computer Science, Visvesvaraya Technological University (VTU), 2026\n\n### Certifications\n- AWS Cloud Practitioner (In Progress)\n\n### Contact\nFeel free to reach out via email or connect with me on LinkedIn to discuss potential opportunities or collaborations.",
+  "skills_section": [
+    "Cloud & Containerization: AWS, Docker",
+    "CI/CD & Automation: GitHub Actions, Bash",
+    "Programming & Scripting: Python",
+    "Operating Systems: Linux",
+    "Version Control & IDE: Git, VS Code"
+  ],
+  "timeline": [
+    "2023-2024: DevOps Internship - Gained hands-on experience in Linux administration, CI/CD workflows, and AWS deployment support.",
+    "2025: Developed Containerized CI/CD Pipeline Demo using Docker, GitHub Actions, and AWS EC2.",
+    "2026: Completed B.Tech in Computer Science from VTU; coordinated and presented final-year deployment automation project.",
+    "2024-Present: Pursuing AWS Cloud Practitioner certification."
+  ],
+  "contact_section": [
+    "Email: contact@anitarao.dev",
+    "Portfolio: https://anitarao.dev",
+    "GitHub: https://github.com/anita-rao",
+    "LinkedIn: https://www.linkedin.com/in/anita-rao"
+  ],
+  "professional_footer": "\u00a9 2024 Anita Rao | DevOps Engineer | All rights reserved.",
+  "seo_meta_title": "Anita Rao | DevOps Engineer | AWS, Docker, CI/CD Specialist | India",
+  "seo_meta_description": "Explore the professional portfolio of Anita Rao, a skilled DevOps Engineer from India with expertise in AWS, Docker, CI/CD pipelines, Linux administration, and automation. View projects, skills, and contact information.",
+  "selected_theme": "Developer",
+  "portfolio_score": 82,
+  "recruiter_score": 80,
+  "quality_notes": [
+    "Portfolio content is well-aligned with the target DevOps Engineer role and Indian technology market.",
+    "Professional bio and about me sections clearly communicate technical skills, internship experience, and project work relevant to DevOps.",
+    "Project showcase and case study provide concrete examples of automation and cloud deployment using industry-standard tools (Docker, GitHub Actions, AWS EC2).",
+    "Skills are grouped logically and cover key technical areas including cloud, containerization, CI/CD, scripting, and operating systems.",
+    "Personal website content is structured with clear sections (Hero, About, Skills, Projects, Experience, Education, Certifications, Contact) supporting recruiter readability and ATS compatibility.",
+    "Contact information is complete and accessible, enhancing recruiter engagement.",
+    "SEO meta title and description are keyword-rich and appropriate for online discoverability.",
+    "LinkedIn profile content is strong with a high headline and profile score, but lacks completed certifications and quantified achievements.",
+    "Resume and portfolio lack detailed quantified outcomes or impact metrics for internship and projects, which limits recruiter confidence.",
+    "Certifications are in progress rather than completed, reducing perceived credibility.",
+    "Some ATS-required keywords such as 'Automation', 'Scripting languages', and 'CI/CD pipelines' are underrepresented in experience descriptions.",
+    "Resume and portfolio could benefit from clearer, role-first headings and more concise bullet points emphasizing measurable results.",
+    "No major formatting risks detected, but standard section titles and clearer labeling would improve ATS parsing and recruiter clarity."
+  ]
+}

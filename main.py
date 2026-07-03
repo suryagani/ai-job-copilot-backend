@@ -21,6 +21,7 @@ from career_knowledge_engine import generate_career_knowledge
 from cover_letter import generate_cover_letter_package
 from linkedin_engine import generate_linkedin_optimization_package
 from interview_engine import generate_interview_prep_package
+from portfolio_engine import generate_portfolio_package
 from resume_designer import render_resume_package
 from resume_designer.regression_runner import run_regression_suite
 from resume_models import select_resume_model
@@ -355,6 +356,40 @@ class InterviewPrepOutput(BaseModel):
     mock_interview_plan: list[str]
     interview_report_pdf_path: str
     interview_report_docx_path: str
+
+
+class PortfolioInput(ResumeIntelligenceInput):
+    resume_text: str = ""
+    years_of_experience: str = ""
+    current_linkedin: str = ""
+    current_headline: str = ""
+    current_about: str = ""
+    github_url: str = ""
+
+
+class PortfolioOutput(BaseModel):
+    professional_bio: str
+    about_me: str
+    personal_tagline: str
+    project_showcase: list[str]
+    project_case_studies: list[str]
+    github_readme: str
+    personal_website_content: str
+    skills_section: list[str]
+    timeline: list[str]
+    contact_section: list[str]
+    professional_footer: str
+    seo_meta_title: str
+    seo_meta_description: str
+    selected_theme: str
+    portfolio_score: int
+    recruiter_score: int
+    quality_notes: list[str]
+    portfolio_html_path: str
+    portfolio_readme_path: str
+    portfolio_docx_path: str
+    portfolio_pdf_path: str
+    portfolio_json_path: str
 
 
 class ResumeSkillGroup(BaseModel):
@@ -3082,6 +3117,88 @@ def generate_interview_prep(data: InterviewPrepInput):
         recruiter_intelligence=recruiter_feedback,
         ats_intelligence=ats_intelligence,
         career_knowledge=career_knowledge,
+        client=client,
+        parse_json_response=parse_json_response,
+    )
+
+
+@app.post("/generate-portfolio", response_model=PortfolioOutput)
+def generate_portfolio(data: PortfolioInput):
+    intelligence_request = build_resume_intelligence_request(data)
+    intelligence = generate_resume_intelligence(intelligence_request)
+    career_knowledge = get_career_knowledge_context(
+        data,
+        education=data.education_details,
+        highest_qualification=data.highest_qualification,
+        current_background=data.current_background or data.resume_text,
+        target_industry=data.target_industry,
+    )
+    skill_intelligence = generate_skill_intelligence(data, intelligence)
+    job_intelligence = None
+    if str(data.job_description or "").strip():
+        job_intelligence = analyze_job_description_intelligence(
+            JobDescriptionRequest(
+                job_title=data.target_role,
+                company_name=data.company_name,
+                country=data.target_country,
+                industry=data.target_industry,
+                job_description=data.job_description,
+            )
+        )
+        if job_intelligence.get("recommended_resume_model"):
+            intelligence["recommended_resume_model"] = job_intelligence["recommended_resume_model"]
+    achievement_intelligence = generate_achievement_intelligence(data, intelligence, job_intelligence)
+    ats_intelligence = generate_ats_intelligence(
+        data,
+        resume_text=str(data.resume_text or data.current_background or ""),
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        skill_intelligence=skill_intelligence,
+    )
+    recruiter_source = "\n".join(part for part in [data.resume_text, data.current_background, data.work_experience, data.internships, data.projects, data.achievements] if str(part or "").strip())
+    recruiter_context = dict(intelligence)
+    recruiter_context.update({
+        "ats_keyword_strategy": ats_intelligence.get("required_keywords", []),
+        "target_market_strategy": intelligence.get("target_market_strategy", ""),
+        "recruiter_positioning": intelligence.get("recruiter_positioning", ""),
+        "career_graph_roles": career_knowledge.get("recommended_roles", []),
+        "career_graph_certifications": career_knowledge.get("recommended_certifications", []),
+        "career_graph_growth_roles": career_knowledge.get("future_growth_roles", []),
+    })
+    recruiter_feedback = recruiter_review(recruiter_source, data, recruiter_context)
+    linkedin_context = generate_linkedin_optimization_package(
+        candidate_data=data,
+        intelligence=intelligence,
+        skill_intelligence=skill_intelligence,
+        job_intelligence=job_intelligence,
+        recruiter_intelligence=recruiter_feedback,
+        ats_intelligence=ats_intelligence,
+        personalization=generate_resume_personalization(data, job_intelligence=job_intelligence, intelligence=intelligence, ats_intelligence=ats_intelligence, recruiter_intelligence=None),
+        career_knowledge=career_knowledge,
+        client=client,
+        parse_json_response=parse_json_response,
+    )
+    interview_context = generate_interview_prep_package(
+        candidate_data=data,
+        intelligence=intelligence,
+        job_intelligence=job_intelligence,
+        recruiter_intelligence=recruiter_feedback,
+        ats_intelligence=ats_intelligence,
+        career_knowledge=career_knowledge,
+        client=client,
+        parse_json_response=parse_json_response,
+    )
+    return generate_portfolio_package(
+        candidate_data=data,
+        intelligence=intelligence,
+        skill_intelligence=skill_intelligence,
+        achievement_intelligence=achievement_intelligence,
+        recruiter_intelligence=recruiter_feedback,
+        ats_intelligence=ats_intelligence,
+        career_knowledge=career_knowledge,
+        linkedin_context=linkedin_context,
+        interview_context=interview_context,
+        job_intelligence=job_intelligence,
         client=client,
         parse_json_response=parse_json_response,
     )
