@@ -20,6 +20,7 @@ from reportlab.lib.enums import TA_LEFT
 from career_knowledge_engine import generate_career_knowledge
 from cover_letter import generate_cover_letter_package
 from linkedin_engine import generate_linkedin_optimization_package
+from interview_engine import generate_interview_prep_package
 from resume_designer import render_resume_package
 from resume_designer.regression_runner import run_regression_suite
 from resume_models import select_resume_model
@@ -332,6 +333,28 @@ class LinkedInOptimizationOutput(BaseModel):
     visibility_explanation: str
     linkedin_report_pdf_path: str
     linkedin_report_docx_path: str
+
+
+class InterviewPrepInput(ResumeIntelligenceInput):
+    resume_text: str = ""
+    years_of_experience: str = ""
+
+
+class InterviewPrepOutput(BaseModel):
+    technical_questions: list[str]
+    behavioral_questions: list[str]
+    hr_questions: list[str]
+    company_specific_questions: list[str]
+    star_answer_examples: list[str]
+    candidate_strengths: list[str]
+    candidate_weaknesses: list[str]
+    likely_follow_up_questions: list[str]
+    interview_tips: list[str]
+    confidence_score: int
+    readiness_score: int
+    mock_interview_plan: list[str]
+    interview_report_pdf_path: str
+    interview_report_docx_path: str
 
 
 class ResumeSkillGroup(BaseModel):
@@ -3003,6 +3026,61 @@ def optimize_linkedin(data: LinkedInOptimizationInput):
         recruiter_intelligence=recruiter_feedback,
         ats_intelligence=ats_intelligence,
         personalization=personalization,
+        career_knowledge=career_knowledge,
+        client=client,
+        parse_json_response=parse_json_response,
+    )
+
+
+@app.post("/generate-interview-prep", response_model=InterviewPrepOutput)
+def generate_interview_prep(data: InterviewPrepInput):
+    intelligence_request = build_resume_intelligence_request(data)
+    intelligence = generate_resume_intelligence(intelligence_request)
+    career_knowledge = get_career_knowledge_context(
+        data,
+        education=data.education_details,
+        highest_qualification=data.highest_qualification,
+        current_background=data.current_background or data.resume_text,
+        target_industry=data.target_industry,
+    )
+    skill_intelligence = generate_skill_intelligence(data, intelligence)
+    job_intelligence = None
+    if str(data.job_description or "").strip():
+        job_intelligence = analyze_job_description_intelligence(
+            JobDescriptionRequest(
+                job_title=data.target_role,
+                company_name=data.company_name,
+                country=data.target_country,
+                industry=data.target_industry,
+                job_description=data.job_description,
+            )
+        )
+        if job_intelligence.get("recommended_resume_model"):
+            intelligence["recommended_resume_model"] = job_intelligence["recommended_resume_model"]
+    ats_intelligence = generate_ats_intelligence(
+        data,
+        resume_text=str(data.resume_text or data.current_background or ""),
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        skill_intelligence=skill_intelligence,
+    )
+    recruiter_source = "\n".join(part for part in [data.resume_text, data.current_background, data.work_experience, data.internships, data.projects, data.achievements] if str(part or "").strip())
+    recruiter_context = dict(intelligence)
+    recruiter_context.update({
+        "ats_keyword_strategy": ats_intelligence.get("required_keywords", []),
+        "target_market_strategy": intelligence.get("target_market_strategy", ""),
+        "recruiter_positioning": intelligence.get("recruiter_positioning", ""),
+        "career_graph_roles": career_knowledge.get("recommended_roles", []),
+        "career_graph_certifications": career_knowledge.get("recommended_certifications", []),
+        "career_graph_growth_roles": career_knowledge.get("future_growth_roles", []),
+    })
+    recruiter_feedback = recruiter_review(recruiter_source, data, recruiter_context)
+    return generate_interview_prep_package(
+        candidate_data=data,
+        intelligence=intelligence,
+        job_intelligence=job_intelligence,
+        recruiter_intelligence=recruiter_feedback,
+        ats_intelligence=ats_intelligence,
         career_knowledge=career_knowledge,
         client=client,
         parse_json_response=parse_json_response,
