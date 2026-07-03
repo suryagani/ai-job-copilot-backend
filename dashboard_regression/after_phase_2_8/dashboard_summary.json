@@ -1,0 +1,25 @@
+{
+  "api_performance_ms": {
+    "dashboard": 76.99,
+    "career-assets": 52.13,
+    "career-statistics": 50.71,
+    "career-timeline": 50.28,
+    "career-history": 5.84
+  },
+  "storage_summary": {
+    "asset_registry_exists": true,
+    "history_registry_exists": true,
+    "asset_count": 40,
+    "history_count": 7
+  },
+  "dashboard_snapshot": {
+    "resume_library": 10,
+    "cover_letter_library": 7,
+    "linkedin_library": 7,
+    "portfolio_library": 7,
+    "interview_library": 8,
+    "job_description_library": 1,
+    "timeline_entries": 7,
+    "recent_activity": 7
+  }
+}

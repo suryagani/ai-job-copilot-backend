@@ -1,0 +1,93 @@
+[
+  {
+    "id": "9f5e8af9-a5ea-4394-8000-f0c5e09ea3f0",
+    "timestamp": "2026-07-03T22:10:55.142027+00:00",
+    "event_type": "asset_created",
+    "asset_id": "465893d0-00a6-415f-9f9a-a7f32c2fcebb",
+    "title": "Business Analyst Portfolio",
+    "asset_type": "portfolio",
+    "role": "Business Analyst",
+    "country": "India",
+    "metadata": {
+      "version": 1
+    }
+  },
+  {
+    "id": "efaaf139-2f56-444c-886f-212050ae8334",
+    "timestamp": "2026-07-03T22:08:50.231607+00:00",
+    "event_type": "asset_created",
+    "asset_id": "1d7f1a97-2738-4ae5-a8a3-aaafbeca9b91",
+    "title": "Business Analyst - InsightBridge Consulting",
+    "asset_type": "interview",
+    "role": "Business Analyst",
+    "country": "India",
+    "metadata": {
+      "version": 1
+    }
+  },
+  {
+    "id": "5931ec40-61c2-464a-8791-45e50392ba69",
+    "timestamp": "2026-07-03T22:08:05.523823+00:00",
+    "event_type": "asset_created",
+    "asset_id": "b07c47db-e9e0-4351-b464-c31190dc9cb5",
+    "title": "Business Analyst LinkedIn Optimization",
+    "asset_type": "linkedin",
+    "role": "Business Analyst",
+    "country": "India",
+    "metadata": {
+      "version": 1
+    }
+  },
+  {
+    "id": "5fc18bec-6f5e-4e9f-9737-4e428035cf45",
+    "timestamp": "2026-07-03T22:06:56.458933+00:00",
+    "event_type": "asset_created",
+    "asset_id": "a25ae5ed-7512-47e3-bf63-14d735b3bc2c",
+    "title": "Business Analyst - InsightBridge Consulting",
+    "asset_type": "cover_letter",
+    "role": "Business Analyst",
+    "country": "India",
+    "metadata": {
+      "version": 1
+    }
+  },
+  {
+    "id": "8737f756-0034-42e1-9bac-0030073884e1",
+    "timestamp": "2026-07-03T22:06:11.280243+00:00",
+    "event_type": "asset_created",
+    "asset_id": "f58c3eff-24c9-40bc-84bb-311468a20e5c",
+    "title": "Business Analyst Resume",
+    "asset_type": "resume",
+    "role": "Business Analyst",
+    "country": "India",
+    "metadata": {
+      "version": 2
+    }
+  },
+  {
+    "id": "19048fec-c2e7-4791-b8e4-3830f1d9d1d3",
+    "timestamp": "2026-07-03T22:05:20.684707+00:00",
+    "event_type": "asset_created",
+    "asset_id": "82bd3a02-90e8-49c5-a2bd-1105ab9e8b42",
+    "title": "Business Analyst Resume",
+    "asset_type": "resume",
+    "role": "Business Analyst",
+    "country": "India",
+    "metadata": {
+      "version": 1
+    }
+  },
+  {
+    "id": "7e7c9924-b7ea-4c2c-a5fc-ee071478f623",
+    "timestamp": "2026-07-03T22:05:20.650066+00:00",
+    "event_type": "job_description_saved",
+    "asset_id": "b2fb360d-6f62-479d-88fb-8df7b08eda77",
+    "title": "Business Analyst - InsightBridge Consulting",
+    "asset_type": "job_description",
+    "role": "Business Analyst",
+    "country": "India",
+    "metadata": {
+      "version": 1
+    }
+  }
+]

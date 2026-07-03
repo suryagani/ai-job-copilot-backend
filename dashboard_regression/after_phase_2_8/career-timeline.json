@@ -1,0 +1,58 @@
+[
+  {
+    "timestamp": "2026-07-03T22:10:55.142027+00:00",
+    "event": "asset_created",
+    "title": "Business Analyst Portfolio",
+    "asset_type": "portfolio",
+    "role": "Business Analyst",
+    "country": "India"
+  },
+  {
+    "timestamp": "2026-07-03T22:08:50.231607+00:00",
+    "event": "asset_created",
+    "title": "Business Analyst - InsightBridge Consulting",
+    "asset_type": "interview",
+    "role": "Business Analyst",
+    "country": "India"
+  },
+  {
+    "timestamp": "2026-07-03T22:08:05.523823+00:00",
+    "event": "asset_created",
+    "title": "Business Analyst LinkedIn Optimization",
+    "asset_type": "linkedin",
+    "role": "Business Analyst",
+    "country": "India"
+  },
+  {
+    "timestamp": "2026-07-03T22:06:56.458933+00:00",
+    "event": "asset_created",
+    "title": "Business Analyst - InsightBridge Consulting",
+    "asset_type": "cover_letter",
+    "role": "Business Analyst",
+    "country": "India"
+  },
+  {
+    "timestamp": "2026-07-03T22:06:11.280243+00:00",
+    "event": "asset_created",
+    "title": "Business Analyst Resume",
+    "asset_type": "resume",
+    "role": "Business Analyst",
+    "country": "India"
+  },
+  {
+    "timestamp": "2026-07-03T22:05:20.684707+00:00",
+    "event": "asset_created",
+    "title": "Business Analyst Resume",
+    "asset_type": "resume",
+    "role": "Business Analyst",
+    "country": "India"
+  },
+  {
+    "timestamp": "2026-07-03T22:05:20.650066+00:00",
+    "event": "job_description_saved",
+    "title": "Business Analyst - InsightBridge Consulting",
+    "asset_type": "job_description",
+    "role": "Business Analyst",
+    "country": "India"
+  }
+]

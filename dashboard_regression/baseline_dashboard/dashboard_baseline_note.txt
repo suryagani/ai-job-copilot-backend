@@ -1,0 +1,1 @@
+Before phase 2.8, the backend had generated career assets but no dedicated dashboard APIs, timeline, history, or asset registry endpoints.

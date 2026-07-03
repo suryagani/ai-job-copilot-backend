@@ -1,0 +1,205 @@
+{
+  "rendered_file_count": 97,
+  "sample": [
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\ananya-rao.docx",
+      "size": 37124
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\ananya-rao.pdf",
+      "size": 2555
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\anita-rao.docx",
+      "size": 37436
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\anita-rao.pdf",
+      "size": 3022
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\dashboard-test-user.docx",
+      "size": 37355
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\dashboard-test-user.pdf",
+      "size": 2920
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\karan-singh.docx",
+      "size": 37369
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\karan-singh.pdf",
+      "size": 2994
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\meera-nair.docx",
+      "size": 37474
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\meera-nair.pdf",
+      "size": 3069
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\operations-manager.docx",
+      "size": 37474
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\operations-manager.pdf",
+      "size": 3050
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\priya-menon.docx",
+      "size": 37456
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\priya-menon.pdf",
+      "size": 3087
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\rahul-sharma.docx",
+      "size": 37161
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\rahul-sharma.pdf",
+      "size": 2596
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\test-user.docx",
+      "size": 37080
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\test-user.pdf",
+      "size": 2481
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\anita-rao-cloudnova-technologies-devops-engineer.docx",
+      "size": 37463
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\anita-rao-cloudnova-technologies-devops-engineer.pdf",
+      "size": 2676
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\dashboard-test-user-insightbridge-consulting-business-analyst.docx",
+      "size": 37490
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\dashboard-test-user-insightbridge-consulting-business-analyst.pdf",
+      "size": 2715
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\karan-singh-desert-table-hospitality-restaurant-manager.docx",
+      "size": 37445
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\karan-singh-desert-table-hospitality-restaurant-manager.pdf",
+      "size": 2652
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\meera-nair-peoplefirst-services-hr-executive.docx",
+      "size": 37547
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\meera-nair-peoplefirst-services-hr-executive.pdf",
+      "size": 2755
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\priya-menon-insightbridge-consulting-business-analyst.docx",
+      "size": 37478
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\priya-menon-insightbridge-consulting-business-analyst.pdf",
+      "size": 2655
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\rahul-sharma-siliconvista-labs-vlsi-design-engineer.docx",
+      "size": 37599
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\rahul-sharma-siliconvista-labs-vlsi-design-engineer.pdf",
+      "size": 2860
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\test-user-insightbridge-business-analyst.docx",
+      "size": 37403
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\test-user-insightbridge-business-analyst.pdf",
+      "size": 2596
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\anita-rao-devops-engineer.docx",
+      "size": 39038
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\anita-rao-devops-engineer.pdf",
+      "size": 6703
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\asha-verma-operations-coordinator.docx",
+      "size": 38948
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\asha-verma-operations-coordinator.pdf",
+      "size": 6571
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\dashboard-test-user-business-analyst.docx",
+      "size": 39089
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\dashboard-test-user-business-analyst.pdf",
+      "size": 6724
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\karan-singh-restaurant-manager.docx",
+      "size": 39141
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\karan-singh-restaurant-manager.pdf",
+      "size": 6772
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\meera-nair-hr-executive.docx",
+      "size": 39351
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\meera-nair-hr-executive.pdf",
+      "size": 7169
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\priya-menon-business-analyst.docx",
+      "size": 39178
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\priya-menon-business-analyst.pdf",
+      "size": 6868
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\rahul-sharma-vlsi-design-engineer.docx",
+      "size": 39526
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\rahul-sharma-vlsi-design-engineer.pdf",
+      "size": 7501
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\test-user-business-analyst.docx",
+      "size": 39129
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\test-user-business-analyst.pdf",
+      "size": 6705
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\linkedin\\anita-rao-devops-engineer.docx",
+      "size": 39564
+    },
+    {
+      "path": "C:\\Users\\surya\\AI-Jobs\\rendered\\linkedin\\anita-rao-devops-engineer.pdf",
+      "size": 8917
+    }
+  ]
+}

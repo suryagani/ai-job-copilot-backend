@@ -22,6 +22,8 @@ from cover_letter import generate_cover_letter_package
 from linkedin_engine import generate_linkedin_optimization_package
 from interview_engine import generate_interview_prep_package
 from portfolio_engine import generate_portfolio_package
+from career_dashboard import get_dashboard_snapshot, get_dashboard_assets, get_dashboard_timeline, get_dashboard_statistics, get_dashboard_history
+from career_dashboard.career_assets import register_asset, register_job_description
 from resume_designer import render_resume_package
 from resume_designer.regression_runner import run_regression_suite
 from resume_models import select_resume_model
@@ -3053,7 +3055,7 @@ def optimize_linkedin(data: LinkedInOptimizationInput):
         "career_graph_certifications": career_knowledge.get("recommended_certifications", []),
     })
     recruiter_feedback = recruiter_review(recruiter_source, data, recruiter_context)
-    return generate_linkedin_optimization_package(
+    result = generate_linkedin_optimization_package(
         candidate_data=data,
         intelligence=intelligence,
         skill_intelligence=skill_intelligence,
@@ -3065,6 +3067,16 @@ def optimize_linkedin(data: LinkedInOptimizationInput):
         client=client,
         parse_json_response=parse_json_response,
     )
+    if str(data.job_description or "").strip():
+        register_job_description(data, data.job_description, job_intelligence)
+    register_asset(
+        "linkedin",
+        data,
+        result,
+        files={"pdf_path": result.get("linkedin_report_pdf_path", ""), "docx_path": result.get("linkedin_report_docx_path", "")},
+        text_key="about_section",
+    )
+    return result
 
 
 @app.post("/generate-interview-prep", response_model=InterviewPrepOutput)
@@ -3110,7 +3122,7 @@ def generate_interview_prep(data: InterviewPrepInput):
         "career_graph_growth_roles": career_knowledge.get("future_growth_roles", []),
     })
     recruiter_feedback = recruiter_review(recruiter_source, data, recruiter_context)
-    return generate_interview_prep_package(
+    result = generate_interview_prep_package(
         candidate_data=data,
         intelligence=intelligence,
         job_intelligence=job_intelligence,
@@ -3120,6 +3132,16 @@ def generate_interview_prep(data: InterviewPrepInput):
         client=client,
         parse_json_response=parse_json_response,
     )
+    if str(data.job_description or "").strip():
+        register_job_description(data, data.job_description, job_intelligence)
+    register_asset(
+        "interview",
+        data,
+        result,
+        files={"pdf_path": result.get("interview_report_pdf_path", ""), "docx_path": result.get("interview_report_docx_path", "")},
+        metadata={"origin": "interview_prep"},
+    )
+    return result
 
 
 @app.post("/generate-portfolio", response_model=PortfolioOutput)
@@ -3188,7 +3210,7 @@ def generate_portfolio(data: PortfolioInput):
         client=client,
         parse_json_response=parse_json_response,
     )
-    return generate_portfolio_package(
+    result = generate_portfolio_package(
         candidate_data=data,
         intelligence=intelligence,
         skill_intelligence=skill_intelligence,
@@ -3202,6 +3224,48 @@ def generate_portfolio(data: PortfolioInput):
         client=client,
         parse_json_response=parse_json_response,
     )
+    if str(data.job_description or "").strip():
+        register_job_description(data, data.job_description, job_intelligence)
+    register_asset(
+        "portfolio",
+        data,
+        result,
+        files={
+            "pdf_path": result.get("portfolio_pdf_path", ""),
+            "docx_path": result.get("portfolio_docx_path", ""),
+            "html_path": result.get("portfolio_html_path", ""),
+            "json_path": result.get("portfolio_json_path", ""),
+            "readme_path": result.get("portfolio_readme_path", ""),
+        },
+        text_key="about_me",
+        metadata={"selected_theme": result.get("selected_theme", "")},
+    )
+    return result
+
+
+@app.get("/dashboard")
+def dashboard():
+    return get_dashboard_snapshot()
+
+
+@app.get("/career-timeline")
+def career_timeline():
+    return get_dashboard_timeline()
+
+
+@app.get("/career-assets")
+def career_assets():
+    return get_dashboard_assets()
+
+
+@app.get("/career-statistics")
+def career_statistics():
+    return get_dashboard_statistics()
+
+
+@app.get("/career-history")
+def career_history():
+    return get_dashboard_history()
 
 
 @app.post("/analyze-resume-intelligence", response_model=ResumeIntelligenceAnalysisOutput)
@@ -3211,7 +3275,9 @@ def analyze_resume_intelligence(data: ResumeIntelligenceRequest):
 
 @app.post("/analyze-job-description", response_model=JobDescriptionAnalysisOutput)
 def analyze_job_description(data: JobDescriptionRequest):
-    return analyze_job_description_intelligence(data)
+    result = analyze_job_description_intelligence(data)
+    register_job_description(data, data.job_description, result)
+    return result
 
 
 @app.post("/analyze-career-knowledge", response_model=CareerKnowledgeOutput)
@@ -3565,6 +3631,16 @@ Return ONLY valid JSON in this exact format:
     parsed["selected_theme"] = rendered["selected_theme"]
     parsed["page_count"] = rendered["page_count"]
     parsed["render_quality_score"] = rendered["render_quality_score"]
+    if str(data.job_description or "").strip():
+        register_job_description(data, data.job_description, job_intelligence)
+    register_asset(
+        "resume",
+        data,
+        parsed,
+        files={"pdf_path": parsed.get("resume_pdf_path", ""), "docx_path": parsed.get("resume_docx_path", "")},
+        text_key="optimized_resume",
+        metadata={"origin": "resume_optimizer", "selected_theme": parsed.get("selected_theme", "")},
+    )
     return parsed
 
 
@@ -3723,6 +3799,16 @@ def build_resume(data: ResumeIntelligenceInput):
     final_response["selected_theme"] = rendered["selected_theme"]
     final_response["page_count"] = rendered["page_count"]
     final_response["render_quality_score"] = rendered["render_quality_score"]
+    if str(data.job_description or "").strip():
+        register_job_description(data, data.job_description, job_intelligence)
+    register_asset(
+        "resume",
+        data,
+        final_response,
+        files={"pdf_path": final_response.get("resume_pdf_path", ""), "docx_path": final_response.get("resume_docx_path", "")},
+        text_key="full_resume",
+        metadata={"origin": "resume_builder", "selected_theme": final_response.get("selected_theme", "")},
+    )
     return final_response
 
 
@@ -3807,7 +3893,7 @@ def generate_cover_letter_endpoint(data: CoverLetterInput):
     })
     recruiter_feedback = recruiter_review(reference_resume_text, data, recruiter_context)
 
-    return generate_cover_letter_package(
+    result = generate_cover_letter_package(
         candidate_data=data,
         intelligence=intelligence,
         skill_intelligence=skill_intelligence,
@@ -3821,6 +3907,16 @@ def generate_cover_letter_endpoint(data: CoverLetterInput):
         client=client,
         parse_json_response=parse_json_response,
     )
+    if str(data.job_description or "").strip():
+        register_job_description(data, data.job_description, job_intelligence)
+    register_asset(
+        "cover_letter",
+        data,
+        result,
+        files={"pdf_path": result.get("cover_letter_pdf_path", ""), "docx_path": result.get("cover_letter_docx_path", "")},
+        text_key="cover_letter_text",
+    )
+    return result
 
 
 @app.post("/review-resume", response_model=ResumeReviewerOutput)
