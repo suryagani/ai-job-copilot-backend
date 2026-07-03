@@ -18,6 +18,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.enums import TA_LEFT
 from career_knowledge_engine import generate_career_knowledge
+from cover_letter import generate_cover_letter_package
 from resume_designer import render_resume_package
 from resume_designer.regression_runner import run_regression_suite
 from resume_models import select_resume_model
@@ -513,6 +514,22 @@ class ResumeOptimizerOutput(BaseModel):
     missing_required_skills: list[str]
     missing_preferred_skills: list[str]
     resume_alignment_strategy: str
+
+
+class CoverLetterInput(ResumeIntelligenceInput):
+    hiring_manager: str = ""
+    tone: str = "Professional"
+    years_of_experience: str = ""
+    resume_text: str = ""
+
+
+class CoverLetterOutput(BaseModel):
+    cover_letter_text: str
+    cover_letter_pdf_path: str
+    cover_letter_docx_path: str
+    cover_letter_quality_score: int
+    ats_alignment_score: int
+    recruiter_confidence: int
 
 
 class ResumeReviewerInput(BaseModel):
@@ -3423,6 +3440,103 @@ def build_resume(data: ResumeIntelligenceInput):
     final_response["page_count"] = rendered["page_count"]
     final_response["render_quality_score"] = rendered["render_quality_score"]
     return final_response
+
+
+@app.post("/generate-cover-letter", response_model=CoverLetterOutput)
+def generate_cover_letter_endpoint(data: CoverLetterInput):
+    intelligence_request = build_resume_intelligence_request(data)
+    intelligence = generate_resume_intelligence(intelligence_request)
+    career_knowledge = get_career_knowledge_context(
+        data,
+        education=data.education_details,
+        highest_qualification=data.highest_qualification,
+        current_background=data.current_background,
+        target_industry=data.target_industry,
+    )
+    skill_intelligence = generate_skill_intelligence(data, intelligence)
+    job_intelligence = None
+    if str(data.job_description or "").strip():
+        job_intelligence = analyze_job_description_intelligence(
+            JobDescriptionRequest(
+                job_title=data.target_role,
+                company_name=data.company_name,
+                country=data.target_country,
+                industry=data.target_industry,
+                job_description=data.job_description,
+            )
+        )
+        if job_intelligence.get("recommended_resume_model"):
+            intelligence["recommended_resume_model"] = job_intelligence["recommended_resume_model"]
+
+    achievement_intelligence = generate_achievement_intelligence(data, intelligence, job_intelligence)
+    ats_intelligence = generate_ats_intelligence(
+        data,
+        resume_text=str(data.resume_text or ""),
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        skill_intelligence=skill_intelligence,
+    )
+    personalization = generate_resume_personalization(
+        data,
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        ats_intelligence=ats_intelligence,
+        recruiter_intelligence=None,
+    )
+    selected_resume_style, _ = select_resume_model(intelligence)
+    intelligence["recommended_resume_model"] = selected_resume_style
+    intelligence["career_graph_roles"] = career_knowledge["recommended_roles"]
+    intelligence["career_graph_certifications"] = career_knowledge["recommended_certifications"]
+    intelligence["career_graph_growth_roles"] = career_knowledge["future_growth_roles"]
+
+    reference_resume_text = str(data.resume_text or "").strip()
+    if not reference_resume_text:
+        grouped_skills = []
+        for group in skill_intelligence.get("skill_groups", []):
+            grouped_skills.extend(group.get("skills", []))
+        reference_resume_text = "\n".join(
+            part
+            for part in [
+                data.full_name,
+                data.target_role,
+                "Professional Summary",
+                data.current_background,
+                "Work Experience",
+                data.work_experience,
+                "Internships",
+                data.internships,
+                "Projects",
+                data.projects,
+                "Skills",
+                ", ".join(clean_string_list(grouped_skills)),
+                "Achievements",
+                "\n".join(item.get("improved", "") for item in achievement_intelligence.get("experience_bullets", [])[:3]),
+            ]
+            if str(part or "").strip()
+        )
+
+    recruiter_context = dict(intelligence)
+    recruiter_context.update({
+        "ats_keyword_strategy": ats_intelligence.get("required_keywords", []),
+        "target_market_strategy": intelligence.get("target_market_strategy", ""),
+        "recruiter_positioning": intelligence.get("recruiter_positioning", ""),
+    })
+    recruiter_feedback = recruiter_review(reference_resume_text, data, recruiter_context)
+
+    return generate_cover_letter_package(
+        candidate_data=data,
+        intelligence=intelligence,
+        skill_intelligence=skill_intelligence,
+        achievement_intelligence=achievement_intelligence,
+        job_intelligence=job_intelligence,
+        recruiter_intelligence=recruiter_feedback,
+        ats_intelligence=ats_intelligence,
+        personalization=personalization,
+        career_knowledge=career_knowledge,
+        resume_model_name=selected_resume_style,
+        client=client,
+        parse_json_response=parse_json_response,
+    )
 
 
 @app.post("/review-resume", response_model=ResumeReviewerOutput)

@@ -1,0 +1,1 @@
+from .cover_letter_engine import generate_cover_letter_package
