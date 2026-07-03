@@ -70,6 +70,7 @@ def _asset_title(asset_type: str, role: str = '', company_name: str = '') -> str
         'portfolio': 'Portfolio',
         'interview': 'Interview Prep',
         'job_description': 'Job Description',
+        'application_report': 'Application Report',
     }.get(asset_type, 'Career Asset')
     if company_name and asset_type in {'cover_letter', 'interview', 'job_description'}:
         return f"{role or label} - {company_name}".strip(' -')

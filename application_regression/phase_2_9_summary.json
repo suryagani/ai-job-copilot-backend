@@ -1,0 +1,17 @@
+{
+  "new_endpoint_present": true,
+  "baseline_components_generated": true,
+  "application_readiness": "Not Ready",
+  "overall_application_score": 71,
+  "job_match_score": 32,
+  "resume_style": "Business Professional Resume",
+  "ats_score_estimate": 56,
+  "recruiter_confidence": 70,
+  "linkedin_score": 96,
+  "interview_readiness": 89,
+  "recommended_next_steps": [
+    "Strengthen evidence for these missing role keywords before applying: Requirement gathering, Stakeholder management, Process mapping, Communication skills, Problem solving.",
+    "Address recruiter concerns in the resume and interview narrative: Limited professional experience beyond internship/project level; Lack of quantified achievements or impact metrics; No explicit mention of problem solving or process improvement outcomes.",
+    "Tighten the weakest resume areas next: Lack of explicit experience in requirement gathering; Limited evidence of process improvement and process mapping; No formal work experience dates or company names provided."
+  ]
+}

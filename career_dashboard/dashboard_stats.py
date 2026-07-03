@@ -28,7 +28,7 @@ def compute_career_statistics(assets: list[dict]) -> dict:
         'total_job_descriptions': len([asset for asset in assets if asset.get('asset_type') == 'job_description']),
         'average_ats_score': round(sum(ats_scores) / len(ats_scores), 1) if ats_scores else 0,
         'average_recruiter_score': round(sum(recruiter_scores) / len(recruiter_scores), 1) if recruiter_scores else 0,
-        'applications_prepared': len([asset for asset in assets if asset.get('asset_type') in {'resume', 'cover_letter', 'interview'}]),
+        'applications_prepared': len([asset for asset in assets if asset.get('asset_type') in {'resume', 'cover_letter', 'interview', 'application_report'}]),
         'most_common_target_role': role_counter.most_common(1)[0][0] if role_counter else '',
         'most_common_country': country_counter.most_common(1)[0][0] if country_counter else '',
         'improvement_trend': improvement_trend,

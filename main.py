@@ -24,6 +24,7 @@ from interview_engine import generate_interview_prep_package
 from portfolio_engine import generate_portfolio_package
 from career_dashboard import get_dashboard_snapshot, get_dashboard_assets, get_dashboard_timeline, get_dashboard_statistics, get_dashboard_history
 from career_dashboard.career_assets import register_asset, register_job_description
+from job_application_engine import generate_job_application_package
 from resume_designer import render_resume_package
 from resume_designer.regression_runner import run_regression_suite
 from resume_models import select_resume_model
@@ -616,6 +617,32 @@ class CoverLetterOutput(BaseModel):
     cover_letter_quality_score: int
     ats_alignment_score: int
     recruiter_confidence: int
+
+
+class JobApplicationInput(ResumeIntelligenceInput):
+    resume_text: str
+    years_of_experience: str = ""
+    hiring_manager: str = ""
+    tone: str = "Professional"
+    current_linkedin: str = ""
+    current_headline: str = ""
+    current_about: str = ""
+
+
+class JobApplicationOutput(BaseModel):
+    optimized_resume: dict
+    cover_letter: dict
+    linkedin_recommendations: dict
+    interview_preparation: dict
+    ats_report: dict
+    recruiter_report: dict
+    overall_application_score: int
+    job_match_score: int
+    application_readiness: str
+    recommended_next_steps: list[str]
+    application_report: dict
+    application_report_pdf_path: str
+    application_report_docx_path: str
 
 
 class ResumeReviewerInput(BaseModel):
@@ -3915,6 +3942,96 @@ def generate_cover_letter_endpoint(data: CoverLetterInput):
         result,
         files={"pdf_path": result.get("cover_letter_pdf_path", ""), "docx_path": result.get("cover_letter_docx_path", "")},
         text_key="cover_letter_text",
+    )
+    return result
+
+
+@app.post("/prepare-job-application", response_model=JobApplicationOutput)
+def prepare_job_application(data: JobApplicationInput):
+    optimized_resume = optimize_resume(
+        ResumeOptimizerInput(
+            target_role=data.target_role,
+            target_country=data.target_country,
+            resume_text=data.resume_text,
+            job_description=data.job_description,
+            target_location=data.target_country,
+        )
+    )
+
+    optimized_resume_text = str(optimized_resume.get("optimized_resume", "")).strip()
+    background_snapshot = "\n".join(
+        part
+        for part in [
+            data.current_background,
+            data.work_experience,
+            data.internships,
+            data.projects,
+            data.achievements,
+            data.resume_text,
+            optimized_resume_text,
+        ]
+        if str(part or "").strip()
+    )
+
+    application_payload = data.model_dump()
+    application_payload.update({
+        "resume_text": optimized_resume_text or data.resume_text,
+        "current_background": data.current_background or background_snapshot,
+        "work_experience": data.work_experience or data.resume_text,
+        "projects": data.projects or data.resume_text,
+        "years_of_experience": data.years_of_experience or data.experience_level,
+    })
+
+    cover_letter = generate_cover_letter_endpoint(CoverLetterInput(**application_payload))
+
+    linkedin_recommendations = optimize_linkedin(LinkedInOptimizationInput(**application_payload))
+
+    interview_preparation = generate_interview_prep(InterviewPrepInput(**application_payload))
+
+    ats_report = {
+        "ats_score_estimate": optimized_resume.get("ats_score_estimate", 0),
+        "ats_readiness_level": optimized_resume.get("ats_readiness_level", ""),
+        "matching_keywords": optimized_resume.get("matching_keywords", []),
+        "missing_keywords": optimized_resume.get("missing_keywords", []),
+        "ats_improvement_actions": optimized_resume.get("ats_improvement_actions", []),
+    }
+    recruiter_report = {
+        "interview_probability": optimized_resume.get("interview_probability", 0),
+        "recruiter_confidence": optimized_resume.get("recruiter_confidence", 0),
+        "first_impression": optimized_resume.get("first_impression", ""),
+        "shortlisting_decision": optimized_resume.get("shortlisting_decision", ""),
+        "top_strengths": optimized_resume.get("top_strengths", []),
+        "top_concerns": optimized_resume.get("top_concerns", []),
+        "missing_high_value_information": optimized_resume.get("missing_high_value_information", []),
+        "recommended_improvements": optimized_resume.get("recommended_improvements", []),
+        "industry_keywords_missing": optimized_resume.get("industry_keywords_missing", []),
+        "resume_competitiveness": optimized_resume.get("resume_competitiveness", ""),
+    }
+
+    result = generate_job_application_package(
+        candidate_data=data,
+        optimized_resume=optimized_resume,
+        cover_letter=cover_letter,
+        linkedin_recommendations=linkedin_recommendations,
+        interview_preparation=interview_preparation,
+        ats_report=ats_report,
+        recruiter_report=recruiter_report,
+    )
+
+    register_asset(
+        "application_report",
+        data,
+        {
+            "ats_score_estimate": result.get("ats_report", {}).get("ats_score_estimate", 0),
+            "recruiter_confidence": result.get("recruiter_report", {}).get("recruiter_confidence", 0),
+            "application_readiness": result.get("application_readiness", ""),
+        },
+        files={
+            "pdf_path": result.get("application_report_pdf_path", ""),
+            "docx_path": result.get("application_report_docx_path", ""),
+        },
+        text_key="application_readiness",
+        metadata={"origin": "job_application_engine", "overall_application_score": result.get("overall_application_score", 0)},
     )
     return result
 

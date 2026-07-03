@@ -1,0 +1,496 @@
+{
+  "optimized_resume": {
+    "recommended_resume_style": "Business Professional Resume",
+    "recommendation_reason": "The candidate targets a mid-level Business Analyst role in India with foundational experience and relevant technical skills. A Business Professional Resume style best balances emphasis on analytical skills, reporting experience, and stakeholder communication, while maintaining ATS-friendly structure and clarity for recruiters in business services or consulting sectors.",
+    "optimized_resume": "Aarav Mehta\nBengaluru, India\n\nProfessional Title: Business Analyst\n\nProfessional Summary\nDetail-oriented and analytical Business Analyst with practical experience in reporting, data coordination, and customer support. Proficient in Excel, SQL, and Power BI for data analysis and dashboard creation. Skilled in documentation, stakeholder communication, and supporting operational teams to improve process transparency and reporting accuracy. Holds a B.Tech in Electronics and Communication Engineering and certifications in Microsoft Excel for Business and Power BI Fundamentals.\n\nCore Competencies\n- Data Analysis & Reporting: Excel, SQL, Power BI\n- Documentation & Process Support\n- Stakeholder Coordination & Communication\n- Dashboard Development & Metrics Monitoring\n- Customer Support & Service Request Tracking\n\nProfessional Experience\nOperations Executive (Internship/Project Experience)\n- Generated weekly analytical reports and maintained Excel databases to track service requests, enhancing team visibility into operational status and facilitating timely customer communication.\n- Supported cross-functional teams by coordinating information flow and responding to customer queries, ensuring smooth issue resolution.\n- Updated and managed Excel sheets to maintain accurate records of service requests and operational data.\n\nProjects\nExcel and SQL Reporting Dashboards\n- Developed dynamic Excel dashboards to visualize turnaround times and open case metrics, enabling proactive monitoring and decision-making.\n- Created SQL-based reports to extract and analyze case data, improving transparency and supporting process improvement initiatives.\n\nEducation\nB.Tech in Electronics and Communication Engineering\n\nCertifications\n- Microsoft Excel for Business\n- Power BI Fundamentals",
+    "ats_keywords": [
+      "Business Analyst",
+      "Reporting",
+      "Documentation",
+      "Excel",
+      "SQL",
+      "Power BI",
+      "Stakeholder coordination",
+      "Communication skills",
+      "Data analysis",
+      "Process improvement",
+      "Problem solving"
+    ],
+    "strengths": [
+      "Proficiency in Excel, SQL, and Power BI",
+      "Experience in reporting and documentation",
+      "Demonstrated stakeholder coordination and communication"
+    ],
+    "weaknesses_found": [
+      "Lack of explicit experience in requirement gathering",
+      "Limited evidence of process improvement and process mapping",
+      "No formal work experience dates or company names provided"
+    ],
+    "improvement_suggestions": [
+      "Gain practical experience or training in requirement gathering and process mapping",
+      "Include measurable impacts or improvements achieved through reporting projects",
+      "Add specific employer names and dates to strengthen professional experience credibility",
+      "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Requirement gathering, Stakeholder management, Process mapping, Communication skills, Problem solving.",
+      "Place the strongest role keywords naturally in the Professional Summary: Data analysis, Process improvement, Reporting.",
+      "Keep the Skills section ATS-safe and grouped, highlighting: Data analysis, Process improvement, Reporting, Documentation."
+    ],
+    "ats_score_estimate": 56,
+    "ats_readiness_level": "Low",
+    "matching_keywords": [
+      "Data analysis",
+      "Process improvement",
+      "Reporting",
+      "Documentation",
+      "Excel",
+      "SQL",
+      "Power BI",
+      "Business Analyst"
+    ],
+    "missing_keywords": [
+      "Requirement gathering",
+      "Stakeholder management",
+      "Process mapping",
+      "Communication skills",
+      "Problem solving"
+    ],
+    "ats_improvement_actions": [
+      "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Requirement gathering, Stakeholder management, Process mapping, Communication skills, Problem solving.",
+      "Place the strongest role keywords naturally in the Professional Summary: Data analysis, Process improvement, Reporting.",
+      "Keep the Skills section ATS-safe and grouped, highlighting: Data analysis, Process improvement, Reporting, Documentation."
+    ],
+    "personalization_score": 80,
+    "personalization_strategy": "Balance role alignment, recruiter clarity, and truthful ATS keyword coverage.",
+    "personalization_notes": [
+      "India personalization often works best with a balanced emphasis on skills, projects, and readiness.",
+      "Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.",
+      "Overall: India personalization often works best with a balanced emphasis on skills, projects, and readiness. Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills."
+    ],
+    "interview_probability": 65,
+    "recruiter_confidence": 70,
+    "first_impression": "The candidate presents a clear Business Analyst title with relevant foundational skills in data analysis, reporting, and stakeholder communication. The resume is concise, ATS-friendly, and highlights practical experience through internship/project work, but lacks depth in professional experience and measurable achievements.",
+    "shortlisting_decision": "Maybe",
+    "top_strengths": [
+      "Relevant technical skills in Excel, SQL, and Power BI",
+      "Clear focus on reporting, documentation, and stakeholder coordination",
+      "Certifications aligned with target role"
+    ],
+    "top_concerns": [
+      "Limited professional experience beyond internship/project level",
+      "Lack of quantified achievements or impact metrics",
+      "No explicit mention of problem solving or process improvement outcomes"
+    ],
+    "missing_high_value_information": [
+      "Detailed professional experience with measurable results",
+      "Specific examples of problem solving or process improvement",
+      "Soft skills elaboration such as communication or teamwork examples"
+    ],
+    "recommended_improvements": [
+      "Expand professional experience section with more detailed responsibilities and outcomes",
+      "Include quantified achievements to demonstrate impact",
+      "Add a brief section or bullet points highlighting problem solving and process improvement contributions"
+    ],
+    "industry_keywords_missing": [
+      "Problem solving",
+      "Process improvement",
+      "Communication skills"
+    ],
+    "resume_competitiveness": "Basic",
+    "skill_match_percentage": 29,
+    "strong_matching_skills": [
+      "Reporting",
+      "Documentation"
+    ],
+    "missing_required_skills": [
+      "Requirement gathering",
+      "Data analysis",
+      "Process improvement",
+      "Stakeholder management",
+      "Process mapping"
+    ],
+    "missing_preferred_skills": [],
+    "resume_alignment_strategy": "Lead with the strongest matching skills, keep role-relevant evidence visible early, and address the missing required skills through truthful positioning or future upskilling suggestions.",
+    "resume_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\business-analyst.pdf",
+    "resume_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\business-analyst.docx",
+    "selected_theme": "Modern Professional",
+    "page_count": 1,
+    "render_quality_score": 92
+  },
+  "cover_letter": {
+    "cover_letter_text": "Dear Hiring Manager,\n\nI am writing to express my interest in the Business Analyst position at InsightBridge Consulting. With two years of experience as an Operations Executive in technology-driven environments, I have developed strong analytical, reporting, and stakeholder coordination skills that align well with the demands of this role.\n\nMy background in operations has equipped me with a solid foundation in data analysis and process coordination, supported by proficiency in Excel, SQL, and Power BI. I have successfully generated weekly operational reports to enhance visibility into service performance and developed integrated reporting workflows that improved transparency and issue tracking across teams. These experiences have honed my ability to gather and analyze business data, support stakeholders effectively, and contribute to process improvements.\n\nIn my current role, I coordinate cross-functional teams to ensure timely resolution of service requests and customer issues, demonstrating my communication and problem-solving capabilities. Additionally, I have designed customer escalation trackers with structured status updates and summary dashboards, streamlining issue prioritization and communication.\n\nI am particularly drawn to InsightBridge Consulting because of its reputation for delivering technology and business services with a focus on practical, data-driven solutions. I am eager to contribute my skills in reporting, stakeholder management, and data analysis to support your clients' business objectives and drive operational excellence.\n\nThank you for considering my application. I look forward to the opportunity to discuss how my background and skills can add value to your team.\n\nSincerely,\nAarav Mehta",
+    "cover_letter_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\aarav-mehta-insightbridge-consulting-business-analyst.pdf",
+    "cover_letter_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\aarav-mehta-insightbridge-consulting-business-analyst.docx",
+    "cover_letter_quality_score": 85,
+    "ats_alignment_score": 90,
+    "recruiter_confidence": 80
+  },
+  "linkedin_recommendations": {
+    "professional_headline": "Business Analyst | Data Analysis & Reporting Specialist | Excel, SQL & Power BI Expert | Driving Process Transparency & Stakeholder Collaboration in Technology Consulting",
+    "about_section": "I am a detail-oriented Business Analyst with 1-3 years of experience specializing in data analysis, reporting, and process coordination within technology consulting environments. Leveraging strong technical skills in Excel, SQL, and Power BI, I develop insightful dashboards and reports that enhance operational transparency and support informed decision-making. My background in Electronics and Communication Engineering, complemented by certifications in Microsoft Excel for Business and Power BI Fundamentals, equips me with a solid foundation in analytical problem solving and data-driven process improvements.\n\nThroughout my professional journey, I have supported cross-functional teams by managing data flows, coordinating stakeholder communications, and streamlining issue tracking to improve service delivery and customer satisfaction. I am adept at documenting processes and metrics to facilitate clear communication between technical and business teams, ensuring alignment and timely resolution of operational challenges.\n\nMy approach combines technical proficiency with effective stakeholder engagement, enabling me to gather requirements, monitor key performance indicators, and contribute to process mapping initiatives. I am committed to continuous learning and applying best practices in business analysis to drive measurable improvements in technology consulting projects. I am actively seeking opportunities to apply my skills in a Business Analyst role where I can contribute to business process optimization and data-driven strategy development.",
+    "experience_rewrite": [
+      "Generated weekly analytical reports and maintained comprehensive Excel databases to track service requests, enhancing operational visibility and enabling timely stakeholder communication.",
+      "Coordinated information flow across cross-functional teams and responded to customer queries, ensuring efficient issue resolution and improved service delivery.",
+      "Developed dynamic Excel dashboards and SQL-based reporting workflows to monitor turnaround times and open case metrics, supporting proactive decision-making and process improvements.",
+      "Managed documentation and maintained accurate records of service requests and operational data, facilitating transparent reporting and streamlined escalation tracking."
+    ],
+    "featured_section": [
+      "Portfolio / GitHub: https://github.com/aaravmehta",
+      "Pin 1-2 strongest project case studies with problem, approach, and result.",
+      "Add the most relevant certification or workshop proof to Featured.",
+      "Publish one short post highlighting a project or career insight and pin it in Featured.",
+      "Suggested portfolio angle: Process mapping case study"
+    ],
+    "skills_order": [
+      "Excel",
+      "PowerPoint",
+      "Google Sheets",
+      "Power BI",
+      "SQL",
+      "Python",
+      "reporting",
+      "Stakeholder communication",
+      "documentation",
+      "coordination",
+      "problem solving",
+      "customer handling",
+      "Business Analyst",
+      "Communication",
+      "Requirement gathering",
+      "Stakeholder management",
+      "Process mapping",
+      "Business data analysis",
+      "Communication skills",
+      "Physical Design Engineer",
+      "VLSI Engineer",
+      "Embedded Engineer",
+      "FPGA Engineer",
+      "Hardware Validation Engineer",
+      "Telecommunications Engineer",
+      "QA Engineer",
+      "DevOps Engineer",
+      "Operations Analyst",
+      "Business Analysis"
+    ],
+    "top_50_recruiter_keywords": [
+      "Business Analyst",
+      "Excel",
+      "PowerPoint",
+      "Google Sheets",
+      "Power BI",
+      "SQL",
+      "Python",
+      "reporting",
+      "Stakeholder communication",
+      "documentation",
+      "coordination",
+      "problem solving",
+      "customer handling",
+      "Communication",
+      "Requirement gathering",
+      "Stakeholder management",
+      "Process mapping",
+      "Business data analysis",
+      "Communication skills",
+      "Physical Design Engineer",
+      "VLSI Engineer",
+      "Embedded Engineer",
+      "FPGA Engineer",
+      "Hardware Validation Engineer",
+      "Telecommunications Engineer",
+      "QA Engineer",
+      "DevOps Engineer",
+      "Operations Analyst",
+      "Business Analysis"
+    ],
+    "creator_profile_suggestions": [
+      "Update the headline to clearly reflect the target Business Analyst role with relevant keywords such as data analysis, reporting, and stakeholder collaboration to improve recruiter search visibility.",
+      "Expand the About section to highlight analytical skills, business analysis readiness, and technical proficiencies while incorporating ATS-friendly keywords aligned with technology consulting.",
+      "Reframe experience bullet points to emphasize achievements, impact, and business analyst-related responsibilities like process improvement, requirement gathering, and stakeholder communication.",
+      "Add a dedicated Skills section grouping technical tools (Excel, SQL, Power BI) and business skills (stakeholder communication, documentation, problem solving) to enhance keyword optimization.",
+      "Include certifications prominently and consider pursuing recognized business analysis certifications to strengthen professional credibility."
+    ],
+    "networking_suggestions": [
+      "Connect with Business Analysts and technology consulting professionals in India to gain insights and increase profile visibility within the target industry.",
+      "Join LinkedIn groups focused on Business Analysis, Technology Consulting, and Data Analytics to engage in discussions and share relevant content.",
+      "Follow companies and recruiters specializing in technology consulting to stay updated on job openings and industry trends.",
+      "Request informational interviews or mentorship from experienced Business Analysts to deepen understanding of role expectations and required competencies.",
+      "Share posts or articles demonstrating knowledge of business analysis methodologies, data visualization, and process improvement to position yourself as an engaged professional."
+    ],
+    "headline_score": 96,
+    "linkedin_score": 96,
+    "recruiter_visibility_score": 100,
+    "quality_notes": [
+      "Headline effectively incorporates key role and technical skills relevant to Business Analyst positions in technology consulting.",
+      "About section is detailed, professional, and aligns well with target role, emphasizing technical proficiency and stakeholder engagement.",
+      "Experience bullet points focus on relevant tasks but lack quantifiable achievements and explicit business analysis terminology such as requirement gathering and process mapping.",
+      "Skills are well grouped and include important technical and business competencies, though some unrelated engineering roles appear in the skills list which may dilute focus.",
+      "Missing measurable impact statements and certifications directly related to business analysis (e.g., CBAP, IIBA) reduce perceived credibility.",
+      "ATS keyword coverage is moderate but lacks critical keywords like 'requirement gathering', 'stakeholder management', and 'process mapping' in experience and summary sections.",
+      "Profile tone is balanced and professional, suitable for early-career transition into business analysis within technology consulting in India."
+    ],
+    "visibility_explanation": "The profile uses relevant keywords and presents a clear career objective aligned with the Business Analyst role, improving recruiter discoverability. However, missing key business analysis terms and quantifiable results limit ATS optimization and recruiter confidence. The inclusion of some unrelated skills and roles may reduce clarity and focus for recruiters searching specifically for business analysts.",
+    "linkedin_report_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\linkedin\\aarav-mehta-business-analyst.docx",
+    "linkedin_report_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\linkedin\\aarav-mehta-business-analyst.pdf"
+  },
+  "interview_preparation": {
+    "technical_questions": [
+      "Can you describe your experience using Excel, SQL, and Power BI to create reports and dashboards? Please provide specific examples.",
+      "How do you approach gathering and documenting business requirements from stakeholders?",
+      "Explain a time when you used data analysis to identify a process improvement opportunity.",
+      "What steps do you follow to ensure accuracy and clarity in your reporting?",
+      "How do you prioritize and manage multiple service requests or operational issues simultaneously?",
+      "Can you walk me through the process of creating a dashboard to monitor key business metrics?",
+      "Describe your experience coordinating between cross-functional teams to resolve customer issues.",
+      "What techniques do you use to communicate complex data insights to non-technical stakeholders?"
+    ],
+    "behavioral_questions": [
+      "Tell me about a time when you had to manage conflicting priorities or deadlines. How did you handle it?",
+      "Describe a situation where you identified a problem in a process and took initiative to improve it.",
+      "Give an example of how you have effectively communicated with stakeholders to ensure alignment on project goals.",
+      "Tell me about a time you faced a challenge in coordinating between teams. How did you resolve it?",
+      "Describe an instance where your attention to detail prevented a potential error or issue."
+    ],
+    "hr_questions": [
+      "Why are you interested in transitioning from operations to a Business Analyst role at InsightBridge Consulting?",
+      "What motivates you to work in technology consulting?",
+      "How do you handle feedback and criticism in a professional setting?",
+      "Where do you see yourself in the next 3 to 5 years?",
+      "What are your strengths and areas for improvement related to this role?"
+    ],
+    "company_specific_questions": [
+      "InsightBridge Consulting values clear communication and professionalism. How do you ensure your reports and presentations meet these standards?",
+      "Our consultants often work with diverse stakeholders. How would you manage stakeholder expectations and conflicting requirements?",
+      "How would you leverage your skills in Excel, SQL, and Power BI to support consulting projects at InsightBridge?",
+      "Describe how you would approach understanding a client\u2019s business processes to identify areas for improvement.",
+      "InsightBridge emphasizes data-driven decision making. How do you ensure your data analysis supports actionable insights?"
+    ],
+    "star_answer_examples": [
+      "Situation: During my internship as an Operations Executive, the team lacked visibility into service request statuses, causing delays in customer communication. Task: I was responsible for improving reporting clarity. Action: I developed dynamic Excel dashboards and SQL reports to track turnaround times and open cases, coordinating with cross-functional teams to validate data. Result: This improved transparency and enabled proactive issue resolution, enhancing team efficiency and customer satisfaction.",
+      "Situation: While supporting customer issue resolution, I noticed inconsistent documentation causing confusion among stakeholders. Task: I aimed to streamline documentation and communication. Action: I created structured status updates and summary dashboards using Power BI and Excel, and regularly followed up with stakeholders to ensure alignment. Result: This improved process transparency and reduced resolution times.",
+      "Situation: In a college project, I led a team of four members to deliver a data reporting solution. Task: I coordinated deliverables, reviews, and presentations. Action: I maintained clear documentation, delegated tasks, and facilitated communication among team members. Result: We successfully completed the project on time with positive feedback on our organized approach."
+    ],
+    "candidate_strengths": [
+      "Proficiency in Excel, SQL, and Power BI for data analysis and dashboard creation",
+      "Experience in generating reports that improve operational transparency",
+      "Strong stakeholder communication and coordination skills",
+      "Relevant certifications in Microsoft Excel for Business and Power BI Fundamentals",
+      "Detail-oriented with a focus on documentation and process support"
+    ],
+    "candidate_weaknesses": [
+      "Limited full-time professional experience in business analysis roles",
+      "Lack of explicit experience with formal requirement gathering and process mapping methodologies",
+      "Minimal quantifiable impact or metrics in past projects and work experience",
+      "Limited exposure to formal business analysis certifications such as CBAP or CCBA",
+      "Career summary and resume could better highlight business analyst-specific responsibilities"
+    ],
+    "likely_follow_up_questions": [
+      "Can you give an example of a business requirement you gathered and how you documented it?",
+      "How do you handle situations when stakeholders have conflicting requirements?",
+      "What challenges did you face while creating dashboards and how did you overcome them?",
+      "Describe a time when your analysis led to a change in a business process.",
+      "How do you ensure your reports are understandable to both technical and non-technical audiences?"
+    ],
+    "interview_tips": [
+      "Focus on clearly articulating your experience with data tools (Excel, SQL, Power BI) and how you used them to support business decisions.",
+      "Use the STAR method to structure your answers, emphasizing your role in problem-solving and stakeholder communication.",
+      "Highlight transferable skills from your operations experience that align with business analysis, such as reporting, coordination, and documentation.",
+      "Prepare to discuss how you would approach requirement gathering and process mapping, even if you have limited direct experience.",
+      "Demonstrate professionalism and clarity in your communication, reflecting InsightBridge Consulting\u2019s values.",
+      "Be ready to explain your motivation for transitioning into business analysis and how your background prepares you for this role."
+    ],
+    "confidence_score": 91,
+    "readiness_score": 89,
+    "mock_interview_plan": [
+      "Begin with an introduction and discuss the candidate\u2019s motivation for the Business Analyst role at InsightBridge Consulting.",
+      "Ask technical questions focused on Excel, SQL, Power BI, and reporting experience.",
+      "Explore behavioral questions related to stakeholder management, problem-solving, and process improvement.",
+      "Conduct company-specific scenario questions to assess fit with InsightBridge\u2019s consulting environment.",
+      "Provide feedback on communication clarity and use of business analyst terminology.",
+      "Review candidate\u2019s STAR answers and suggest improvements for quantifying impact and emphasizing business analysis skills.",
+      "Conclude with HR questions to understand career goals and cultural fit."
+    ],
+    "interview_report_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\aarav-mehta-business-analyst.docx",
+    "interview_report_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\aarav-mehta-business-analyst.pdf"
+  },
+  "ats_report": {
+    "ats_score_estimate": 56,
+    "ats_readiness_level": "Low",
+    "matching_keywords": [
+      "Data analysis",
+      "Process improvement",
+      "Reporting",
+      "Documentation",
+      "Excel",
+      "SQL",
+      "Power BI",
+      "Business Analyst"
+    ],
+    "missing_keywords": [
+      "Requirement gathering",
+      "Stakeholder management",
+      "Process mapping",
+      "Communication skills",
+      "Problem solving"
+    ],
+    "ats_improvement_actions": [
+      "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Requirement gathering, Stakeholder management, Process mapping, Communication skills, Problem solving.",
+      "Place the strongest role keywords naturally in the Professional Summary: Data analysis, Process improvement, Reporting.",
+      "Keep the Skills section ATS-safe and grouped, highlighting: Data analysis, Process improvement, Reporting, Documentation."
+    ]
+  },
+  "recruiter_report": {
+    "interview_probability": 65,
+    "recruiter_confidence": 70,
+    "first_impression": "The candidate presents a clear Business Analyst title with relevant foundational skills in data analysis, reporting, and stakeholder communication. The resume is concise, ATS-friendly, and highlights practical experience through internship/project work, but lacks depth in professional experience and measurable achievements.",
+    "shortlisting_decision": "Maybe",
+    "top_strengths": [
+      "Relevant technical skills in Excel, SQL, and Power BI",
+      "Clear focus on reporting, documentation, and stakeholder coordination",
+      "Certifications aligned with target role"
+    ],
+    "top_concerns": [
+      "Limited professional experience beyond internship/project level",
+      "Lack of quantified achievements or impact metrics",
+      "No explicit mention of problem solving or process improvement outcomes"
+    ],
+    "missing_high_value_information": [
+      "Detailed professional experience with measurable results",
+      "Specific examples of problem solving or process improvement",
+      "Soft skills elaboration such as communication or teamwork examples"
+    ],
+    "recommended_improvements": [
+      "Expand professional experience section with more detailed responsibilities and outcomes",
+      "Include quantified achievements to demonstrate impact",
+      "Add a brief section or bullet points highlighting problem solving and process improvement contributions"
+    ],
+    "industry_keywords_missing": [
+      "Problem solving",
+      "Process improvement",
+      "Communication skills"
+    ],
+    "resume_competitiveness": "Basic"
+  },
+  "overall_application_score": 71,
+  "job_match_score": 32,
+  "application_readiness": "Not Ready",
+  "recommended_next_steps": [
+    "Strengthen evidence for these missing role keywords before applying: Requirement gathering, Stakeholder management, Process mapping, Communication skills, Problem solving.",
+    "Address recruiter concerns in the resume and interview narrative: Limited professional experience beyond internship/project level; Lack of quantified achievements or impact metrics; No explicit mention of problem solving or process improvement outcomes.",
+    "Tighten the weakest resume areas next: Lack of explicit experience in requirement gathering; Limited evidence of process improvement and process mapping; No formal work experience dates or company names provided."
+  ],
+  "application_report": {
+    "candidate_name": "Aarav Mehta",
+    "target_role": "Business Analyst",
+    "target_company": "InsightBridge Consulting",
+    "target_country": "India",
+    "application_readiness": "Not Ready",
+    "overall_application_score": 71,
+    "job_match_score": 32,
+    "resume_summary": {
+      "recommended_style": "Business Professional Resume",
+      "recommendation_reason": "The candidate targets a mid-level Business Analyst role in India with foundational experience and relevant technical skills. A Business Professional Resume style best balances emphasis on analytical skills, reporting experience, and stakeholder communication, while maintaining ATS-friendly structure and clarity for recruiters in business services or consulting sectors.",
+      "ats_score_estimate": 56,
+      "quality_score": 0,
+      "strengths": [
+        "Proficiency in Excel, SQL, and Power BI",
+        "Experience in reporting and documentation",
+        "Demonstrated stakeholder coordination and communication"
+      ],
+      "weaknesses_found": [
+        "Lack of explicit experience in requirement gathering",
+        "Limited evidence of process improvement and process mapping",
+        "No formal work experience dates or company names provided"
+      ]
+    },
+    "ats_summary": {
+      "ats_readiness_level": "Low",
+      "matching_keywords": [
+        "Data analysis",
+        "Process improvement",
+        "Reporting",
+        "Documentation",
+        "Excel",
+        "SQL",
+        "Power BI",
+        "Business Analyst"
+      ],
+      "missing_keywords": [
+        "Requirement gathering",
+        "Stakeholder management",
+        "Process mapping",
+        "Communication skills",
+        "Problem solving"
+      ],
+      "ats_improvement_actions": [
+        "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Requirement gathering, Stakeholder management, Process mapping, Communication skills, Problem solving.",
+        "Place the strongest role keywords naturally in the Professional Summary: Data analysis, Process improvement, Reporting.",
+        "Keep the Skills section ATS-safe and grouped, highlighting: Data analysis, Process improvement, Reporting, Documentation."
+      ]
+    },
+    "recruiter_summary": {
+      "shortlisting_decision": "Maybe",
+      "resume_competitiveness": "Basic",
+      "first_impression": "The candidate presents a clear Business Analyst title with relevant foundational skills in data analysis, reporting, and stakeholder communication. The resume is concise, ATS-friendly, and highlights practical experience through internship/project work, but lacks depth in professional experience and measurable achievements.",
+      "top_strengths": [
+        "Relevant technical skills in Excel, SQL, and Power BI",
+        "Clear focus on reporting, documentation, and stakeholder coordination",
+        "Certifications aligned with target role"
+      ],
+      "top_concerns": [
+        "Limited professional experience beyond internship/project level",
+        "Lack of quantified achievements or impact metrics",
+        "No explicit mention of problem solving or process improvement outcomes"
+      ]
+    },
+    "cover_letter_summary": {
+      "quality_score": 85,
+      "ats_alignment_score": 90,
+      "recruiter_confidence": 80
+    },
+    "linkedin_summary": {
+      "headline_score": 96,
+      "linkedin_score": 96,
+      "recruiter_visibility_score": 100,
+      "quality_notes": [
+        "Headline effectively incorporates key role and technical skills relevant to Business Analyst positions in technology consulting.",
+        "About section is detailed, professional, and aligns well with target role, emphasizing technical proficiency and stakeholder engagement.",
+        "Experience bullet points focus on relevant tasks but lack quantifiable achievements and explicit business analysis terminology such as requirement gathering and process mapping.",
+        "Skills are well grouped and include important technical and business competencies, though some unrelated engineering roles appear in the skills list which may dilute focus.",
+        "Missing measurable impact statements and certifications directly related to business analysis (e.g., CBAP, IIBA) reduce perceived credibility.",
+        "ATS keyword coverage is moderate but lacks critical keywords like 'requirement gathering', 'stakeholder management', and 'process mapping' in experience and summary sections."
+      ]
+    },
+    "interview_plan": {
+      "confidence_score": 91,
+      "readiness_score": 89,
+      "technical_questions": [
+        "Can you describe your experience using Excel, SQL, and Power BI to create reports and dashboards? Please provide specific examples.",
+        "How do you approach gathering and documenting business requirements from stakeholders?",
+        "Explain a time when you used data analysis to identify a process improvement opportunity.",
+        "What steps do you follow to ensure accuracy and clarity in your reporting?",
+        "How do you prioritize and manage multiple service requests or operational issues simultaneously?"
+      ],
+      "behavioral_questions": [
+        "Tell me about a time when you had to manage conflicting priorities or deadlines. How did you handle it?",
+        "Describe a situation where you identified a problem in a process and took initiative to improve it.",
+        "Give an example of how you have effectively communicated with stakeholders to ensure alignment on project goals.",
+        "Tell me about a time you faced a challenge in coordinating between teams. How did you resolve it?",
+        "Describe an instance where your attention to detail prevented a potential error or issue."
+      ],
+      "interview_tips": [
+        "Focus on clearly articulating your experience with data tools (Excel, SQL, Power BI) and how you used them to support business decisions.",
+        "Use the STAR method to structure your answers, emphasizing your role in problem-solving and stakeholder communication.",
+        "Highlight transferable skills from your operations experience that align with business analysis, such as reporting, coordination, and documentation.",
+        "Prepare to discuss how you would approach requirement gathering and process mapping, even if you have limited direct experience.",
+        "Demonstrate professionalism and clarity in your communication, reflecting InsightBridge Consulting\u2019s values.",
+        "Be ready to explain your motivation for transitioning into business analysis and how your background prepares you for this role."
+      ]
+    },
+    "recommended_next_steps": [
+      "Strengthen evidence for these missing role keywords before applying: Requirement gathering, Stakeholder management, Process mapping, Communication skills, Problem solving.",
+      "Address recruiter concerns in the resume and interview narrative: Limited professional experience beyond internship/project level; Lack of quantified achievements or impact metrics; No explicit mention of problem solving or process improvement outcomes.",
+      "Tighten the weakest resume areas next: Lack of explicit experience in requirement gathering; Limited evidence of process improvement and process mapping; No formal work experience dates or company names provided."
+    ]
+  },
+  "application_report_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\job-applications\\aarav-mehta-business-analyst-application-report.pdf",
+  "application_report_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\job-applications\\aarav-mehta-business-analyst-application-report.docx"
+}
