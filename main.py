@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
@@ -24,6 +24,7 @@ from interview_engine import generate_interview_prep_package
 from portfolio_engine import generate_portfolio_package
 from career_dashboard import get_dashboard_snapshot, get_dashboard_assets, get_dashboard_timeline, get_dashboard_statistics, get_dashboard_history
 from career_dashboard.career_assets import register_asset, register_job_description
+from auth_cloud_sync import delete_career_asset, get_auth_config, get_career_asset_by_id, list_career_assets, login_user, save_career_asset, signup_user, verify_access_token
 from job_application_engine import generate_job_application_package
 from resume_designer import render_resume_package
 from resume_designer.regression_runner import run_regression_suite
@@ -645,6 +646,60 @@ class JobApplicationOutput(BaseModel):
     application_report_docx_path: str
 
 
+class AuthConfigOutput(BaseModel):
+    auth_mode: str
+    email_login_enabled: bool
+    google_login_enabled: bool
+    supabase_url: str
+    supabase_anon_key: str
+    supabase_redirect_url: str
+
+
+class AuthCredentialsInput(BaseModel):
+    email: str
+    password: str
+    full_name: str = ""
+
+
+class AuthUserOutput(BaseModel):
+    id: str
+    email: str
+    full_name: str
+    auth_mode: str
+
+
+class AuthResponseOutput(BaseModel):
+    access_token: str
+    refresh_token: str
+    message: str
+    auth_mode: str
+    user: AuthUserOutput
+
+
+class SaveCareerAssetInput(BaseModel):
+    asset_type: str
+    title: str
+    target_role: str = ""
+    target_country: str = "Global"
+    content_json: dict = Field(default_factory=dict)
+    pdf_url: str = ""
+    docx_url: str = ""
+
+
+class CareerAssetOutput(BaseModel):
+    id: str
+    user_id: str
+    asset_type: str
+    title: str
+    target_role: str
+    target_country: str
+    created_at: str
+    updated_at: str
+    content_json: dict
+    pdf_url: str
+    docx_url: str
+
+
 class ResumeReviewerInput(BaseModel):
     resume_text: str
     target_role: str = ""
@@ -733,6 +788,27 @@ def load_json_file(path: Path) -> dict:
     if not path.exists():
         return {}
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def extract_bearer_token(authorization: str | None) -> str:
+    value = str(authorization or "").strip()
+    if not value.lower().startswith("bearer "):
+        return ""
+    return value.split(" ", 1)[1].strip()
+
+
+def get_current_user_optional(authorization: str | None) -> tuple[dict | None, str]:
+    token = extract_bearer_token(authorization)
+    if not token:
+        return None, ""
+    return verify_access_token(token), token
+
+
+def get_current_user_required(authorization: str | None) -> tuple[dict, str]:
+    user, token = get_current_user_optional(authorization)
+    if not user:
+        raise HTTPException(status_code=401, detail="Authentication required.")
+    return user, token
 
 
 def get_career_knowledge_context(candidate_data, **overrides) -> dict:
@@ -3270,6 +3346,52 @@ def generate_portfolio(data: PortfolioInput):
     return result
 
 
+@app.get("/auth/config", response_model=AuthConfigOutput)
+def auth_config():
+    return get_auth_config()
+
+
+@app.post("/auth/signup", response_model=AuthResponseOutput)
+def auth_signup(data: AuthCredentialsInput):
+    try:
+        return signup_user(data.email, data.password, data.full_name)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+
+@app.post("/auth/login", response_model=AuthResponseOutput)
+def auth_login(data: AuthCredentialsInput):
+    try:
+        return login_user(data.email, data.password)
+    except ValueError as exc:
+        raise HTTPException(status_code=401, detail=str(exc))
+
+
+@app.get("/me", response_model=AuthUserOutput)
+def me(authorization: str | None = Header(default=None)):
+    user, _ = get_current_user_required(authorization)
+    return user
+
+
+@app.post("/save-career-asset", response_model=CareerAssetOutput)
+def save_career_asset_endpoint(data: SaveCareerAssetInput, authorization: str | None = Header(default=None)):
+    user, token = get_current_user_required(authorization)
+    try:
+        return save_career_asset(
+            user=user,
+            asset_type=data.asset_type,
+            title=data.title,
+            target_role=data.target_role,
+            target_country=data.target_country,
+            content_json=data.content_json,
+            pdf_url=data.pdf_url,
+            docx_url=data.docx_url,
+            access_token=token,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+
 @app.get("/dashboard")
 def dashboard():
     return get_dashboard_snapshot()
@@ -3281,8 +3403,38 @@ def career_timeline():
 
 
 @app.get("/career-assets")
-def career_assets():
+def career_assets(authorization: str | None = Header(default=None)):
+    user, token = get_current_user_optional(authorization)
+    if user:
+        try:
+            return list_career_assets(user, access_token=token)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc))
     return get_dashboard_assets()
+
+
+@app.get("/career-assets/{asset_id}", response_model=CareerAssetOutput)
+def career_asset_by_id(asset_id: str, authorization: str | None = Header(default=None)):
+    user, token = get_current_user_required(authorization)
+    try:
+        asset = get_career_asset_by_id(user, asset_id, access_token=token)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    if not asset:
+        raise HTTPException(status_code=404, detail="Career asset not found.")
+    return asset
+
+
+@app.delete("/career-assets/{asset_id}")
+def delete_career_asset_endpoint(asset_id: str, authorization: str | None = Header(default=None)):
+    user, token = get_current_user_required(authorization)
+    try:
+        deleted = delete_career_asset(user, asset_id, access_token=token)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Career asset not found.")
+    return {"status": "deleted", "id": asset_id}
 
 
 @app.get("/career-statistics")

@@ -2,3 +2,6 @@ venv/
 __pycache__/
 .env
 *.pyc
+auth_cloud_sync_data/
+resume-engine.err.log
+resume-engine.out.log

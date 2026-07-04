@@ -1,0 +1,18 @@
+{
+  "auth_mode": "local",
+  "google_login_enabled": false,
+  "signup_status": 200,
+  "login_status": "ok",
+  "save_status": 200,
+  "list_status": 200,
+  "detail_status": 200,
+  "delete_status": 200,
+  "public_generation_status": 200,
+  "public_assets_shape": "dict",
+  "notes": [
+    "Existing public generation endpoints remained accessible without authentication.",
+    "Authenticated users can save, list, inspect, and delete synced career assets.",
+    "Supabase mode is implemented but not active because SUPABASE_URL, SUPABASE_ANON_KEY, and SUPABASE_SERVICE_ROLE_KEY are not configured in the backend environment yet.",
+    "Google login is wired for future Supabase activation and is intentionally unavailable in local fallback mode."
+  ]
+}

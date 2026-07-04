@@ -1,0 +1,12 @@
+{
+  "access_token": "local.eyJlbWFpbCI6InBoYXNlLXYxOC10ZXN0ZXJAZXhhbXBsZS5jb20iLCJleHAiOjE3ODM4MDc2NzgsImZ1bGxfbmFtZSI6IlBoYXNlIFYxOCBUZXN0ZXIiLCJtb2RlIjoibG9jYWwiLCJzdWIiOiI2YWFlZjkyZi05NDVjLTRmYWMtOGE3Zi0yY2Q0NzkxNDllODkifQ.QHexbqaQHg2PIyOQ9zQqUb7uwKtwLuzJF_eaQv3hqM8",
+  "refresh_token": "",
+  "message": "Login successful.",
+  "auth_mode": "local",
+  "user": {
+    "id": "6aaef92f-945c-4fac-8a7f-2cd479149e89",
+    "email": "phase-v18-tester@example.com",
+    "full_name": "Phase V18 Tester",
+    "auth_mode": "local"
+  }
+}

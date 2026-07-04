@@ -1,0 +1,124 @@
+{
+  "auth_config": {
+    "status": 200,
+    "body": {
+      "auth_mode": "local",
+      "email_login_enabled": true,
+      "google_login_enabled": false,
+      "supabase_url": "",
+      "supabase_anon_key": "",
+      "supabase_redirect_url": ""
+    }
+  },
+  "signup": {
+    "status": 200,
+    "body": {
+      "access_token": "local.eyJlbWFpbCI6InBoYXNlLXYxOC10ZXN0ZXJAZXhhbXBsZS5jb20iLCJleHAiOjE3ODM4MDc0OTQsImZ1bGxfbmFtZSI6IlBoYXNlIFYxOCBUZXN0ZXIiLCJtb2RlIjoibG9jYWwiLCJzdWIiOiI2YWFlZjkyZi05NDVjLTRmYWMtOGE3Zi0yY2Q0NzkxNDllODkifQ.f5ckx1nkz7Y7R5wjO8gnMGYu3RR6uMLH0hL7z7StJjs",
+      "refresh_token": "",
+      "message": "Account created successfully.",
+      "auth_mode": "local",
+      "user": {
+        "id": "6aaef92f-945c-4fac-8a7f-2cd479149e89",
+        "email": "phase-v18-tester@example.com",
+        "full_name": "Phase V18 Tester",
+        "auth_mode": "local"
+      }
+    }
+  },
+  "me": {
+    "status": 200,
+    "body": {
+      "id": "6aaef92f-945c-4fac-8a7f-2cd479149e89",
+      "email": "phase-v18-tester@example.com",
+      "full_name": "Phase V18 Tester",
+      "auth_mode": "local"
+    }
+  },
+  "save_career_asset": {
+    "status": 200,
+    "body": {
+      "id": "cb5cc220-d880-4a7d-ab82-ec573b259a98",
+      "user_id": "6aaef92f-945c-4fac-8a7f-2cd479149e89",
+      "asset_type": "resume",
+      "title": "Phase V1.8 Resume",
+      "target_role": "Business Analyst",
+      "target_country": "India",
+      "created_at": "2026-07-04T22:04:54.159834+00:00",
+      "updated_at": "2026-07-04T22:04:54.159834+00:00",
+      "content_json": {
+        "summary": "Sample saved asset for auth sync testing.",
+        "status": "ready"
+      },
+      "pdf_url": "",
+      "docx_url": ""
+    }
+  },
+  "career_assets_authenticated": {
+    "status": 200,
+    "count": 1,
+    "body": [
+      {
+        "id": "cb5cc220-d880-4a7d-ab82-ec573b259a98",
+        "user_id": "6aaef92f-945c-4fac-8a7f-2cd479149e89",
+        "asset_type": "resume",
+        "title": "Phase V1.8 Resume",
+        "target_role": "Business Analyst",
+        "target_country": "India",
+        "created_at": "2026-07-04T22:04:54.159834+00:00",
+        "updated_at": "2026-07-04T22:04:54.159834+00:00",
+        "content_json": {
+          "summary": "Sample saved asset for auth sync testing.",
+          "status": "ready"
+        },
+        "pdf_url": "",
+        "docx_url": ""
+      }
+    ]
+  },
+  "career_asset_detail": {
+    "status": 200,
+    "body": {
+      "id": "cb5cc220-d880-4a7d-ab82-ec573b259a98",
+      "user_id": "6aaef92f-945c-4fac-8a7f-2cd479149e89",
+      "asset_type": "resume",
+      "title": "Phase V1.8 Resume",
+      "target_role": "Business Analyst",
+      "target_country": "India",
+      "created_at": "2026-07-04T22:04:54.159834+00:00",
+      "updated_at": "2026-07-04T22:04:54.159834+00:00",
+      "content_json": {
+        "summary": "Sample saved asset for auth sync testing.",
+        "status": "ready"
+      },
+      "pdf_url": "",
+      "docx_url": ""
+    }
+  },
+  "career_assets_public": {
+    "status": 200,
+    "type": "dict",
+    "keys": [
+      "resume_library",
+      "cover_letter_library",
+      "linkedin_library",
+      "portfolio_library",
+      "interview_library",
+      "job_description_library"
+    ]
+  },
+  "unauthenticated_generation": {
+    "status": 200,
+    "body_keys": [
+      "connection_message",
+      "outreach_message",
+      "follow_up_message"
+    ]
+  },
+  "delete_career_asset": {
+    "status": 200,
+    "body": {
+      "status": "deleted",
+      "id": "cb5cc220-d880-4a7d-ab82-ec573b259a98"
+    }
+  }
+}
