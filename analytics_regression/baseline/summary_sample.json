@@ -1,0 +1,36 @@
+{
+  "total_users": 4,
+  "total_generations": 2,
+  "resume_downloads": 1,
+  "average_ats_score": 84.0,
+  "average_recruiter_score": 80.5,
+  "most_used_tool": "resume_builder",
+  "top_countries": [
+    {
+      "target_country": "India",
+      "count": 2
+    },
+    {
+      "target_country": "United Kingdom",
+      "count": 1
+    },
+    {
+      "target_country": "Canada",
+      "count": 1
+    }
+  ],
+  "top_roles": [
+    {
+      "target_role": "Business Analyst",
+      "count": 2
+    },
+    {
+      "target_role": "DevOps Engineer",
+      "count": 1
+    },
+    {
+      "target_role": "Project Manager",
+      "count": 1
+    }
+  ]
+}

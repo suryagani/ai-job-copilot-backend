@@ -1,0 +1,107 @@
+[
+  {
+    "id": "9e7bcdac-2f63-46c8-8d8c-a38a47aad153",
+    "user_id": "079a8c53-c05c-4b3d-8c67-5c2c78ac3c88",
+    "session_id": "analytics-admin-session-v19",
+    "event_name": "resume_downloaded_docx",
+    "tool_name": "resume_export",
+    "target_role": "Business Analyst",
+    "target_country": "India",
+    "resume_model": "",
+    "ats_score": null,
+    "recruiter_score": null,
+    "created_at": "2026-07-04T23:08:58.303116+00:00",
+    "metadata_json": {}
+  },
+  {
+    "id": "0d9c11e5-4b4f-4ddc-a09d-99befb1924c5",
+    "user_id": "079a8c53-c05c-4b3d-8c67-5c2c78ac3c88",
+    "session_id": "analytics-admin-session-v19",
+    "event_name": "resume_downloaded_pdf",
+    "tool_name": "resume_export",
+    "target_role": "Business Analyst",
+    "target_country": "India",
+    "resume_model": "",
+    "ats_score": null,
+    "recruiter_score": null,
+    "created_at": "2026-07-04T23:08:58.176745+00:00",
+    "metadata_json": {}
+  },
+  {
+    "id": "61171229-9ca7-4f2b-8459-1faa5a8a3226",
+    "user_id": null,
+    "session_id": "analytics-admin-session-v19",
+    "event_name": "resume_optimizer_completed",
+    "tool_name": "resume_optimizer",
+    "target_role": "Business Analyst",
+    "target_country": "India",
+    "resume_model": "Business Professional Resume",
+    "ats_score": 57,
+    "recruiter_score": 70,
+    "created_at": "2026-07-04T23:08:58.155888+00:00",
+    "metadata_json": {}
+  },
+  {
+    "id": "e083b783-d5e5-4d51-93bb-05440dda5a29",
+    "user_id": null,
+    "session_id": "analytics-admin-session-v19",
+    "event_name": "resume_optimizer_started",
+    "tool_name": "resume_optimizer",
+    "target_role": "Business Analyst",
+    "target_country": "India",
+    "resume_model": "",
+    "ats_score": null,
+    "recruiter_score": null,
+    "created_at": "2026-07-04T23:08:33.477029+00:00",
+    "metadata_json": {}
+  },
+  {
+    "id": "dd6ea50b-30ba-4400-ae8a-102bc4cbf599",
+    "user_id": null,
+    "session_id": "analytics-admin-session-v19",
+    "event_name": "generation_failed",
+    "tool_name": "resume_optimizer",
+    "target_role": "",
+    "target_country": "",
+    "resume_model": "",
+    "ats_score": null,
+    "recruiter_score": null,
+    "created_at": "2026-07-04T23:08:33.462388+00:00",
+    "metadata_json": {
+      "status_code": 422,
+      "path": "/optimize-resume"
+    }
+  },
+  {
+    "id": "b1e29c6e-574a-448a-86b5-92b37284763c",
+    "user_id": "079a8c53-c05c-4b3d-8c67-5c2c78ac3c88",
+    "session_id": "analytics-admin-session-v19",
+    "event_name": "user_logged_in",
+    "tool_name": "auth",
+    "target_role": "",
+    "target_country": "",
+    "resume_model": "",
+    "ats_score": null,
+    "recruiter_score": null,
+    "created_at": "2026-07-04T23:08:33.438598+00:00",
+    "metadata_json": {
+      "auth_mode": "local"
+    }
+  },
+  {
+    "id": "10f24682-010f-426c-8ab6-a140f51eee88",
+    "user_id": "079a8c53-c05c-4b3d-8c67-5c2c78ac3c88",
+    "session_id": "analytics-admin-session-v19",
+    "event_name": "user_signed_up",
+    "tool_name": "auth",
+    "target_role": "",
+    "target_country": "",
+    "resume_model": "",
+    "ats_score": null,
+    "recruiter_score": null,
+    "created_at": "2026-07-04T23:08:33.332953+00:00",
+    "metadata_json": {
+      "auth_mode": "local"
+    }
+  }
+]

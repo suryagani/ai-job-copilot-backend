@@ -67,3 +67,19 @@ create table if not exists public.job_applications (
   created_at timestamptz default now(),
   content_json jsonb default '{}'::jsonb
 );
+
+
+create table if not exists public.analytics_events (
+  id uuid primary key,
+  user_id uuid,
+  session_id text not null,
+  event_name text not null,
+  tool_name text default '',
+  target_role text default '',
+  target_country text default '',
+  resume_model text default '',
+  ats_score integer,
+  recruiter_score integer,
+  created_at timestamptz default now(),
+  metadata_json jsonb default '{}'::jsonb
+);

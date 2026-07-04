@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
@@ -25,6 +25,7 @@ from portfolio_engine import generate_portfolio_package
 from career_dashboard import get_dashboard_snapshot, get_dashboard_assets, get_dashboard_timeline, get_dashboard_statistics, get_dashboard_history
 from career_dashboard.career_assets import register_asset, register_job_description
 from auth_cloud_sync import delete_career_asset, get_auth_config, get_career_asset_by_id, list_career_assets, login_user, save_career_asset, signup_user, verify_access_token
+from analytics_engine import analytics_countries, analytics_downloads, analytics_errors, analytics_recent_events, analytics_roles, analytics_summary, analytics_tool_usage, track_analytics_event
 from job_application_engine import generate_job_application_package
 from resume_designer import render_resume_package
 from resume_designer.regression_runner import run_regression_suite
@@ -61,6 +62,7 @@ SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
 SMTP_USER = os.getenv("SMTP_USER", "")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
 SMTP_FROM = os.getenv("SMTP_FROM", SMTP_USER)
+ADMIN_SECRET = os.getenv("ADMIN_SECRET", "change-me-admin-secret").strip()
 
 ROLE_CATALOG = [
     "Software Engineer",
@@ -809,6 +811,87 @@ def get_current_user_required(authorization: str | None) -> tuple[dict, str]:
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required.")
     return user, token
+
+
+def require_admin_secret(x_admin_secret: str | None) -> None:
+    if str(x_admin_secret or "").strip() != ADMIN_SECRET:
+        raise HTTPException(status_code=403, detail="Admin access denied.")
+
+
+def analytics_user_id_from_authorization(authorization: str | None) -> str | None:
+    user, _ = get_current_user_optional(authorization)
+    return str((user or {}).get("id", "")).strip() or None
+
+
+def analytics_session_id(x_session_id: str | None) -> str:
+    return str(x_session_id or "").strip()
+
+
+def log_analytics_event(
+    event_name: str,
+    tool_name: str,
+    authorization: str | None = None,
+    x_session_id: str | None = None,
+    target_role: str = "",
+    target_country: str = "",
+    resume_model: str = "",
+    ats_score=None,
+    recruiter_score=None,
+    metadata_json: dict | None = None,
+) -> None:
+    try:
+        track_analytics_event(
+            event_name=event_name,
+            tool_name=tool_name,
+            session_id=analytics_session_id(x_session_id),
+            user_id=analytics_user_id_from_authorization(authorization),
+            target_role=target_role,
+            target_country=target_country,
+            resume_model=resume_model,
+            ats_score=ats_score,
+            recruiter_score=recruiter_score,
+            metadata_json=metadata_json or {},
+        )
+    except Exception:
+        pass
+
+
+TRACKED_FAILURE_TOOLS = {
+    "/build-resume": "resume_builder",
+    "/optimize-resume": "resume_optimizer",
+    "/generate-cover-letter": "cover_letter",
+    "/optimize-linkedin": "linkedin_optimizer",
+    "/generate-interview-prep": "interview_prep",
+    "/generate-portfolio": "portfolio",
+    "/prepare-job-application": "job_application",
+}
+
+
+@app.middleware("http")
+async def analytics_failure_middleware(request: Request, call_next):
+    path = request.url.path
+    try:
+        response = await call_next(request)
+    except Exception as exc:
+        if request.method.upper() == "POST" and path in TRACKED_FAILURE_TOOLS:
+            log_analytics_event(
+                event_name="generation_failed",
+                tool_name=TRACKED_FAILURE_TOOLS[path],
+                authorization=request.headers.get("Authorization"),
+                x_session_id=request.headers.get("X-Session-Id"),
+                metadata_json={"status_code": 500, "path": path, "error_type": exc.__class__.__name__},
+            )
+        raise
+
+    if request.method.upper() == "POST" and path in TRACKED_FAILURE_TOOLS and response.status_code >= 400:
+        log_analytics_event(
+            event_name="generation_failed",
+            tool_name=TRACKED_FAILURE_TOOLS[path],
+            authorization=request.headers.get("Authorization"),
+            x_session_id=request.headers.get("X-Session-Id"),
+            metadata_json={"status_code": response.status_code, "path": path},
+        )
+    return response
 
 
 def get_career_knowledge_context(candidate_data, **overrides) -> dict:
@@ -3110,7 +3193,7 @@ Return ONLY valid JSON in this exact format:
 
 
 @app.post("/optimize-linkedin", response_model=LinkedInOptimizationOutput)
-def optimize_linkedin(data: LinkedInOptimizationInput):
+def optimize_linkedin(data: LinkedInOptimizationInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
     intelligence_request = build_resume_intelligence_request(data)
     intelligence = generate_resume_intelligence(intelligence_request)
     career_knowledge = get_career_knowledge_context(
@@ -3179,11 +3262,21 @@ def optimize_linkedin(data: LinkedInOptimizationInput):
         files={"pdf_path": result.get("linkedin_report_pdf_path", ""), "docx_path": result.get("linkedin_report_docx_path", "")},
         text_key="about_section",
     )
+    log_analytics_event(
+        event_name="linkedin_optimized",
+        tool_name="linkedin_optimizer",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+        recruiter_score=result.get("recruiter_visibility_score", 0),
+        metadata_json={"linkedin_score": result.get("linkedin_score", 0)},
+    )
     return result
 
 
 @app.post("/generate-interview-prep", response_model=InterviewPrepOutput)
-def generate_interview_prep(data: InterviewPrepInput):
+def generate_interview_prep(data: InterviewPrepInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
     intelligence_request = build_resume_intelligence_request(data)
     intelligence = generate_resume_intelligence(intelligence_request)
     career_knowledge = get_career_knowledge_context(
@@ -3244,11 +3337,21 @@ def generate_interview_prep(data: InterviewPrepInput):
         files={"pdf_path": result.get("interview_report_pdf_path", ""), "docx_path": result.get("interview_report_docx_path", "")},
         metadata={"origin": "interview_prep"},
     )
+    log_analytics_event(
+        event_name="interview_prep_generated",
+        tool_name="interview_prep",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+        recruiter_score=result.get("confidence_score", 0),
+        metadata_json={"readiness_score": result.get("readiness_score", 0)},
+    )
     return result
 
 
 @app.post("/generate-portfolio", response_model=PortfolioOutput)
-def generate_portfolio(data: PortfolioInput):
+def generate_portfolio(data: PortfolioInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
     intelligence_request = build_resume_intelligence_request(data)
     intelligence = generate_resume_intelligence(intelligence_request)
     career_knowledge = get_career_knowledge_context(
@@ -3343,6 +3446,16 @@ def generate_portfolio(data: PortfolioInput):
         text_key="about_me",
         metadata={"selected_theme": result.get("selected_theme", "")},
     )
+    log_analytics_event(
+        event_name="portfolio_generated",
+        tool_name="portfolio",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+        recruiter_score=result.get("recruiter_score", 0),
+        metadata_json={"portfolio_score": result.get("portfolio_score", 0), "selected_theme": result.get("selected_theme", "")},
+    )
     return result
 
 
@@ -3352,17 +3465,33 @@ def auth_config():
 
 
 @app.post("/auth/signup", response_model=AuthResponseOutput)
-def auth_signup(data: AuthCredentialsInput):
+def auth_signup(data: AuthCredentialsInput, x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
     try:
-        return signup_user(data.email, data.password, data.full_name)
+        result = signup_user(data.email, data.password, data.full_name)
+        log_analytics_event(
+            event_name="user_signed_up",
+            tool_name="auth",
+            authorization=f"Bearer {result.get('access_token', '')}" if result.get('access_token') else None,
+            x_session_id=x_session_id,
+            metadata_json={"auth_mode": result.get("auth_mode", "")},
+        )
+        return result
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
 
 
 @app.post("/auth/login", response_model=AuthResponseOutput)
-def auth_login(data: AuthCredentialsInput):
+def auth_login(data: AuthCredentialsInput, x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
     try:
-        return login_user(data.email, data.password)
+        result = login_user(data.email, data.password)
+        log_analytics_event(
+            event_name="user_logged_in",
+            tool_name="auth",
+            authorization=f"Bearer {result.get('access_token', '')}" if result.get('access_token') else None,
+            x_session_id=x_session_id,
+            metadata_json={"auth_mode": result.get("auth_mode", "")},
+        )
+        return result
     except ValueError as exc:
         raise HTTPException(status_code=401, detail=str(exc))
 
@@ -3447,6 +3576,48 @@ def career_history():
     return get_dashboard_history()
 
 
+@app.get("/admin/analytics/summary")
+def admin_analytics_summary(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
+    require_admin_secret(x_admin_secret)
+    return analytics_summary(include_sample=sample)
+
+
+@app.get("/admin/analytics/tool-usage")
+def admin_analytics_tool_usage(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
+    require_admin_secret(x_admin_secret)
+    return analytics_tool_usage(include_sample=sample)
+
+
+@app.get("/admin/analytics/countries")
+def admin_analytics_countries(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
+    require_admin_secret(x_admin_secret)
+    return analytics_countries(include_sample=sample)
+
+
+@app.get("/admin/analytics/roles")
+def admin_analytics_roles(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
+    require_admin_secret(x_admin_secret)
+    return analytics_roles(include_sample=sample)
+
+
+@app.get("/admin/analytics/downloads")
+def admin_analytics_downloads(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
+    require_admin_secret(x_admin_secret)
+    return analytics_downloads(include_sample=sample)
+
+
+@app.get("/admin/analytics/errors")
+def admin_analytics_errors(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
+    require_admin_secret(x_admin_secret)
+    return analytics_errors(include_sample=sample)
+
+
+@app.get("/admin/analytics/recent-events")
+def admin_analytics_recent_events(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False, limit: int = 30):
+    require_admin_secret(x_admin_secret)
+    return analytics_recent_events(include_sample=sample, limit=limit)
+
+
 @app.post("/analyze-resume-intelligence", response_model=ResumeIntelligenceAnalysisOutput)
 def analyze_resume_intelligence(data: ResumeIntelligenceRequest):
     return generate_resume_intelligence(data)
@@ -3503,7 +3674,15 @@ def generate_achievements(data: AchievementRequest):
 
 
 @app.post("/optimize-resume", response_model=ResumeOptimizerOutput)
-def optimize_resume(data: ResumeOptimizerInput):
+def optimize_resume(data: ResumeOptimizerInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
+    log_analytics_event(
+        event_name="resume_optimizer_started",
+        tool_name="resume_optimizer",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+    )
     country_rules = get_country_rules(data.target_country)
     career_knowledge = get_career_knowledge_context(
         data,
@@ -3820,11 +3999,30 @@ Return ONLY valid JSON in this exact format:
         text_key="optimized_resume",
         metadata={"origin": "resume_optimizer", "selected_theme": parsed.get("selected_theme", "")},
     )
+    log_analytics_event(
+        event_name="resume_optimizer_completed",
+        tool_name="resume_optimizer",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+        resume_model=parsed.get("recommended_resume_style", ""),
+        ats_score=parsed.get("ats_score_estimate", 0),
+        recruiter_score=parsed.get("recruiter_confidence", 0),
+    )
     return parsed
 
 
 @app.post("/build-resume", response_model=ResumeBuildOutput)
-def build_resume(data: ResumeIntelligenceInput):
+def build_resume(data: ResumeIntelligenceInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
+    log_analytics_event(
+        event_name="resume_builder_started",
+        tool_name="resume_builder",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+    )
     intelligence_request = build_resume_intelligence_request(data)
     intelligence = generate_resume_intelligence(intelligence_request)
     career_knowledge = get_career_knowledge_context(
@@ -3988,11 +4186,22 @@ def build_resume(data: ResumeIntelligenceInput):
         text_key="full_resume",
         metadata={"origin": "resume_builder", "selected_theme": final_response.get("selected_theme", "")},
     )
+    log_analytics_event(
+        event_name="resume_builder_completed",
+        tool_name="resume_builder",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+        resume_model=final_response.get("recommended_resume_style", ""),
+        ats_score=final_response.get("ats_score_estimate", 0),
+        recruiter_score=final_response.get("recruiter_confidence", 0),
+    )
     return final_response
 
 
 @app.post("/generate-cover-letter", response_model=CoverLetterOutput)
-def generate_cover_letter_endpoint(data: CoverLetterInput):
+def generate_cover_letter_endpoint(data: CoverLetterInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
     intelligence_request = build_resume_intelligence_request(data)
     intelligence = generate_resume_intelligence(intelligence_request)
     career_knowledge = get_career_knowledge_context(
@@ -4095,11 +4304,22 @@ def generate_cover_letter_endpoint(data: CoverLetterInput):
         files={"pdf_path": result.get("cover_letter_pdf_path", ""), "docx_path": result.get("cover_letter_docx_path", "")},
         text_key="cover_letter_text",
     )
+    log_analytics_event(
+        event_name="cover_letter_generated",
+        tool_name="cover_letter",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+        resume_model=selected_resume_style,
+        ats_score=result.get("ats_alignment_score", 0),
+        recruiter_score=result.get("recruiter_confidence", 0),
+    )
     return result
 
 
 @app.post("/prepare-job-application", response_model=JobApplicationOutput)
-def prepare_job_application(data: JobApplicationInput):
+def prepare_job_application(data: JobApplicationInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
     optimized_resume = optimize_resume(
         ResumeOptimizerInput(
             target_role=data.target_role,
@@ -4184,6 +4404,18 @@ def prepare_job_application(data: JobApplicationInput):
         },
         text_key="application_readiness",
         metadata={"origin": "job_application_engine", "overall_application_score": result.get("overall_application_score", 0)},
+    )
+    log_analytics_event(
+        event_name="job_application_prepared",
+        tool_name="job_application",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+        resume_model=result.get("optimized_resume", {}).get("recommended_resume_style", ""),
+        ats_score=result.get("ats_report", {}).get("ats_score_estimate", 0),
+        recruiter_score=result.get("recruiter_report", {}).get("recruiter_confidence", 0),
+        metadata_json={"overall_application_score": result.get("overall_application_score", 0)},
     )
     return result
 
@@ -4276,7 +4508,15 @@ Return ONLY valid JSON in this exact format:
 
 
 @app.post("/export-resume-docx")
-def export_resume_docx(data: ResumeExportInput):
+def export_resume_docx(data: ResumeExportInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
+    log_analytics_event(
+        event_name="resume_downloaded_docx",
+        tool_name="resume_export",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+    )
     buffer = build_docx_resume(data)
     filename = f"{(data.full_name or data.target_role or 'resume').strip().replace(' ', '-').lower()}-resume.docx"
     headers = {"Content-Disposition": f'attachment; filename="{filename}"'}
@@ -4288,7 +4528,15 @@ def export_resume_docx(data: ResumeExportInput):
 
 
 @app.post("/export-resume-pdf")
-def export_resume_pdf(data: ResumeExportInput):
+def export_resume_pdf(data: ResumeExportInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
+    log_analytics_event(
+        event_name="resume_downloaded_pdf",
+        tool_name="resume_export",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+    )
     buffer = build_pdf_resume(data)
     filename = f"{(data.full_name or data.target_role or 'resume').strip().replace(' ', '-').lower()}-resume.pdf"
     headers = {"Content-Disposition": f'attachment; filename="{filename}"'}

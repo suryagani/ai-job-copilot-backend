@@ -1,0 +1,5676 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AI Job Copilot",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Home",
+        "operationId": "home__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/suggest-role": {
+      "post": {
+        "summary": "Suggest Role",
+        "operationId": "suggest_role_suggest_role_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleSuggestionInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/optimize-profile": {
+      "post": {
+        "summary": "Optimize Profile",
+        "operationId": "optimize_profile_optimize_profile_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OptimizedProfile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/generate-profile-from-scratch": {
+      "post": {
+        "summary": "Generate Profile From Scratch",
+        "operationId": "generate_profile_from_scratch_generate_profile_from_scratch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScratchProfileInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OptimizedProfile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/optimize-linkedin": {
+      "post": {
+        "summary": "Optimize Linkedin",
+        "operationId": "optimize_linkedin_optimize_linkedin_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-Session-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkedInOptimizationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkedInOptimizationOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/generate-interview-prep": {
+      "post": {
+        "summary": "Generate Interview Prep",
+        "operationId": "generate_interview_prep_generate_interview_prep_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-Session-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InterviewPrepInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterviewPrepOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/generate-portfolio": {
+      "post": {
+        "summary": "Generate Portfolio",
+        "operationId": "generate_portfolio_generate_portfolio_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-Session-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PortfolioInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortfolioOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/config": {
+      "get": {
+        "summary": "Auth Config",
+        "operationId": "auth_config_auth_config_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthConfigOutput"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "summary": "Auth Signup",
+        "operationId": "auth_signup_auth_signup_post",
+        "parameters": [
+          {
+            "name": "X-Session-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthCredentialsInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Auth Login",
+        "operationId": "auth_login_auth_login_post",
+        "parameters": [
+          {
+            "name": "X-Session-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthCredentialsInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me": {
+      "get": {
+        "summary": "Me",
+        "operationId": "me_me_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthUserOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/save-career-asset": {
+      "post": {
+        "summary": "Save Career Asset Endpoint",
+        "operationId": "save_career_asset_endpoint_save_career_asset_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveCareerAssetInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CareerAssetOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Dashboard",
+        "operationId": "dashboard_dashboard_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/career-timeline": {
+      "get": {
+        "summary": "Career Timeline",
+        "operationId": "career_timeline_career_timeline_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/career-assets": {
+      "get": {
+        "summary": "Career Assets",
+        "operationId": "career_assets_career_assets_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/career-assets/{asset_id}": {
+      "get": {
+        "summary": "Career Asset By Id",
+        "operationId": "career_asset_by_id_career_assets__asset_id__get",
+        "parameters": [
+          {
+            "name": "asset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Asset Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CareerAssetOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Career Asset Endpoint",
+        "operationId": "delete_career_asset_endpoint_career_assets__asset_id__delete",
+        "parameters": [
+          {
+            "name": "asset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Asset Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/career-statistics": {
+      "get": {
+        "summary": "Career Statistics",
+        "operationId": "career_statistics_career_statistics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/career-history": {
+      "get": {
+        "summary": "Career History",
+        "operationId": "career_history_career_history_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/analytics/summary": {
+      "get": {
+        "summary": "Admin Analytics Summary",
+        "operationId": "admin_analytics_summary_admin_analytics_summary_get",
+        "parameters": [
+          {
+            "name": "sample",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Sample"
+            }
+          },
+          {
+            "name": "X-Admin-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Secret"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/analytics/tool-usage": {
+      "get": {
+        "summary": "Admin Analytics Tool Usage",
+        "operationId": "admin_analytics_tool_usage_admin_analytics_tool_usage_get",
+        "parameters": [
+          {
+            "name": "sample",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Sample"
+            }
+          },
+          {
+            "name": "X-Admin-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Secret"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/analytics/countries": {
+      "get": {
+        "summary": "Admin Analytics Countries",
+        "operationId": "admin_analytics_countries_admin_analytics_countries_get",
+        "parameters": [
+          {
+            "name": "sample",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Sample"
+            }
+          },
+          {
+            "name": "X-Admin-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Secret"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/analytics/roles": {
+      "get": {
+        "summary": "Admin Analytics Roles",
+        "operationId": "admin_analytics_roles_admin_analytics_roles_get",
+        "parameters": [
+          {
+            "name": "sample",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Sample"
+            }
+          },
+          {
+            "name": "X-Admin-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Secret"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/analytics/downloads": {
+      "get": {
+        "summary": "Admin Analytics Downloads",
+        "operationId": "admin_analytics_downloads_admin_analytics_downloads_get",
+        "parameters": [
+          {
+            "name": "sample",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Sample"
+            }
+          },
+          {
+            "name": "X-Admin-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Secret"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/analytics/errors": {
+      "get": {
+        "summary": "Admin Analytics Errors",
+        "operationId": "admin_analytics_errors_admin_analytics_errors_get",
+        "parameters": [
+          {
+            "name": "sample",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Sample"
+            }
+          },
+          {
+            "name": "X-Admin-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Secret"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/analytics/recent-events": {
+      "get": {
+        "summary": "Admin Analytics Recent Events",
+        "operationId": "admin_analytics_recent_events_admin_analytics_recent_events_get",
+        "parameters": [
+          {
+            "name": "sample",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Sample"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 30,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "X-Admin-Secret",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Secret"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analyze-resume-intelligence": {
+      "post": {
+        "summary": "Analyze Resume Intelligence",
+        "operationId": "analyze_resume_intelligence_analyze_resume_intelligence_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResumeIntelligenceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeIntelligenceAnalysisOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analyze-job-description": {
+      "post": {
+        "summary": "Analyze Job Description",
+        "operationId": "analyze_job_description_analyze_job_description_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobDescriptionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobDescriptionAnalysisOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analyze-career-knowledge": {
+      "post": {
+        "summary": "Analyze Career Knowledge",
+        "operationId": "analyze_career_knowledge_analyze_career_knowledge_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CareerKnowledgeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CareerKnowledgeOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analyze-ats": {
+      "post": {
+        "summary": "Analyze Ats",
+        "operationId": "analyze_ats_analyze_ats_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ATSAnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ATSIntelligenceOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/generate-achievements": {
+      "post": {
+        "summary": "Generate Achievements",
+        "operationId": "generate_achievements_generate_achievements_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AchievementRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AchievementIntelligenceOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/optimize-resume": {
+      "post": {
+        "summary": "Optimize Resume",
+        "operationId": "optimize_resume_optimize_resume_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-Session-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResumeOptimizerInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeOptimizerOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/build-resume": {
+      "post": {
+        "summary": "Build Resume",
+        "operationId": "build_resume_build_resume_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-Session-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResumeIntelligenceInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeBuildOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/generate-cover-letter": {
+      "post": {
+        "summary": "Generate Cover Letter Endpoint",
+        "operationId": "generate_cover_letter_endpoint_generate_cover_letter_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-Session-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoverLetterInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoverLetterOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prepare-job-application": {
+      "post": {
+        "summary": "Prepare Job Application",
+        "operationId": "prepare_job_application_prepare_job_application_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-Session-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobApplicationInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobApplicationOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/review-resume": {
+      "post": {
+        "summary": "Review Resume",
+        "operationId": "review_resume_review_resume_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResumeReviewerInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResumeReviewerOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/export-resume-docx": {
+      "post": {
+        "summary": "Export Resume Docx",
+        "operationId": "export_resume_docx_export_resume_docx_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-Session-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResumeExportInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/export-resume-pdf": {
+      "post": {
+        "summary": "Export Resume Pdf",
+        "operationId": "export_resume_pdf_export_resume_pdf_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "X-Session-Id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Session-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResumeExportInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/generate-hiring-messages": {
+      "post": {
+        "summary": "Generate Hiring Messages",
+        "operationId": "generate_hiring_messages_generate_hiring_messages_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HiringMessageInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HiringMessageOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/save-job-alert": {
+      "post": {
+        "summary": "Save Job Alert",
+        "operationId": "save_job_alert_save_job_alert_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobAlertInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/send-test-job-alert": {
+      "post": {
+        "summary": "Send Test Job Alert",
+        "operationId": "send_test_job_alert_send_test_job_alert_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobAlertInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAlertTestOutput"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/job-alert-config": {
+      "get": {
+        "summary": "Get Job Alert Config",
+        "operationId": "get_job_alert_config_job_alert_config_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/format-linkedin": {
+      "post": {
+        "summary": "Format Linkedin",
+        "operationId": "format_linkedin_format_linkedin_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkedInCopyInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ATSAnalysisRequest": {
+        "properties": {
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "Global"
+          },
+          "target_industry": {
+            "type": "string",
+            "title": "Target Industry",
+            "default": ""
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level",
+            "default": ""
+          },
+          "career_direction": {
+            "type": "string",
+            "title": "Career Direction",
+            "default": ""
+          },
+          "resume_text": {
+            "type": "string",
+            "title": "Resume Text",
+            "default": ""
+          },
+          "job_description": {
+            "type": "string",
+            "title": "Job Description",
+            "default": ""
+          },
+          "technical_skills": {
+            "type": "string",
+            "title": "Technical Skills",
+            "default": ""
+          },
+          "transferable_skills": {
+            "type": "string",
+            "title": "Transferable Skills",
+            "default": ""
+          },
+          "tools_software": {
+            "type": "string",
+            "title": "Tools Software",
+            "default": ""
+          },
+          "projects": {
+            "type": "string",
+            "title": "Projects",
+            "default": ""
+          },
+          "work_experience": {
+            "type": "string",
+            "title": "Work Experience",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role"
+        ],
+        "title": "ATSAnalysisRequest"
+      },
+      "ATSIntelligenceOutput": {
+        "properties": {
+          "ats_score_estimate": {
+            "type": "integer",
+            "title": "Ats Score Estimate"
+          },
+          "ats_readiness_level": {
+            "type": "string",
+            "title": "Ats Readiness Level"
+          },
+          "required_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Required Keywords"
+          },
+          "matching_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Matching Keywords"
+          },
+          "missing_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Keywords"
+          },
+          "keyword_placement_strategy": {
+            "$ref": "#/components/schemas/ATSKeywordPlacementOutput"
+          },
+          "formatting_risks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Formatting Risks"
+          },
+          "section_risks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Section Risks"
+          },
+          "keyword_stuffing_risk": {
+            "type": "string",
+            "title": "Keyword Stuffing Risk"
+          },
+          "ats_improvement_actions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ats Improvement Actions"
+          },
+          "ats_strategy_note": {
+            "type": "string",
+            "title": "Ats Strategy Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ats_score_estimate",
+          "ats_readiness_level",
+          "required_keywords",
+          "matching_keywords",
+          "missing_keywords",
+          "keyword_placement_strategy",
+          "formatting_risks",
+          "section_risks",
+          "keyword_stuffing_risk",
+          "ats_improvement_actions",
+          "ats_strategy_note"
+        ],
+        "title": "ATSIntelligenceOutput"
+      },
+      "ATSKeywordPlacementOutput": {
+        "properties": {
+          "summary": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Summary"
+          },
+          "skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Skills"
+          },
+          "experience": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Experience"
+          },
+          "projects": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Projects"
+          }
+        },
+        "type": "object",
+        "required": [
+          "summary",
+          "skills",
+          "experience",
+          "projects"
+        ],
+        "title": "ATSKeywordPlacementOutput"
+      },
+      "AchievementIntelligenceOutput": {
+        "properties": {
+          "experience_bullets": {
+            "items": {
+              "$ref": "#/components/schemas/ExperienceAchievementOutput"
+            },
+            "type": "array",
+            "title": "Experience Bullets"
+          },
+          "project_bullets": {
+            "items": {
+              "$ref": "#/components/schemas/ProjectAchievementOutput"
+            },
+            "type": "array",
+            "title": "Project Bullets"
+          },
+          "leadership_bullets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Leadership Bullets"
+          },
+          "transferable_achievement_bullets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Transferable Achievement Bullets"
+          },
+          "missing_impact_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Impact Questions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "experience_bullets",
+          "project_bullets",
+          "leadership_bullets",
+          "transferable_achievement_bullets",
+          "missing_impact_questions"
+        ],
+        "title": "AchievementIntelligenceOutput"
+      },
+      "AchievementRequest": {
+        "properties": {
+          "target_role": {
+            "type": "string",
+            "title": "Target Role",
+            "default": ""
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "Global"
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level",
+            "default": ""
+          },
+          "career_direction": {
+            "type": "string",
+            "title": "Career Direction",
+            "default": ""
+          },
+          "work_experience": {
+            "type": "string",
+            "title": "Work Experience",
+            "default": ""
+          },
+          "internships": {
+            "type": "string",
+            "title": "Internships",
+            "default": ""
+          },
+          "projects": {
+            "type": "string",
+            "title": "Projects",
+            "default": ""
+          },
+          "achievements": {
+            "type": "string",
+            "title": "Achievements",
+            "default": ""
+          },
+          "leadership_experience": {
+            "type": "string",
+            "title": "Leadership Experience",
+            "default": ""
+          },
+          "technical_skills": {
+            "type": "string",
+            "title": "Technical Skills",
+            "default": ""
+          },
+          "transferable_skills": {
+            "type": "string",
+            "title": "Transferable Skills",
+            "default": ""
+          },
+          "resume_text": {
+            "type": "string",
+            "title": "Resume Text",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "AchievementRequest"
+      },
+      "AuthConfigOutput": {
+        "properties": {
+          "auth_mode": {
+            "type": "string",
+            "title": "Auth Mode"
+          },
+          "email_login_enabled": {
+            "type": "boolean",
+            "title": "Email Login Enabled"
+          },
+          "google_login_enabled": {
+            "type": "boolean",
+            "title": "Google Login Enabled"
+          },
+          "supabase_url": {
+            "type": "string",
+            "title": "Supabase Url"
+          },
+          "supabase_anon_key": {
+            "type": "string",
+            "title": "Supabase Anon Key"
+          },
+          "supabase_redirect_url": {
+            "type": "string",
+            "title": "Supabase Redirect Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "auth_mode",
+          "email_login_enabled",
+          "google_login_enabled",
+          "supabase_url",
+          "supabase_anon_key",
+          "supabase_redirect_url"
+        ],
+        "title": "AuthConfigOutput"
+      },
+      "AuthCredentialsInput": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "AuthCredentialsInput"
+      },
+      "AuthResponseOutput": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "refresh_token": {
+            "type": "string",
+            "title": "Refresh Token"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "auth_mode": {
+            "type": "string",
+            "title": "Auth Mode"
+          },
+          "user": {
+            "$ref": "#/components/schemas/AuthUserOutput"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "refresh_token",
+          "message",
+          "auth_mode",
+          "user"
+        ],
+        "title": "AuthResponseOutput"
+      },
+      "AuthUserOutput": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "auth_mode": {
+            "type": "string",
+            "title": "Auth Mode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "full_name",
+          "auth_mode"
+        ],
+        "title": "AuthUserOutput"
+      },
+      "CareerAssetOutput": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "asset_type": {
+            "type": "string",
+            "title": "Asset Type"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          },
+          "content_json": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Content Json"
+          },
+          "pdf_url": {
+            "type": "string",
+            "title": "Pdf Url"
+          },
+          "docx_url": {
+            "type": "string",
+            "title": "Docx Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_id",
+          "asset_type",
+          "title",
+          "target_role",
+          "target_country",
+          "created_at",
+          "updated_at",
+          "content_json",
+          "pdf_url",
+          "docx_url"
+        ],
+        "title": "CareerAssetOutput"
+      },
+      "CareerKnowledgeOutput": {
+        "properties": {
+          "recommended_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recommended Roles"
+          },
+          "recommended_industries": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recommended Industries"
+          },
+          "recommended_certifications": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recommended Certifications"
+          },
+          "recommended_projects": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recommended Projects"
+          },
+          "recommended_resume_model": {
+            "type": "string",
+            "title": "Recommended Resume Model"
+          },
+          "career_transition_options": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Career Transition Options"
+          },
+          "future_growth_roles": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Future Growth Roles"
+          },
+          "salary_progression_note": {
+            "type": "string",
+            "title": "Salary Progression Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recommended_roles",
+          "recommended_industries",
+          "recommended_certifications",
+          "recommended_projects",
+          "recommended_resume_model",
+          "career_transition_options",
+          "future_growth_roles",
+          "salary_progression_note"
+        ],
+        "title": "CareerKnowledgeOutput"
+      },
+      "CareerKnowledgeRequest": {
+        "properties": {
+          "target_role": {
+            "type": "string",
+            "title": "Target Role",
+            "default": ""
+          },
+          "target_industry": {
+            "type": "string",
+            "title": "Target Industry",
+            "default": ""
+          },
+          "education": {
+            "type": "string",
+            "title": "Education",
+            "default": ""
+          },
+          "highest_qualification": {
+            "type": "string",
+            "title": "Highest Qualification",
+            "default": ""
+          },
+          "current_background": {
+            "type": "string",
+            "title": "Current Background",
+            "default": ""
+          },
+          "career_direction": {
+            "type": "string",
+            "title": "Career Direction",
+            "default": ""
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "CareerKnowledgeRequest"
+      },
+      "CoverLetterInput": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "title": "Full Name",
+            "default": ""
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "default": ""
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone",
+            "default": ""
+          },
+          "location": {
+            "type": "string",
+            "title": "Location",
+            "default": ""
+          },
+          "linkedin_url": {
+            "type": "string",
+            "title": "Linkedin Url",
+            "default": ""
+          },
+          "portfolio_url": {
+            "type": "string",
+            "title": "Portfolio Url",
+            "default": ""
+          },
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "Global"
+          },
+          "target_industry": {
+            "type": "string",
+            "title": "Target Industry",
+            "default": ""
+          },
+          "career_direction": {
+            "type": "string",
+            "title": "Career Direction",
+            "default": ""
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level",
+            "default": ""
+          },
+          "current_background": {
+            "type": "string",
+            "title": "Current Background",
+            "default": ""
+          },
+          "highest_qualification": {
+            "type": "string",
+            "title": "Highest Qualification",
+            "default": ""
+          },
+          "education_details": {
+            "type": "string",
+            "title": "Education Details",
+            "default": ""
+          },
+          "work_experience": {
+            "type": "string",
+            "title": "Work Experience",
+            "default": ""
+          },
+          "internships": {
+            "type": "string",
+            "title": "Internships",
+            "default": ""
+          },
+          "projects": {
+            "type": "string",
+            "title": "Projects",
+            "default": ""
+          },
+          "technical_skills": {
+            "type": "string",
+            "title": "Technical Skills",
+            "default": ""
+          },
+          "transferable_skills": {
+            "type": "string",
+            "title": "Transferable Skills",
+            "default": ""
+          },
+          "tools_software": {
+            "type": "string",
+            "title": "Tools Software",
+            "default": ""
+          },
+          "certifications": {
+            "type": "string",
+            "title": "Certifications",
+            "default": ""
+          },
+          "achievements": {
+            "type": "string",
+            "title": "Achievements",
+            "default": ""
+          },
+          "leadership_experience": {
+            "type": "string",
+            "title": "Leadership Experience",
+            "default": ""
+          },
+          "career_change": {
+            "type": "string",
+            "title": "Career Change",
+            "default": "No"
+          },
+          "current_field": {
+            "type": "string",
+            "title": "Current Field",
+            "default": ""
+          },
+          "target_field": {
+            "type": "string",
+            "title": "Target Field",
+            "default": ""
+          },
+          "preferred_resume_style": {
+            "type": "string",
+            "title": "Preferred Resume Style",
+            "default": "Auto Recommend"
+          },
+          "job_description": {
+            "type": "string",
+            "title": "Job Description",
+            "default": ""
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name",
+            "default": ""
+          },
+          "hiring_manager": {
+            "type": "string",
+            "title": "Hiring Manager",
+            "default": ""
+          },
+          "tone": {
+            "type": "string",
+            "title": "Tone",
+            "default": "Professional"
+          },
+          "years_of_experience": {
+            "type": "string",
+            "title": "Years Of Experience",
+            "default": ""
+          },
+          "resume_text": {
+            "type": "string",
+            "title": "Resume Text",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role"
+        ],
+        "title": "CoverLetterInput"
+      },
+      "CoverLetterOutput": {
+        "properties": {
+          "cover_letter_text": {
+            "type": "string",
+            "title": "Cover Letter Text"
+          },
+          "cover_letter_pdf_path": {
+            "type": "string",
+            "title": "Cover Letter Pdf Path"
+          },
+          "cover_letter_docx_path": {
+            "type": "string",
+            "title": "Cover Letter Docx Path"
+          },
+          "cover_letter_quality_score": {
+            "type": "integer",
+            "title": "Cover Letter Quality Score"
+          },
+          "ats_alignment_score": {
+            "type": "integer",
+            "title": "Ats Alignment Score"
+          },
+          "recruiter_confidence": {
+            "type": "integer",
+            "title": "Recruiter Confidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cover_letter_text",
+          "cover_letter_pdf_path",
+          "cover_letter_docx_path",
+          "cover_letter_quality_score",
+          "ats_alignment_score",
+          "recruiter_confidence"
+        ],
+        "title": "CoverLetterOutput"
+      },
+      "ExperienceAchievementOutput": {
+        "properties": {
+          "original": {
+            "type": "string",
+            "title": "Original"
+          },
+          "improved": {
+            "type": "string",
+            "title": "Improved"
+          },
+          "impact_type": {
+            "type": "string",
+            "title": "Impact Type"
+          },
+          "confidence": {
+            "type": "string",
+            "title": "Confidence"
+          }
+        },
+        "type": "object",
+        "required": [
+          "original",
+          "improved",
+          "impact_type",
+          "confidence"
+        ],
+        "title": "ExperienceAchievementOutput"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HiringMessageInput": {
+        "properties": {
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name"
+          },
+          "hiring_manager_name": {
+            "type": "string",
+            "title": "Hiring Manager Name",
+            "default": ""
+          },
+          "job_context": {
+            "type": "string",
+            "title": "Job Context",
+            "default": ""
+          },
+          "personal_background": {
+            "type": "string",
+            "title": "Personal Background"
+          },
+          "target_location": {
+            "type": "string",
+            "title": "Target Location",
+            "default": "United Kingdom"
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role",
+          "company_name",
+          "personal_background"
+        ],
+        "title": "HiringMessageInput"
+      },
+      "HiringMessageOutput": {
+        "properties": {
+          "connection_message": {
+            "type": "string",
+            "title": "Connection Message"
+          },
+          "outreach_message": {
+            "type": "string",
+            "title": "Outreach Message"
+          },
+          "follow_up_message": {
+            "type": "string",
+            "title": "Follow Up Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "connection_message",
+          "outreach_message",
+          "follow_up_message"
+        ],
+        "title": "HiringMessageOutput"
+      },
+      "InterviewPrepInput": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "title": "Full Name",
+            "default": ""
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "default": ""
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone",
+            "default": ""
+          },
+          "location": {
+            "type": "string",
+            "title": "Location",
+            "default": ""
+          },
+          "linkedin_url": {
+            "type": "string",
+            "title": "Linkedin Url",
+            "default": ""
+          },
+          "portfolio_url": {
+            "type": "string",
+            "title": "Portfolio Url",
+            "default": ""
+          },
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "Global"
+          },
+          "target_industry": {
+            "type": "string",
+            "title": "Target Industry",
+            "default": ""
+          },
+          "career_direction": {
+            "type": "string",
+            "title": "Career Direction",
+            "default": ""
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level",
+            "default": ""
+          },
+          "current_background": {
+            "type": "string",
+            "title": "Current Background",
+            "default": ""
+          },
+          "highest_qualification": {
+            "type": "string",
+            "title": "Highest Qualification",
+            "default": ""
+          },
+          "education_details": {
+            "type": "string",
+            "title": "Education Details",
+            "default": ""
+          },
+          "work_experience": {
+            "type": "string",
+            "title": "Work Experience",
+            "default": ""
+          },
+          "internships": {
+            "type": "string",
+            "title": "Internships",
+            "default": ""
+          },
+          "projects": {
+            "type": "string",
+            "title": "Projects",
+            "default": ""
+          },
+          "technical_skills": {
+            "type": "string",
+            "title": "Technical Skills",
+            "default": ""
+          },
+          "transferable_skills": {
+            "type": "string",
+            "title": "Transferable Skills",
+            "default": ""
+          },
+          "tools_software": {
+            "type": "string",
+            "title": "Tools Software",
+            "default": ""
+          },
+          "certifications": {
+            "type": "string",
+            "title": "Certifications",
+            "default": ""
+          },
+          "achievements": {
+            "type": "string",
+            "title": "Achievements",
+            "default": ""
+          },
+          "leadership_experience": {
+            "type": "string",
+            "title": "Leadership Experience",
+            "default": ""
+          },
+          "career_change": {
+            "type": "string",
+            "title": "Career Change",
+            "default": "No"
+          },
+          "current_field": {
+            "type": "string",
+            "title": "Current Field",
+            "default": ""
+          },
+          "target_field": {
+            "type": "string",
+            "title": "Target Field",
+            "default": ""
+          },
+          "preferred_resume_style": {
+            "type": "string",
+            "title": "Preferred Resume Style",
+            "default": "Auto Recommend"
+          },
+          "job_description": {
+            "type": "string",
+            "title": "Job Description",
+            "default": ""
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name",
+            "default": ""
+          },
+          "resume_text": {
+            "type": "string",
+            "title": "Resume Text",
+            "default": ""
+          },
+          "years_of_experience": {
+            "type": "string",
+            "title": "Years Of Experience",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role"
+        ],
+        "title": "InterviewPrepInput"
+      },
+      "InterviewPrepOutput": {
+        "properties": {
+          "technical_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Technical Questions"
+          },
+          "behavioral_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Behavioral Questions"
+          },
+          "hr_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Hr Questions"
+          },
+          "company_specific_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Company Specific Questions"
+          },
+          "star_answer_examples": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Star Answer Examples"
+          },
+          "candidate_strengths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Candidate Strengths"
+          },
+          "candidate_weaknesses": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Candidate Weaknesses"
+          },
+          "likely_follow_up_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Likely Follow Up Questions"
+          },
+          "interview_tips": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Interview Tips"
+          },
+          "confidence_score": {
+            "type": "integer",
+            "title": "Confidence Score"
+          },
+          "readiness_score": {
+            "type": "integer",
+            "title": "Readiness Score"
+          },
+          "mock_interview_plan": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Mock Interview Plan"
+          },
+          "interview_report_pdf_path": {
+            "type": "string",
+            "title": "Interview Report Pdf Path"
+          },
+          "interview_report_docx_path": {
+            "type": "string",
+            "title": "Interview Report Docx Path"
+          }
+        },
+        "type": "object",
+        "required": [
+          "technical_questions",
+          "behavioral_questions",
+          "hr_questions",
+          "company_specific_questions",
+          "star_answer_examples",
+          "candidate_strengths",
+          "candidate_weaknesses",
+          "likely_follow_up_questions",
+          "interview_tips",
+          "confidence_score",
+          "readiness_score",
+          "mock_interview_plan",
+          "interview_report_pdf_path",
+          "interview_report_docx_path"
+        ],
+        "title": "InterviewPrepOutput"
+      },
+      "JobAlertInput": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "country": {
+            "type": "string",
+            "title": "Country"
+          },
+          "city": {
+            "type": "string",
+            "title": "City"
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level"
+          },
+          "keywords": {
+            "type": "string",
+            "title": "Keywords",
+            "default": ""
+          },
+          "preferred_time": {
+            "type": "string",
+            "title": "Preferred Time",
+            "default": "09:00"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "target_role",
+          "country",
+          "city",
+          "experience_level"
+        ],
+        "title": "JobAlertInput"
+      },
+      "JobAlertTestOutput": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "preview_subject": {
+            "type": "string",
+            "title": "Preview Subject"
+          },
+          "preview_body": {
+            "type": "string",
+            "title": "Preview Body"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "message",
+          "preview_subject",
+          "preview_body"
+        ],
+        "title": "JobAlertTestOutput"
+      },
+      "JobApplicationInput": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "title": "Full Name",
+            "default": ""
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "default": ""
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone",
+            "default": ""
+          },
+          "location": {
+            "type": "string",
+            "title": "Location",
+            "default": ""
+          },
+          "linkedin_url": {
+            "type": "string",
+            "title": "Linkedin Url",
+            "default": ""
+          },
+          "portfolio_url": {
+            "type": "string",
+            "title": "Portfolio Url",
+            "default": ""
+          },
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "Global"
+          },
+          "target_industry": {
+            "type": "string",
+            "title": "Target Industry",
+            "default": ""
+          },
+          "career_direction": {
+            "type": "string",
+            "title": "Career Direction",
+            "default": ""
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level",
+            "default": ""
+          },
+          "current_background": {
+            "type": "string",
+            "title": "Current Background",
+            "default": ""
+          },
+          "highest_qualification": {
+            "type": "string",
+            "title": "Highest Qualification",
+            "default": ""
+          },
+          "education_details": {
+            "type": "string",
+            "title": "Education Details",
+            "default": ""
+          },
+          "work_experience": {
+            "type": "string",
+            "title": "Work Experience",
+            "default": ""
+          },
+          "internships": {
+            "type": "string",
+            "title": "Internships",
+            "default": ""
+          },
+          "projects": {
+            "type": "string",
+            "title": "Projects",
+            "default": ""
+          },
+          "technical_skills": {
+            "type": "string",
+            "title": "Technical Skills",
+            "default": ""
+          },
+          "transferable_skills": {
+            "type": "string",
+            "title": "Transferable Skills",
+            "default": ""
+          },
+          "tools_software": {
+            "type": "string",
+            "title": "Tools Software",
+            "default": ""
+          },
+          "certifications": {
+            "type": "string",
+            "title": "Certifications",
+            "default": ""
+          },
+          "achievements": {
+            "type": "string",
+            "title": "Achievements",
+            "default": ""
+          },
+          "leadership_experience": {
+            "type": "string",
+            "title": "Leadership Experience",
+            "default": ""
+          },
+          "career_change": {
+            "type": "string",
+            "title": "Career Change",
+            "default": "No"
+          },
+          "current_field": {
+            "type": "string",
+            "title": "Current Field",
+            "default": ""
+          },
+          "target_field": {
+            "type": "string",
+            "title": "Target Field",
+            "default": ""
+          },
+          "preferred_resume_style": {
+            "type": "string",
+            "title": "Preferred Resume Style",
+            "default": "Auto Recommend"
+          },
+          "job_description": {
+            "type": "string",
+            "title": "Job Description",
+            "default": ""
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name",
+            "default": ""
+          },
+          "resume_text": {
+            "type": "string",
+            "title": "Resume Text"
+          },
+          "years_of_experience": {
+            "type": "string",
+            "title": "Years Of Experience",
+            "default": ""
+          },
+          "hiring_manager": {
+            "type": "string",
+            "title": "Hiring Manager",
+            "default": ""
+          },
+          "tone": {
+            "type": "string",
+            "title": "Tone",
+            "default": "Professional"
+          },
+          "current_linkedin": {
+            "type": "string",
+            "title": "Current Linkedin",
+            "default": ""
+          },
+          "current_headline": {
+            "type": "string",
+            "title": "Current Headline",
+            "default": ""
+          },
+          "current_about": {
+            "type": "string",
+            "title": "Current About",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role",
+          "resume_text"
+        ],
+        "title": "JobApplicationInput"
+      },
+      "JobApplicationOutput": {
+        "properties": {
+          "optimized_resume": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Optimized Resume"
+          },
+          "cover_letter": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Cover Letter"
+          },
+          "linkedin_recommendations": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Linkedin Recommendations"
+          },
+          "interview_preparation": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Interview Preparation"
+          },
+          "ats_report": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Ats Report"
+          },
+          "recruiter_report": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Recruiter Report"
+          },
+          "overall_application_score": {
+            "type": "integer",
+            "title": "Overall Application Score"
+          },
+          "job_match_score": {
+            "type": "integer",
+            "title": "Job Match Score"
+          },
+          "application_readiness": {
+            "type": "string",
+            "title": "Application Readiness"
+          },
+          "recommended_next_steps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recommended Next Steps"
+          },
+          "application_report": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Application Report"
+          },
+          "application_report_pdf_path": {
+            "type": "string",
+            "title": "Application Report Pdf Path"
+          },
+          "application_report_docx_path": {
+            "type": "string",
+            "title": "Application Report Docx Path"
+          }
+        },
+        "type": "object",
+        "required": [
+          "optimized_resume",
+          "cover_letter",
+          "linkedin_recommendations",
+          "interview_preparation",
+          "ats_report",
+          "recruiter_report",
+          "overall_application_score",
+          "job_match_score",
+          "application_readiness",
+          "recommended_next_steps",
+          "application_report",
+          "application_report_pdf_path",
+          "application_report_docx_path"
+        ],
+        "title": "JobApplicationOutput"
+      },
+      "JobDescriptionAnalysisOutput": {
+        "properties": {
+          "job_level": {
+            "type": "string",
+            "title": "Job Level"
+          },
+          "career_direction": {
+            "type": "string",
+            "title": "Career Direction"
+          },
+          "industry": {
+            "type": "string",
+            "title": "Industry"
+          },
+          "experience_required": {
+            "type": "string",
+            "title": "Experience Required"
+          },
+          "education_expectation": {
+            "type": "string",
+            "title": "Education Expectation"
+          },
+          "required_skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Required Skills"
+          },
+          "preferred_skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Preferred Skills"
+          },
+          "technical_skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Technical Skills"
+          },
+          "soft_skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Soft Skills"
+          },
+          "tools_and_platforms": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tools And Platforms"
+          },
+          "ats_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ats Keywords"
+          },
+          "primary_responsibilities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Primary Responsibilities"
+          },
+          "leadership_required": {
+            "type": "boolean",
+            "title": "Leadership Required"
+          },
+          "communication_level": {
+            "type": "string",
+            "title": "Communication Level"
+          },
+          "problem_solving_level": {
+            "type": "string",
+            "title": "Problem Solving Level"
+          },
+          "resume_focus_sections": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Resume Focus Sections"
+          },
+          "recommended_resume_model": {
+            "type": "string",
+            "title": "Recommended Resume Model"
+          },
+          "important_certifications": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Important Certifications"
+          },
+          "company_type_guess": {
+            "type": "string",
+            "title": "Company Type Guess"
+          },
+          "hiring_priority_summary": {
+            "type": "string",
+            "title": "Hiring Priority Summary"
+          },
+          "candidate_fit_strategy": {
+            "type": "string",
+            "title": "Candidate Fit Strategy"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_level",
+          "career_direction",
+          "industry",
+          "experience_required",
+          "education_expectation",
+          "required_skills",
+          "preferred_skills",
+          "technical_skills",
+          "soft_skills",
+          "tools_and_platforms",
+          "ats_keywords",
+          "primary_responsibilities",
+          "leadership_required",
+          "communication_level",
+          "problem_solving_level",
+          "resume_focus_sections",
+          "recommended_resume_model",
+          "important_certifications",
+          "company_type_guess",
+          "hiring_priority_summary",
+          "candidate_fit_strategy"
+        ],
+        "title": "JobDescriptionAnalysisOutput"
+      },
+      "JobDescriptionRequest": {
+        "properties": {
+          "job_title": {
+            "type": "string",
+            "title": "Job Title",
+            "default": ""
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name",
+            "default": ""
+          },
+          "country": {
+            "type": "string",
+            "title": "Country",
+            "default": ""
+          },
+          "industry": {
+            "type": "string",
+            "title": "Industry",
+            "default": ""
+          },
+          "job_description": {
+            "type": "string",
+            "title": "Job Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_description"
+        ],
+        "title": "JobDescriptionRequest"
+      },
+      "LinkedInCopyInput": {
+        "properties": {
+          "headline": {
+            "type": "string",
+            "title": "Headline"
+          },
+          "about": {
+            "type": "string",
+            "title": "About"
+          },
+          "experience_bullets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Experience Bullets"
+          }
+        },
+        "type": "object",
+        "required": [
+          "headline",
+          "about",
+          "experience_bullets"
+        ],
+        "title": "LinkedInCopyInput"
+      },
+      "LinkedInOptimizationInput": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "title": "Full Name",
+            "default": ""
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "default": ""
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone",
+            "default": ""
+          },
+          "location": {
+            "type": "string",
+            "title": "Location",
+            "default": ""
+          },
+          "linkedin_url": {
+            "type": "string",
+            "title": "Linkedin Url",
+            "default": ""
+          },
+          "portfolio_url": {
+            "type": "string",
+            "title": "Portfolio Url",
+            "default": ""
+          },
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "Global"
+          },
+          "target_industry": {
+            "type": "string",
+            "title": "Target Industry",
+            "default": ""
+          },
+          "career_direction": {
+            "type": "string",
+            "title": "Career Direction",
+            "default": ""
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level",
+            "default": ""
+          },
+          "current_background": {
+            "type": "string",
+            "title": "Current Background",
+            "default": ""
+          },
+          "highest_qualification": {
+            "type": "string",
+            "title": "Highest Qualification",
+            "default": ""
+          },
+          "education_details": {
+            "type": "string",
+            "title": "Education Details",
+            "default": ""
+          },
+          "work_experience": {
+            "type": "string",
+            "title": "Work Experience",
+            "default": ""
+          },
+          "internships": {
+            "type": "string",
+            "title": "Internships",
+            "default": ""
+          },
+          "projects": {
+            "type": "string",
+            "title": "Projects",
+            "default": ""
+          },
+          "technical_skills": {
+            "type": "string",
+            "title": "Technical Skills",
+            "default": ""
+          },
+          "transferable_skills": {
+            "type": "string",
+            "title": "Transferable Skills",
+            "default": ""
+          },
+          "tools_software": {
+            "type": "string",
+            "title": "Tools Software",
+            "default": ""
+          },
+          "certifications": {
+            "type": "string",
+            "title": "Certifications",
+            "default": ""
+          },
+          "achievements": {
+            "type": "string",
+            "title": "Achievements",
+            "default": ""
+          },
+          "leadership_experience": {
+            "type": "string",
+            "title": "Leadership Experience",
+            "default": ""
+          },
+          "career_change": {
+            "type": "string",
+            "title": "Career Change",
+            "default": "No"
+          },
+          "current_field": {
+            "type": "string",
+            "title": "Current Field",
+            "default": ""
+          },
+          "target_field": {
+            "type": "string",
+            "title": "Target Field",
+            "default": ""
+          },
+          "preferred_resume_style": {
+            "type": "string",
+            "title": "Preferred Resume Style",
+            "default": "Auto Recommend"
+          },
+          "job_description": {
+            "type": "string",
+            "title": "Job Description",
+            "default": ""
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name",
+            "default": ""
+          },
+          "resume_text": {
+            "type": "string",
+            "title": "Resume Text",
+            "default": ""
+          },
+          "current_linkedin": {
+            "type": "string",
+            "title": "Current Linkedin",
+            "default": ""
+          },
+          "current_headline": {
+            "type": "string",
+            "title": "Current Headline",
+            "default": ""
+          },
+          "current_about": {
+            "type": "string",
+            "title": "Current About",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role"
+        ],
+        "title": "LinkedInOptimizationInput"
+      },
+      "LinkedInOptimizationOutput": {
+        "properties": {
+          "professional_headline": {
+            "type": "string",
+            "title": "Professional Headline"
+          },
+          "about_section": {
+            "type": "string",
+            "title": "About Section"
+          },
+          "experience_rewrite": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Experience Rewrite"
+          },
+          "featured_section": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Featured Section"
+          },
+          "skills_order": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Skills Order"
+          },
+          "top_50_recruiter_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Top 50 Recruiter Keywords"
+          },
+          "headline_score": {
+            "type": "integer",
+            "title": "Headline Score"
+          },
+          "linkedin_score": {
+            "type": "integer",
+            "title": "Linkedin Score"
+          },
+          "recruiter_visibility_score": {
+            "type": "integer",
+            "title": "Recruiter Visibility Score"
+          },
+          "creator_profile_suggestions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Creator Profile Suggestions"
+          },
+          "networking_suggestions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Networking Suggestions"
+          },
+          "quality_notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Quality Notes"
+          },
+          "visibility_explanation": {
+            "type": "string",
+            "title": "Visibility Explanation"
+          },
+          "linkedin_report_pdf_path": {
+            "type": "string",
+            "title": "Linkedin Report Pdf Path"
+          },
+          "linkedin_report_docx_path": {
+            "type": "string",
+            "title": "Linkedin Report Docx Path"
+          }
+        },
+        "type": "object",
+        "required": [
+          "professional_headline",
+          "about_section",
+          "experience_rewrite",
+          "featured_section",
+          "skills_order",
+          "top_50_recruiter_keywords",
+          "headline_score",
+          "linkedin_score",
+          "recruiter_visibility_score",
+          "creator_profile_suggestions",
+          "networking_suggestions",
+          "quality_notes",
+          "visibility_explanation",
+          "linkedin_report_pdf_path",
+          "linkedin_report_docx_path"
+        ],
+        "title": "LinkedInOptimizationOutput"
+      },
+      "OptimizedProfile": {
+        "properties": {
+          "headline": {
+            "type": "string",
+            "title": "Headline"
+          },
+          "about": {
+            "type": "string",
+            "title": "About"
+          },
+          "experience_bullets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Experience Bullets"
+          },
+          "top_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Top Keywords"
+          }
+        },
+        "type": "object",
+        "required": [
+          "headline",
+          "about",
+          "experience_bullets",
+          "top_keywords"
+        ],
+        "title": "OptimizedProfile"
+      },
+      "PortfolioInput": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "title": "Full Name",
+            "default": ""
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "default": ""
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone",
+            "default": ""
+          },
+          "location": {
+            "type": "string",
+            "title": "Location",
+            "default": ""
+          },
+          "linkedin_url": {
+            "type": "string",
+            "title": "Linkedin Url",
+            "default": ""
+          },
+          "portfolio_url": {
+            "type": "string",
+            "title": "Portfolio Url",
+            "default": ""
+          },
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "Global"
+          },
+          "target_industry": {
+            "type": "string",
+            "title": "Target Industry",
+            "default": ""
+          },
+          "career_direction": {
+            "type": "string",
+            "title": "Career Direction",
+            "default": ""
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level",
+            "default": ""
+          },
+          "current_background": {
+            "type": "string",
+            "title": "Current Background",
+            "default": ""
+          },
+          "highest_qualification": {
+            "type": "string",
+            "title": "Highest Qualification",
+            "default": ""
+          },
+          "education_details": {
+            "type": "string",
+            "title": "Education Details",
+            "default": ""
+          },
+          "work_experience": {
+            "type": "string",
+            "title": "Work Experience",
+            "default": ""
+          },
+          "internships": {
+            "type": "string",
+            "title": "Internships",
+            "default": ""
+          },
+          "projects": {
+            "type": "string",
+            "title": "Projects",
+            "default": ""
+          },
+          "technical_skills": {
+            "type": "string",
+            "title": "Technical Skills",
+            "default": ""
+          },
+          "transferable_skills": {
+            "type": "string",
+            "title": "Transferable Skills",
+            "default": ""
+          },
+          "tools_software": {
+            "type": "string",
+            "title": "Tools Software",
+            "default": ""
+          },
+          "certifications": {
+            "type": "string",
+            "title": "Certifications",
+            "default": ""
+          },
+          "achievements": {
+            "type": "string",
+            "title": "Achievements",
+            "default": ""
+          },
+          "leadership_experience": {
+            "type": "string",
+            "title": "Leadership Experience",
+            "default": ""
+          },
+          "career_change": {
+            "type": "string",
+            "title": "Career Change",
+            "default": "No"
+          },
+          "current_field": {
+            "type": "string",
+            "title": "Current Field",
+            "default": ""
+          },
+          "target_field": {
+            "type": "string",
+            "title": "Target Field",
+            "default": ""
+          },
+          "preferred_resume_style": {
+            "type": "string",
+            "title": "Preferred Resume Style",
+            "default": "Auto Recommend"
+          },
+          "job_description": {
+            "type": "string",
+            "title": "Job Description",
+            "default": ""
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name",
+            "default": ""
+          },
+          "resume_text": {
+            "type": "string",
+            "title": "Resume Text",
+            "default": ""
+          },
+          "years_of_experience": {
+            "type": "string",
+            "title": "Years Of Experience",
+            "default": ""
+          },
+          "current_linkedin": {
+            "type": "string",
+            "title": "Current Linkedin",
+            "default": ""
+          },
+          "current_headline": {
+            "type": "string",
+            "title": "Current Headline",
+            "default": ""
+          },
+          "current_about": {
+            "type": "string",
+            "title": "Current About",
+            "default": ""
+          },
+          "github_url": {
+            "type": "string",
+            "title": "Github Url",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role"
+        ],
+        "title": "PortfolioInput"
+      },
+      "PortfolioOutput": {
+        "properties": {
+          "professional_bio": {
+            "type": "string",
+            "title": "Professional Bio"
+          },
+          "about_me": {
+            "type": "string",
+            "title": "About Me"
+          },
+          "personal_tagline": {
+            "type": "string",
+            "title": "Personal Tagline"
+          },
+          "project_showcase": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Project Showcase"
+          },
+          "project_case_studies": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Project Case Studies"
+          },
+          "github_readme": {
+            "type": "string",
+            "title": "Github Readme"
+          },
+          "personal_website_content": {
+            "type": "string",
+            "title": "Personal Website Content"
+          },
+          "skills_section": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Skills Section"
+          },
+          "timeline": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Timeline"
+          },
+          "contact_section": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Contact Section"
+          },
+          "professional_footer": {
+            "type": "string",
+            "title": "Professional Footer"
+          },
+          "seo_meta_title": {
+            "type": "string",
+            "title": "Seo Meta Title"
+          },
+          "seo_meta_description": {
+            "type": "string",
+            "title": "Seo Meta Description"
+          },
+          "selected_theme": {
+            "type": "string",
+            "title": "Selected Theme"
+          },
+          "portfolio_score": {
+            "type": "integer",
+            "title": "Portfolio Score"
+          },
+          "recruiter_score": {
+            "type": "integer",
+            "title": "Recruiter Score"
+          },
+          "quality_notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Quality Notes"
+          },
+          "portfolio_html_path": {
+            "type": "string",
+            "title": "Portfolio Html Path"
+          },
+          "portfolio_readme_path": {
+            "type": "string",
+            "title": "Portfolio Readme Path"
+          },
+          "portfolio_docx_path": {
+            "type": "string",
+            "title": "Portfolio Docx Path"
+          },
+          "portfolio_pdf_path": {
+            "type": "string",
+            "title": "Portfolio Pdf Path"
+          },
+          "portfolio_json_path": {
+            "type": "string",
+            "title": "Portfolio Json Path"
+          }
+        },
+        "type": "object",
+        "required": [
+          "professional_bio",
+          "about_me",
+          "personal_tagline",
+          "project_showcase",
+          "project_case_studies",
+          "github_readme",
+          "personal_website_content",
+          "skills_section",
+          "timeline",
+          "contact_section",
+          "professional_footer",
+          "seo_meta_title",
+          "seo_meta_description",
+          "selected_theme",
+          "portfolio_score",
+          "recruiter_score",
+          "quality_notes",
+          "portfolio_html_path",
+          "portfolio_readme_path",
+          "portfolio_docx_path",
+          "portfolio_pdf_path",
+          "portfolio_json_path"
+        ],
+        "title": "PortfolioOutput"
+      },
+      "ProfileInput": {
+        "properties": {
+          "target_role": {
+            "type": "string",
+            "title": "Target Role",
+            "examples": [
+              "Python Developer"
+            ]
+          },
+          "target_location": {
+            "type": "string",
+            "title": "Target Location",
+            "default": "United Kingdom",
+            "examples": [
+              "United Kingdom"
+            ]
+          },
+          "headline": {
+            "type": "string",
+            "title": "Headline",
+            "default": ""
+          },
+          "about": {
+            "type": "string",
+            "title": "About"
+          },
+          "experience": {
+            "type": "string",
+            "title": "Experience",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role",
+          "about"
+        ],
+        "title": "ProfileInput"
+      },
+      "ProjectAchievementOutput": {
+        "properties": {
+          "project_name": {
+            "type": "string",
+            "title": "Project Name"
+          },
+          "improved_bullets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Improved Bullets"
+          },
+          "technologies_detected": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Technologies Detected"
+          },
+          "project_value": {
+            "type": "string",
+            "title": "Project Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "project_name",
+          "improved_bullets",
+          "technologies_detected",
+          "project_value"
+        ],
+        "title": "ProjectAchievementOutput"
+      },
+      "ResumeBuildOutput": {
+        "properties": {
+          "recommended_resume_style": {
+            "type": "string",
+            "title": "Recommended Resume Style"
+          },
+          "recommendation_reason": {
+            "type": "string",
+            "title": "Recommendation Reason"
+          },
+          "professional_title": {
+            "type": "string",
+            "title": "Professional Title"
+          },
+          "executive_summary": {
+            "type": "string",
+            "title": "Executive Summary"
+          },
+          "resume_length_rule": {
+            "type": "string",
+            "title": "Resume Length Rule"
+          },
+          "target_market_strategy": {
+            "type": "string",
+            "title": "Target Market Strategy"
+          },
+          "recruiter_positioning": {
+            "type": "string",
+            "title": "Recruiter Positioning"
+          },
+          "full_resume": {
+            "type": "string",
+            "title": "Full Resume"
+          },
+          "ats_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ats Keywords"
+          },
+          "skill_groups": {
+            "items": {
+              "$ref": "#/components/schemas/ResumeSkillGroup"
+            },
+            "type": "array",
+            "title": "Skill Groups"
+          },
+          "strengths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Strengths"
+          },
+          "missing_information": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Information"
+          },
+          "improvement_suggestions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Improvement Suggestions"
+          },
+          "writing_quality_score": {
+            "type": "string",
+            "title": "Writing Quality Score"
+          },
+          "resume_readability": {
+            "type": "string",
+            "title": "Resume Readability"
+          },
+          "ats_readiness": {
+            "type": "string",
+            "title": "Ats Readiness"
+          },
+          "resume_confidence": {
+            "type": "string",
+            "title": "Resume Confidence"
+          },
+          "quality_score": {
+            "type": "integer",
+            "title": "Quality Score"
+          },
+          "ats_readiness_score": {
+            "type": "integer",
+            "title": "Ats Readiness Score"
+          },
+          "recruiter_readability_score": {
+            "type": "integer",
+            "title": "Recruiter Readability Score"
+          },
+          "role_alignment_score": {
+            "type": "integer",
+            "title": "Role Alignment Score"
+          },
+          "quality_issues_found": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Quality Issues Found"
+          },
+          "quality_fixes_applied": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Quality Fixes Applied"
+          },
+          "interview_probability": {
+            "type": "integer",
+            "title": "Interview Probability"
+          },
+          "recruiter_confidence": {
+            "type": "integer",
+            "title": "Recruiter Confidence"
+          },
+          "first_impression": {
+            "type": "string",
+            "title": "First Impression"
+          },
+          "shortlisting_decision": {
+            "type": "string",
+            "title": "Shortlisting Decision"
+          },
+          "top_strengths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Top Strengths"
+          },
+          "top_concerns": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Top Concerns"
+          },
+          "missing_high_value_information": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing High Value Information"
+          },
+          "recommended_improvements": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recommended Improvements"
+          },
+          "industry_keywords_missing": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Industry Keywords Missing"
+          },
+          "resume_competitiveness": {
+            "type": "string",
+            "title": "Resume Competitiveness"
+          },
+          "skill_match_percentage": {
+            "type": "integer",
+            "title": "Skill Match Percentage"
+          },
+          "strong_matching_skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Strong Matching Skills"
+          },
+          "missing_required_skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Required Skills"
+          },
+          "missing_preferred_skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Preferred Skills"
+          },
+          "resume_alignment_strategy": {
+            "type": "string",
+            "title": "Resume Alignment Strategy"
+          },
+          "ats_score_estimate": {
+            "type": "integer",
+            "title": "Ats Score Estimate"
+          },
+          "ats_readiness_level": {
+            "type": "string",
+            "title": "Ats Readiness Level"
+          },
+          "matching_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Matching Keywords"
+          },
+          "missing_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Keywords"
+          },
+          "ats_improvement_actions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ats Improvement Actions"
+          },
+          "personalization_score": {
+            "type": "integer",
+            "title": "Personalization Score"
+          },
+          "personalization_strategy": {
+            "type": "string",
+            "title": "Personalization Strategy"
+          },
+          "personalization_notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Personalization Notes"
+          },
+          "resume_pdf_path": {
+            "type": "string",
+            "title": "Resume Pdf Path"
+          },
+          "resume_docx_path": {
+            "type": "string",
+            "title": "Resume Docx Path"
+          },
+          "selected_theme": {
+            "type": "string",
+            "title": "Selected Theme"
+          },
+          "page_count": {
+            "type": "integer",
+            "title": "Page Count"
+          },
+          "render_quality_score": {
+            "type": "integer",
+            "title": "Render Quality Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recommended_resume_style",
+          "recommendation_reason",
+          "professional_title",
+          "executive_summary",
+          "resume_length_rule",
+          "target_market_strategy",
+          "recruiter_positioning",
+          "full_resume",
+          "ats_keywords",
+          "skill_groups",
+          "strengths",
+          "missing_information",
+          "improvement_suggestions",
+          "writing_quality_score",
+          "resume_readability",
+          "ats_readiness",
+          "resume_confidence",
+          "quality_score",
+          "ats_readiness_score",
+          "recruiter_readability_score",
+          "role_alignment_score",
+          "quality_issues_found",
+          "quality_fixes_applied",
+          "interview_probability",
+          "recruiter_confidence",
+          "first_impression",
+          "shortlisting_decision",
+          "top_strengths",
+          "top_concerns",
+          "missing_high_value_information",
+          "recommended_improvements",
+          "industry_keywords_missing",
+          "resume_competitiveness",
+          "skill_match_percentage",
+          "strong_matching_skills",
+          "missing_required_skills",
+          "missing_preferred_skills",
+          "resume_alignment_strategy",
+          "ats_score_estimate",
+          "ats_readiness_level",
+          "matching_keywords",
+          "missing_keywords",
+          "ats_improvement_actions",
+          "personalization_score",
+          "personalization_strategy",
+          "personalization_notes",
+          "resume_pdf_path",
+          "resume_docx_path",
+          "selected_theme",
+          "page_count",
+          "render_quality_score"
+        ],
+        "title": "ResumeBuildOutput"
+      },
+      "ResumeExportInput": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "title": "Full Name",
+            "default": ""
+          },
+          "target_role": {
+            "type": "string",
+            "title": "Target Role",
+            "default": ""
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "United Kingdom"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/ResumeExportSection"
+            },
+            "type": "array",
+            "title": "Sections"
+          },
+          "selected_theme": {
+            "type": "string",
+            "title": "Selected Theme",
+            "default": ""
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "sections"
+        ],
+        "title": "ResumeExportInput"
+      },
+      "ResumeExportSection": {
+        "properties": {
+          "heading": {
+            "type": "string",
+            "title": "Heading"
+          },
+          "body": {
+            "type": "string",
+            "title": "Body"
+          }
+        },
+        "type": "object",
+        "required": [
+          "heading",
+          "body"
+        ],
+        "title": "ResumeExportSection"
+      },
+      "ResumeIntelligenceAnalysisOutput": {
+        "properties": {
+          "candidate_profile_type": {
+            "type": "string",
+            "title": "Candidate Profile Type"
+          },
+          "career_direction_detected": {
+            "type": "string",
+            "title": "Career Direction Detected"
+          },
+          "career_change_detected": {
+            "type": "boolean",
+            "title": "Career Change Detected"
+          },
+          "recommended_resume_model": {
+            "type": "string",
+            "title": "Recommended Resume Model"
+          },
+          "resume_length_rule": {
+            "type": "string",
+            "title": "Resume Length Rule"
+          },
+          "target_market_strategy": {
+            "type": "string",
+            "title": "Target Market Strategy"
+          },
+          "recruiter_positioning": {
+            "type": "string",
+            "title": "Recruiter Positioning"
+          },
+          "priority_sections": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Priority Sections"
+          },
+          "sections_to_minimize_or_remove": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sections To Minimize Or Remove"
+          },
+          "skill_grouping_strategy": {
+            "items": {
+              "$ref": "#/components/schemas/ResumeSkillGroup"
+            },
+            "type": "array",
+            "title": "Skill Grouping Strategy"
+          },
+          "ats_keyword_strategy": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ats Keyword Strategy"
+          },
+          "missing_information": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Information"
+          },
+          "content_risk_flags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Content Risk Flags"
+          },
+          "writing_guidance": {
+            "type": "string",
+            "title": "Writing Guidance"
+          }
+        },
+        "type": "object",
+        "required": [
+          "candidate_profile_type",
+          "career_direction_detected",
+          "career_change_detected",
+          "recommended_resume_model",
+          "resume_length_rule",
+          "target_market_strategy",
+          "recruiter_positioning",
+          "priority_sections",
+          "sections_to_minimize_or_remove",
+          "skill_grouping_strategy",
+          "ats_keyword_strategy",
+          "missing_information",
+          "content_risk_flags",
+          "writing_guidance"
+        ],
+        "title": "ResumeIntelligenceAnalysisOutput"
+      },
+      "ResumeIntelligenceInput": {
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "title": "Full Name",
+            "default": ""
+          },
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "default": ""
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone",
+            "default": ""
+          },
+          "location": {
+            "type": "string",
+            "title": "Location",
+            "default": ""
+          },
+          "linkedin_url": {
+            "type": "string",
+            "title": "Linkedin Url",
+            "default": ""
+          },
+          "portfolio_url": {
+            "type": "string",
+            "title": "Portfolio Url",
+            "default": ""
+          },
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "Global"
+          },
+          "target_industry": {
+            "type": "string",
+            "title": "Target Industry",
+            "default": ""
+          },
+          "career_direction": {
+            "type": "string",
+            "title": "Career Direction",
+            "default": ""
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level",
+            "default": ""
+          },
+          "current_background": {
+            "type": "string",
+            "title": "Current Background",
+            "default": ""
+          },
+          "highest_qualification": {
+            "type": "string",
+            "title": "Highest Qualification",
+            "default": ""
+          },
+          "education_details": {
+            "type": "string",
+            "title": "Education Details",
+            "default": ""
+          },
+          "work_experience": {
+            "type": "string",
+            "title": "Work Experience",
+            "default": ""
+          },
+          "internships": {
+            "type": "string",
+            "title": "Internships",
+            "default": ""
+          },
+          "projects": {
+            "type": "string",
+            "title": "Projects",
+            "default": ""
+          },
+          "technical_skills": {
+            "type": "string",
+            "title": "Technical Skills",
+            "default": ""
+          },
+          "transferable_skills": {
+            "type": "string",
+            "title": "Transferable Skills",
+            "default": ""
+          },
+          "tools_software": {
+            "type": "string",
+            "title": "Tools Software",
+            "default": ""
+          },
+          "certifications": {
+            "type": "string",
+            "title": "Certifications",
+            "default": ""
+          },
+          "achievements": {
+            "type": "string",
+            "title": "Achievements",
+            "default": ""
+          },
+          "leadership_experience": {
+            "type": "string",
+            "title": "Leadership Experience",
+            "default": ""
+          },
+          "career_change": {
+            "type": "string",
+            "title": "Career Change",
+            "default": "No"
+          },
+          "current_field": {
+            "type": "string",
+            "title": "Current Field",
+            "default": ""
+          },
+          "target_field": {
+            "type": "string",
+            "title": "Target Field",
+            "default": ""
+          },
+          "preferred_resume_style": {
+            "type": "string",
+            "title": "Preferred Resume Style",
+            "default": "Auto Recommend"
+          },
+          "job_description": {
+            "type": "string",
+            "title": "Job Description",
+            "default": ""
+          },
+          "company_name": {
+            "type": "string",
+            "title": "Company Name",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role"
+        ],
+        "title": "ResumeIntelligenceInput"
+      },
+      "ResumeIntelligenceRequest": {
+        "properties": {
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "Global"
+          },
+          "target_industry": {
+            "type": "string",
+            "title": "Target Industry",
+            "default": ""
+          },
+          "career_direction": {
+            "type": "string",
+            "title": "Career Direction",
+            "default": ""
+          },
+          "experience_level": {
+            "type": "string",
+            "title": "Experience Level",
+            "default": ""
+          },
+          "current_background": {
+            "type": "string",
+            "title": "Current Background",
+            "default": ""
+          },
+          "highest_qualification": {
+            "type": "string",
+            "title": "Highest Qualification",
+            "default": ""
+          },
+          "education_details": {
+            "type": "string",
+            "title": "Education Details",
+            "default": ""
+          },
+          "work_experience": {
+            "type": "string",
+            "title": "Work Experience",
+            "default": ""
+          },
+          "internships": {
+            "type": "string",
+            "title": "Internships",
+            "default": ""
+          },
+          "projects": {
+            "type": "string",
+            "title": "Projects",
+            "default": ""
+          },
+          "technical_skills": {
+            "type": "string",
+            "title": "Technical Skills",
+            "default": ""
+          },
+          "transferable_skills": {
+            "type": "string",
+            "title": "Transferable Skills",
+            "default": ""
+          },
+          "tools_software": {
+            "type": "string",
+            "title": "Tools Software",
+            "default": ""
+          },
+          "certifications": {
+            "type": "string",
+            "title": "Certifications",
+            "default": ""
+          },
+          "achievements": {
+            "type": "string",
+            "title": "Achievements",
+            "default": ""
+          },
+          "leadership_experience": {
+            "type": "string",
+            "title": "Leadership Experience",
+            "default": ""
+          },
+          "career_change": {
+            "type": "string",
+            "title": "Career Change",
+            "default": "No"
+          },
+          "current_field": {
+            "type": "string",
+            "title": "Current Field",
+            "default": ""
+          },
+          "target_field": {
+            "type": "string",
+            "title": "Target Field",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role"
+        ],
+        "title": "ResumeIntelligenceRequest"
+      },
+      "ResumeOptimizerInput": {
+        "properties": {
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "United Kingdom"
+          },
+          "resume_text": {
+            "type": "string",
+            "title": "Resume Text"
+          },
+          "job_description": {
+            "type": "string",
+            "title": "Job Description",
+            "default": ""
+          },
+          "target_location": {
+            "type": "string",
+            "title": "Target Location",
+            "default": "United Kingdom"
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role",
+          "resume_text"
+        ],
+        "title": "ResumeOptimizerInput"
+      },
+      "ResumeOptimizerOutput": {
+        "properties": {
+          "recommended_resume_style": {
+            "type": "string",
+            "title": "Recommended Resume Style"
+          },
+          "recommendation_reason": {
+            "type": "string",
+            "title": "Recommendation Reason"
+          },
+          "optimized_resume": {
+            "type": "string",
+            "title": "Optimized Resume"
+          },
+          "ats_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ats Keywords"
+          },
+          "strengths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Strengths"
+          },
+          "weaknesses_found": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Weaknesses Found"
+          },
+          "improvement_suggestions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Improvement Suggestions"
+          },
+          "ats_score_estimate": {
+            "type": "integer",
+            "title": "Ats Score Estimate"
+          },
+          "ats_readiness_level": {
+            "type": "string",
+            "title": "Ats Readiness Level"
+          },
+          "matching_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Matching Keywords"
+          },
+          "missing_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Keywords"
+          },
+          "ats_improvement_actions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ats Improvement Actions"
+          },
+          "personalization_score": {
+            "type": "integer",
+            "title": "Personalization Score"
+          },
+          "personalization_strategy": {
+            "type": "string",
+            "title": "Personalization Strategy"
+          },
+          "personalization_notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Personalization Notes"
+          },
+          "resume_pdf_path": {
+            "type": "string",
+            "title": "Resume Pdf Path"
+          },
+          "resume_docx_path": {
+            "type": "string",
+            "title": "Resume Docx Path"
+          },
+          "selected_theme": {
+            "type": "string",
+            "title": "Selected Theme"
+          },
+          "page_count": {
+            "type": "integer",
+            "title": "Page Count"
+          },
+          "render_quality_score": {
+            "type": "integer",
+            "title": "Render Quality Score"
+          },
+          "interview_probability": {
+            "type": "integer",
+            "title": "Interview Probability"
+          },
+          "recruiter_confidence": {
+            "type": "integer",
+            "title": "Recruiter Confidence"
+          },
+          "first_impression": {
+            "type": "string",
+            "title": "First Impression"
+          },
+          "shortlisting_decision": {
+            "type": "string",
+            "title": "Shortlisting Decision"
+          },
+          "top_strengths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Top Strengths"
+          },
+          "top_concerns": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Top Concerns"
+          },
+          "missing_high_value_information": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing High Value Information"
+          },
+          "recommended_improvements": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recommended Improvements"
+          },
+          "industry_keywords_missing": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Industry Keywords Missing"
+          },
+          "resume_competitiveness": {
+            "type": "string",
+            "title": "Resume Competitiveness"
+          },
+          "skill_match_percentage": {
+            "type": "integer",
+            "title": "Skill Match Percentage"
+          },
+          "strong_matching_skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Strong Matching Skills"
+          },
+          "missing_required_skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Required Skills"
+          },
+          "missing_preferred_skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Preferred Skills"
+          },
+          "resume_alignment_strategy": {
+            "type": "string",
+            "title": "Resume Alignment Strategy"
+          }
+        },
+        "type": "object",
+        "required": [
+          "recommended_resume_style",
+          "recommendation_reason",
+          "optimized_resume",
+          "ats_keywords",
+          "strengths",
+          "weaknesses_found",
+          "improvement_suggestions",
+          "ats_score_estimate",
+          "ats_readiness_level",
+          "matching_keywords",
+          "missing_keywords",
+          "ats_improvement_actions",
+          "personalization_score",
+          "personalization_strategy",
+          "personalization_notes",
+          "resume_pdf_path",
+          "resume_docx_path",
+          "selected_theme",
+          "page_count",
+          "render_quality_score",
+          "interview_probability",
+          "recruiter_confidence",
+          "first_impression",
+          "shortlisting_decision",
+          "top_strengths",
+          "top_concerns",
+          "missing_high_value_information",
+          "recommended_improvements",
+          "industry_keywords_missing",
+          "resume_competitiveness",
+          "skill_match_percentage",
+          "strong_matching_skills",
+          "missing_required_skills",
+          "missing_preferred_skills",
+          "resume_alignment_strategy"
+        ],
+        "title": "ResumeOptimizerOutput"
+      },
+      "ResumeReviewerInput": {
+        "properties": {
+          "resume_text": {
+            "type": "string",
+            "title": "Resume Text"
+          },
+          "target_role": {
+            "type": "string",
+            "title": "Target Role",
+            "default": ""
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "Global ATS"
+          },
+          "job_description": {
+            "type": "string",
+            "title": "Job Description",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "resume_text"
+        ],
+        "title": "ResumeReviewerInput"
+      },
+      "ResumeReviewerOutput": {
+        "properties": {
+          "ats_score_estimate": {
+            "type": "string",
+            "title": "Ats Score Estimate"
+          },
+          "score_reason": {
+            "type": "string",
+            "title": "Score Reason"
+          },
+          "missing_keywords": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Keywords"
+          },
+          "weak_sections": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Weak Sections"
+          },
+          "strong_sections": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Strong Sections"
+          },
+          "recruiter_feedback": {
+            "type": "string",
+            "title": "Recruiter Feedback"
+          },
+          "improvement_suggestions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Improvement Suggestions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ats_score_estimate",
+          "score_reason",
+          "missing_keywords",
+          "weak_sections",
+          "strong_sections",
+          "recruiter_feedback",
+          "improvement_suggestions"
+        ],
+        "title": "ResumeReviewerOutput"
+      },
+      "ResumeSkillGroup": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "skills": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Skills"
+          }
+        },
+        "type": "object",
+        "required": [
+          "category",
+          "skills"
+        ],
+        "title": "ResumeSkillGroup"
+      },
+      "RoleSuggestionInput": {
+        "properties": {
+          "about": {
+            "type": "string",
+            "title": "About"
+          }
+        },
+        "type": "object",
+        "required": [
+          "about"
+        ],
+        "title": "RoleSuggestionInput"
+      },
+      "SaveCareerAssetInput": {
+        "properties": {
+          "asset_type": {
+            "type": "string",
+            "title": "Asset Type"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "target_role": {
+            "type": "string",
+            "title": "Target Role",
+            "default": ""
+          },
+          "target_country": {
+            "type": "string",
+            "title": "Target Country",
+            "default": "Global"
+          },
+          "content_json": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Content Json"
+          },
+          "pdf_url": {
+            "type": "string",
+            "title": "Pdf Url",
+            "default": ""
+          },
+          "docx_url": {
+            "type": "string",
+            "title": "Docx Url",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "asset_type",
+          "title"
+        ],
+        "title": "SaveCareerAssetInput"
+      },
+      "ScratchProfileInput": {
+        "properties": {
+          "target_role": {
+            "type": "string",
+            "title": "Target Role"
+          },
+          "education": {
+            "type": "string",
+            "title": "Education"
+          },
+          "skills": {
+            "type": "string",
+            "title": "Skills"
+          },
+          "projects": {
+            "type": "string",
+            "title": "Projects"
+          },
+          "experience": {
+            "type": "string",
+            "title": "Experience",
+            "default": ""
+          },
+          "career_goal": {
+            "type": "string",
+            "title": "Career Goal"
+          },
+          "target_location": {
+            "type": "string",
+            "title": "Target Location",
+            "default": "United Kingdom"
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_role",
+          "education",
+          "skills",
+          "projects",
+          "career_goal"
+        ],
+        "title": "ScratchProfileInput"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

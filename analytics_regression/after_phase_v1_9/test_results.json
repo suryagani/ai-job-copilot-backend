@@ -1,0 +1,62 @@
+{
+  "admin_protection": {
+    "status": 403,
+    "body": {
+      "detail": "Admin access denied."
+    }
+  },
+  "signup": {
+    "status": 200,
+    "email": "analytics-v19-1783206513@example.com"
+  },
+  "login": {
+    "status": 200,
+    "auth_mode": "local"
+  },
+  "generation_failed_probe": {
+    "status": 422
+  },
+  "resume_optimizer": {
+    "status": 200,
+    "recommended_resume_style": "Business Professional Resume",
+    "ats_score_estimate": 57,
+    "recruiter_confidence": 70
+  },
+  "download_pdf": {
+    "status": 200,
+    "bytes": 3025
+  },
+  "download_docx": {
+    "status": 200,
+    "bytes": 37446
+  },
+  "public_generation": {
+    "status": 200,
+    "keys": [
+      "connection_message",
+      "outreach_message",
+      "follow_up_message"
+    ]
+  },
+  "summary": {
+    "status": 200
+  },
+  "tool_usage": {
+    "status": 200
+  },
+  "countries": {
+    "status": 200
+  },
+  "roles": {
+    "status": 200
+  },
+  "downloads": {
+    "status": 200
+  },
+  "errors": {
+    "status": 200
+  },
+  "recent_events": {
+    "status": 200
+  }
+}
