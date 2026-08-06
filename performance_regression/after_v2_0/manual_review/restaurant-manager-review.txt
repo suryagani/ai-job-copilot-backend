@@ -1,0 +1,32 @@
+Case: builder_restaurant_manager
+Professional title: Operations Manager – Hospitality
+ATS score: 54
+Recruiter confidence: 80
+Quality score: 72
+Page count: 1
+
+Top strengths:
+- Hands-on operations management experience in hospitality
+- Leadership of supervisors and front-of-house teams
+- Process improvements in stock management and shift handovers
+
+Top concerns:
+- Lack of quantifiable metrics or KPIs to demonstrate impact
+- Limited detail on scale of operations or team size
+- Absence of certifications related to operations management or project management
+
+ATS improvement actions:
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Process Discipline, Problem Solving, Organizational Skills, Customer Focus.
+- Place the strongest role keywords naturally in the Professional Summary: Team Leadership, Inventory Control, Leadership.
+- Keep the Skills section ATS-safe and grouped, highlighting: Team Leadership, Inventory Control, Leadership, Communication, Vendor Coordination.
+- Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.
+
+Improvement suggestions:
+- Consider building stronger exposure in: Cost control, Budget oversight, KPI reporting.
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Process Discipline, Problem Solving, Organizational Skills, Customer Focus.
+- Place the strongest role keywords naturally in the Professional Summary: Team Leadership, Inventory Control, Leadership.
+- Keep the Skills section ATS-safe and grouped, highlighting: Team Leadership, Inventory Control, Leadership, Communication, Vendor Coordination.
+- Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.
+
+Timing report:
+- response_time_ms: 36479.39

@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from docx import Document
 from reportlab.lib.pagesizes import A4, letter
 
 from .docx_generator import build_docx
@@ -36,6 +37,16 @@ def _normalize_sections(sections):
     return normalized
 
 
+def _validate_render_output(docx_path: Path, pdf_path: Path) -> None:
+    if not docx_path.exists() or docx_path.stat().st_size <= 0:
+        raise RuntimeError("DOCX render failed validation.")
+    if not pdf_path.exists() or pdf_path.stat().st_size <= 0:
+        raise RuntimeError("PDF render failed validation.")
+    if not pdf_path.read_bytes().startswith(b"%PDF"):
+        raise RuntimeError("PDF render is invalid.")
+    Document(str(docx_path))
+
+
 def render_resume_package(export, resume_model: str = "", preferred_theme: str = "", output_dir: str | None = None) -> dict:
     sections = _normalize_sections(export.sections)
     word_count = sum(len(" ".join(section["lines"]).split()) for section in sections)
@@ -60,6 +71,7 @@ def render_resume_package(export, resume_model: str = "", preferred_theme: str =
     pdf_path = output_root / f"{base_name}.pdf"
     docx_path.write_bytes(docx_buffer.getvalue())
     pdf_path.write_bytes(pdf_buffer.getvalue())
+    _validate_render_output(docx_path, pdf_path)
 
     return {
         "docx_buffer": docx_buffer,

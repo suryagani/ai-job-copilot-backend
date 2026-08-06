@@ -1,0 +1,32 @@
+Case: builder_devops_fresher
+Professional title: DevOps Engineer | B.Tech Computer Science Graduate
+ATS score: 45
+Recruiter confidence: 70
+Quality score: 82
+Page count: 1
+
+Top strengths:
+- Relevant B.Tech degree with coursework in Cloud Computing and Automation
+- Hands-on project experience with CI/CD pipelines, containerization, and monitoring tools
+- Familiarity with core DevOps technologies like AWS, Docker, Kubernetes, Jenkins, and Terraform
+
+Top concerns:
+- Lack of detailed internship responsibilities and measurable achievements
+- Certifications are minimal and not specific to AWS, Docker, or Kubernetes
+- No explicit mention of infrastructure as code implementation or scripting depth
+
+ATS improvement actions:
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Cloud infrastructure management, Container orchestration, Infrastructure as Code, Continuous Integration and Continuous Deployment, System monitoring and alerting, DevOps.
+- Place the strongest role keywords naturally in the Professional Summary: AWS, Docker, Kubernetes.
+- Keep the Skills section ATS-safe and grouped, highlighting: AWS, Docker, Kubernetes, CI/CD.
+- Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.
+
+Improvement suggestions:
+- Consider building stronger exposure in: CI/CD pipelines, Monitoring.
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Cloud infrastructure management, Container orchestration, Infrastructure as Code, Continuous Integration and Continuous Deployment, System monitoring and alerting, DevOps.
+- Place the strongest role keywords naturally in the Professional Summary: AWS, Docker, Kubernetes.
+- Keep the Skills section ATS-safe and grouped, highlighting: AWS, Docker, Kubernetes, CI/CD.
+- Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.
+
+Timing report:
+- response_time_ms: 29499.58

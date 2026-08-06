@@ -1,0 +1,30 @@
+Case: builder_vlsi_fresher
+Professional title: Electronics and Communication Engineering Graduate | Aspiring VLSI Engineer
+ATS score: 35
+Recruiter confidence: 75
+Quality score: 85
+Page count: 1
+
+Top strengths:
+- Relevant academic coursework in VLSI Design, Digital Electronics, and Physical Design Flow
+- Hands-on experience with Verilog and industry-standard EDA tools like ICC and ModelSim
+
+Top concerns:
+- Lack of detailed description of internship responsibilities and outcomes
+- Absence of measurable achievements or specific project results to demonstrate impact
+
+ATS improvement actions:
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Physical design awareness, Semiconductor fundamentals, VLSI design concepts, Physical design methodologies, Digital IC Design.
+- Place the strongest role keywords naturally in the Professional Summary: Linux, VLSI, Physical design.
+- Keep the Skills section ATS-safe and grouped, highlighting: Linux, VLSI, Physical design, VLSI Design.
+- Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.
+
+Improvement suggestions:
+- Consider building stronger exposure in: RTL Design, Timing Analysis, Cadence, Synopsys.
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Physical design awareness, Semiconductor fundamentals, VLSI design concepts, Physical design methodologies, Digital IC Design.
+- Place the strongest role keywords naturally in the Professional Summary: Linux, VLSI, Physical design.
+- Keep the Skills section ATS-safe and grouped, highlighting: Linux, VLSI, Physical design, VLSI Design.
+- Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.
+
+Timing report:
+- response_time_ms: 23875.73

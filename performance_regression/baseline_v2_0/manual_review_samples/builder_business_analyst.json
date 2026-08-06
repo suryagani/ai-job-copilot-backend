@@ -1,0 +1,175 @@
+{
+  "recommended_resume_style": "Graduate ATS Resume",
+  "recommendation_reason": "Selected Graduate ATS Resume based on the candidate profile type 'Fresher', career direction 'Operations', and target role alignment for Business Analyst.",
+  "professional_title": "Business Analyst",
+  "executive_summary": "MBA graduate with 3-5 years of experience supporting business analysis in operations. Skilled in stakeholder management, requirements gathering, and process mapping. Proficient in SQL and Power BI for data analysis and dashboard creation, contributing to improved reporting accuracy. Experienced in coordinating cross-functional teams and standardizing documentation to support consulting projects. Prepared to apply analytical and communication skills in a UK consulting environment.",
+  "resume_length_rule": "One Page",
+  "target_market_strategy": "Position the candidate as a capable early-career Business Analyst with a strong foundation in operations and consulting-related tasks, leveraging an MBA with operations and finance focus. Emphasize practical experience in reporting, process mapping, stakeholder coordination, and requirement gathering, supported by relevant technical skills (SQL, Excel, Power BI) and certifications. Highlight leadership through mentoring and coordination to demonstrate readiness for consulting environments in the UK market.",
+  "recruiter_positioning": "Present the candidate as a polished, results-oriented Business Analyst with 3-5 years of experience in operations-focused roles, adept at translating business needs into actionable insights and process improvements. Use clear, professional language to showcase contributions to reporting accuracy and documentation standardization, emphasizing stakeholder management and communication skills valued in consulting. Avoid inflated claims; focus on measurable impact and practical skills aligned with UK consulting expectations.",
+  "full_resume": "PROFESSIONAL SUMMARY\nMBA graduate with 3-5 years of experience supporting business analysis in operations. Skilled in stakeholder management, requirements gathering, and process mapping. Proficient in SQL and Power BI for data analysis and dashboard creation, contributing to improved reporting accuracy. Experienced in coordinating cross-functional teams and standardizing documentation to support consulting projects. Prepared to apply analytical and communication skills in a UK consulting environment.\n\nWORK EXPERIENCE\nBusiness Analyst Support\n- Collaborated with stakeholders to gather and document business requirements, enhancing clarity and alignment for operational reporting and process mapping initiatives.\n- Developed and refined operational reports by querying data using SQL and creating visual dashboards in Power BI, improving reporting accuracy.\n- Coordinated communication between cross-functional teams and stakeholders to ensure timely delivery of process documentation and reporting outputs.\n\nTECHNICAL SKILLS & TOOLS\nTechnical Skills: SQL, Excel, Power BI\nBusiness & Analytical Tools: PowerPoint, Jira\nTransferable & Soft Skills: Stakeholder Management, Communication, Process Mapping, Documentation, Problem Solving\n\nEDUCATION & CERTIFICATIONS\nMBA in Operations and Finance\nBusiness Analysis Foundation Certificate\n\nPROJECTS\nReporting Dashboard and Documentation Standardization Initiative\n- Designed and implemented a reporting dashboard using Power BI to visualize key operational metrics, improving data accessibility for stakeholders.\n- Standardized documentation templates and processes to enhance consistency and efficiency in business requirement gathering and reporting.\n\nLEADERSHIP EXPERIENCE\n- Mentored junior analysts by providing guidance on data analysis techniques and reporting best practices, fostering skill development within the team.\n- Led coordination of review meetings to facilitate stakeholder feedback and ensure alignment on project deliverables.",
+  "ats_keywords": [
+    "Stakeholder management",
+    "Requirements gathering",
+    "Reporting",
+    "SQL",
+    "Power BI",
+    "SQL databases",
+    "Communication",
+    "Collaboration",
+    "Analytical thinking",
+    "Business Analyst"
+  ],
+  "skill_groups": [
+    {
+      "category": "Business & Productivity Tools",
+      "skills": [
+        "Excel",
+        "PowerPoint",
+        "Power BI"
+      ]
+    },
+    {
+      "category": "Data & Analysis",
+      "skills": [
+        "SQL"
+      ]
+    },
+    {
+      "category": "Communication & Documentation",
+      "skills": [
+        "communication",
+        "documentation",
+        "Stakeholder management"
+      ]
+    },
+    {
+      "category": "Transferable Skills",
+      "skills": [
+        "process mapping",
+        "problem solving",
+        "Jira"
+      ]
+    }
+  ],
+  "strengths": [
+    "Excel",
+    "PowerPoint",
+    "Power BI",
+    "Collaborated with stakeholders to gather and document business requirements, enhancing clarity and alignment for operational reporting and process mapping initiatives.",
+    "Developed and refined operational reports by querying data using SQL and creating visual dashboards in Power BI to improve reporting accuracy.",
+    "Enhanced reporting clarity and streamlined documentation processes to support operational decision-making."
+  ],
+  "missing_information": [
+    "Specific quantifiable achievements or metrics demonstrating impact",
+    "Details on the scale or scope of projects handled",
+    "Clear articulation of consulting-related experience or exposure",
+    "Professional summary or objective statement",
+    "Dates and durations for work experience and projects"
+  ],
+  "improvement_suggestions": [
+    "Consider building stronger exposure in: Requirements gathering, Dashboarding.",
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Collaboration, Analytical thinking.",
+    "Place the strongest role keywords naturally in the Professional Summary: Stakeholder management, Requirements gathering, Reporting.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Stakeholder management, Requirements gathering, Reporting, SQL."
+  ],
+  "writing_quality_score": "78/100",
+  "resume_readability": "High",
+  "ats_readiness": "Low",
+  "resume_confidence": "Promising",
+  "quality_score": 78,
+  "ats_readiness_score": 90,
+  "recruiter_readability_score": 94,
+  "role_alignment_score": 100,
+  "quality_issues_found": [
+    "Skills are not clearly grouped using the Skill Intelligence structure.",
+    "Section order does not fully follow the recommended resume model."
+  ],
+  "quality_fixes_applied": [
+    "Keep the summary concise, role-specific, and around 70-120 words.",
+    "Rebuild the skills section using the provided grouped categories instead of a flat list.",
+    "Reorder the resume sections to match the recommended structure.",
+    "Sharpen the professional title and summary so the target value is clear within seconds."
+  ],
+  "interview_probability": 75,
+  "recruiter_confidence": 80,
+  "first_impression": "Well-structured, concise resume presenting a capable early-career Business Analyst with relevant MBA background and practical experience in operations-focused analysis and reporting.",
+  "shortlisting_decision": "Maybe",
+  "top_strengths": [
+    "Clear alignment with business analysis tasks such as requirement gathering, process mapping, and stakeholder management",
+    "Strong technical skills in SQL and Power BI with demonstrated application in reporting and dashboard creation",
+    "Relevant leadership experience mentoring juniors and coordinating stakeholder meetings"
+  ],
+  "top_concerns": [
+    "Lack of specific employer names, dates, and quantifiable achievements reduces credibility and impact",
+    "Experience description is somewhat generic and could better highlight measurable business outcomes",
+    "Resume length and detail are minimal; may not fully convey depth of experience or consulting readiness"
+  ],
+  "missing_high_value_information": [
+    "Specific work experience timeline and company names",
+    "Quantifiable results or KPIs demonstrating impact of analysis and reporting improvements",
+    "Additional certifications or training relevant to UK consulting or business analysis"
+  ],
+  "recommended_improvements": [
+    "Include employer names, job titles, and dates to establish clear career progression",
+    "Add measurable achievements to demonstrate impact (e.g., % improvement in reporting accuracy, time saved)",
+    "Expand on stakeholder management examples with context on scale and complexity",
+    "Consider adding a brief section on consulting-related methodologies or frameworks familiar to the candidate"
+  ],
+  "industry_keywords_missing": [
+    "Consulting",
+    "Business Analysis",
+    "Requirement Gathering",
+    "Process Mapping",
+    "Stakeholder Management",
+    "Reporting",
+    "Operations",
+    "Data Analysis",
+    "Dashboard Creation",
+    "Documentation",
+    "SQL",
+    "Power BI"
+  ],
+  "resume_competitiveness": "Competitive",
+  "skill_match_percentage": 67,
+  "strong_matching_skills": [
+    "Stakeholder management",
+    "Created sample reporting dashboard and documentation standardization initiative."
+  ],
+  "missing_required_skills": [
+    "Requirements gathering"
+  ],
+  "missing_preferred_skills": [],
+  "resume_alignment_strategy": "Lead with the strongest matching skills, keep role-relevant evidence visible early, and address the missing required skills through truthful positioning or future upskilling suggestions.",
+  "ats_score_estimate": 64,
+  "ats_readiness_level": "Medium",
+  "matching_keywords": [
+    "Stakeholder management",
+    "Requirements gathering",
+    "Reporting",
+    "SQL",
+    "Power BI",
+    "Communication",
+    "Business Analyst"
+  ],
+  "missing_keywords": [
+    "Collaboration",
+    "Analytical thinking"
+  ],
+  "ats_improvement_actions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Collaboration, Analytical thinking.",
+    "Place the strongest role keywords naturally in the Professional Summary: Stakeholder management, Requirements gathering, Reporting.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Stakeholder management, Requirements gathering, Reporting, SQL."
+  ],
+  "personalization_score": 85,
+  "personalization_strategy": "Balance role alignment, recruiter clarity, and truthful ATS keyword coverage.",
+  "personalization_notes": [
+    "UK personalization favors concise, practical, and professional wording.",
+    "Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.",
+    "Overall: UK personalization favors concise, practical, and professional wording. Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills."
+  ],
+  "resume_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-gamma.pdf",
+  "resume_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-gamma.docx",
+  "selected_theme": "Classic ATS",
+  "page_count": 1,
+  "render_quality_score": 92
+}

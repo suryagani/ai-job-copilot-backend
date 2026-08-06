@@ -1,0 +1,157 @@
+{
+  "recommended_resume_style": "Executive Leadership Resume",
+  "recommendation_reason": "Selected Executive Leadership Resume based on the candidate profile type 'Executive', career direction 'Management', and target role alignment for Engineering Manager.",
+  "professional_title": "Engineering Manager",
+  "executive_summary": "Engineering leader with over a decade of experience steering software delivery and team development within cloud-centric and architecture-driven environments. Demonstrated expertise in managing multiple engineering teams, owning and executing complex roadmaps, and leading architecture reviews to ensure alignment with strategic business goals. Proven track record in mentoring engineering leads, stabilizing delivery operations during rapid scale-up phases, and standardizing engineering processes to boost productivity and release cadence. Skilled in stakeholder engagement, hiring facilitation, and cultivating high-performance, collaborative teams.",
+  "resume_length_rule": "Two Pages",
+  "target_market_strategy": "Craft a concise, impact-driven resume emphasizing leadership in engineering management within software development. Highlight strategic contributions such as team leadership, roadmap planning, architecture oversight, and delivery stabilization. Use US-style formatting with a sharp professional summary that quickly conveys management capabilities and technical acumen. Prioritize quantifiable leadership impact and cross-functional stakeholder management to appeal to US software industry recruiters seeking experienced engineering managers.",
+  "recruiter_positioning": "Position the candidate as a seasoned engineering leader with over 10 years of experience driving software delivery excellence, team growth, and process modernization. Emphasize ability to manage multiple teams, mentor engineering leads, and coordinate complex roadmaps in cloud and architecture-focused environments. Showcase leadership in stabilizing delivery operations during scale-up phases, signaling readiness for senior engineering management roles in US-based software companies.",
+  "full_resume": "PROFESSIONAL SUMMARY\n\nEngineering leader with over a decade of experience steering software delivery and team development within cloud-centric and architecture-driven environments. Demonstrated expertise in managing multiple engineering teams, owning and executing complex roadmaps, and leading architecture reviews to ensure alignment with strategic business goals. Proven track record in mentoring engineering leads, stabilizing delivery operations during rapid scale-up phases, and standardizing engineering processes to boost productivity and release cadence. Skilled in stakeholder engagement, hiring facilitation, and cultivating high-performance, collaborative teams.\n\nLEADERSHIP EXPERIENCE\n\n- Managed multiple engineering teams, fostering a culture of collaboration, continuous improvement, and accountability while mentoring engineering leads to develop leadership capabilities.\n- Owned and drove engineering roadmaps, aligning cross-functional teams and architecture decisions with strategic business objectives to ensure timely and high-quality delivery.\n- Directed hiring support initiatives, partnering with recruitment to strengthen team capabilities and succession planning.\n- Stabilized and optimized delivery operations during critical scale-up phases, enhancing team productivity and maintaining consistent release cadence amid rapid growth.\n\nWORK EXPERIENCE\n\nEngineering Leadership Roles\n\n- Directed multiple engineering teams through end-to-end software delivery cycles, coordinating roadmaps and architecture reviews to align technical strategy with business goals.\n- Supported hiring processes and mentored engineering leads to strengthen team capabilities and ensure timely release planning.\n- Led architecture review sessions to uphold high standards of software design, scalability, and maintainability.\n- Collaborated with stakeholders to manage delivery timelines, resolve operational challenges, and communicate progress effectively.\n\nTECHNICAL SKILLS\n\nLeadership & Management:\n- Team Leadership\n- Mentoring\n- Stakeholder Management\n- Delivery Management\n- Roadmap Coordination\n- Release Planning\n\nTechnical Skills:\n- Java\n- Python\n- Cloud Technologies\n- Architecture Review\n- AWS\n\nTools & Platforms:\n- Jira\n- Confluence\n\nPROJECTS\n\nPlatform Modernization and Process Standardization\n\n- Led platform modernization efforts to update legacy systems, improving maintainability, scalability, and alignment with current technology standards.\n- Standardized engineering processes across teams to enhance consistency, reduce defects, and accelerate delivery timelines.\n- Improved platform reliability and streamlined engineering workflows to support scalable and efficient software delivery.",
+  "ats_keywords": [
+    "People leadership",
+    "Delivery management",
+    "Architecture collaboration",
+    "Hiring",
+    "Roadmap ownership",
+    "Software architecture",
+    "Project delivery methodologies",
+    "Leadership",
+    "Communication",
+    "Collaboration",
+    "Strategic planning",
+    "Engineering Manager"
+  ],
+  "skill_groups": [
+    {
+      "category": "Operations & Coordination",
+      "skills": [
+        "stakeholder management"
+      ]
+    },
+    {
+      "category": "Transferable Skills",
+      "skills": [
+        "Java",
+        "Python",
+        "Cloud",
+        "Architecture Review",
+        "Leadership",
+        "mentoring",
+        "delivery management",
+        "planning"
+      ]
+    }
+  ],
+  "strengths": [
+    "stakeholder management",
+    "Java",
+    "Python",
+    "Directed multiple engineering teams through end-to-end software delivery cycles, coordinating roadmaps and architecture reviews to align technical strategy with business goals; supported hiring and mentored engineering leads to strengthen team capabilities and ensure timely release planning.",
+    "Stabilized and optimized delivery operations during critical scale-up phases, enhancing team productivity and ensuring consistent release cadence amid rapid growth.",
+    "Improved platform reliability and streamlined engineering workflows to support scalable software delivery."
+  ],
+  "missing_information": [
+    "Quantifiable metrics demonstrating leadership impact (e.g., team size, delivery improvements, project outcomes)",
+    "Specific certifications relevant to engineering management or cloud technologies",
+    "Details on scale and scope of teams managed",
+    "Notable achievements with measurable business or technical impact",
+    "Clear professional summary statement"
+  ],
+  "improvement_suggestions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Architecture collaboration, Roadmap ownership, Software architecture, Project delivery methodologies, Communication, Engineering Manager.",
+    "Place the strongest role keywords naturally in the Professional Summary: Delivery management, Hiring, Leadership.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Delivery management, Hiring, Leadership, Collaboration."
+  ],
+  "writing_quality_score": "78/100",
+  "resume_readability": "High",
+  "ats_readiness": "Low",
+  "resume_confidence": "Promising",
+  "quality_score": 78,
+  "ats_readiness_score": 90,
+  "recruiter_readability_score": 94,
+  "role_alignment_score": 100,
+  "quality_issues_found": [
+    "Skills are not clearly grouped using the Skill Intelligence structure.",
+    "Section order does not fully follow the recommended resume model."
+  ],
+  "quality_fixes_applied": [
+    "Rebuild the skills section using the provided grouped categories instead of a flat list.",
+    "Reorder the resume sections to match the recommended structure."
+  ],
+  "interview_probability": 75,
+  "recruiter_confidence": 80,
+  "first_impression": "The resume presents a seasoned engineering leader with solid experience in managing multiple teams, driving roadmaps, and stabilizing delivery operations in cloud and architecture-focused environments. The summary and skills align well with the Engineering Manager role, emphasizing leadership and technical acumen.",
+  "shortlisting_decision": "Maybe",
+  "top_strengths": [
+    "Clear leadership experience managing multiple engineering teams",
+    "Strong focus on roadmap planning, architecture reviews, and delivery stabilization",
+    "Good alignment with cloud technologies and software delivery processes"
+  ],
+  "top_concerns": [
+    "Lacks specific quantifiable achievements or metrics demonstrating impact",
+    "No explicit mention of scale (team size, project size, budget) or seniority level",
+    "Absence of detailed career progression or company names/tenures reduces context"
+  ],
+  "missing_high_value_information": [
+    "Specific leadership achievements with measurable outcomes",
+    "Details on team sizes managed and organizational context",
+    "Clear career timeline with company names, roles, and dates"
+  ],
+  "recommended_improvements": [
+    "Add quantifiable results to leadership accomplishments (e.g., % improvement in delivery speed, team growth numbers)",
+    "Include explicit career progression with company names, roles, and durations to demonstrate growth",
+    "Incorporate examples of cross-functional stakeholder management and strategic decision-making"
+  ],
+  "industry_keywords_missing": [
+    "Release Planning",
+    "Process Standardization",
+    "Delivery Stabilization"
+  ],
+  "resume_competitiveness": "Competitive",
+  "skill_match_percentage": 60,
+  "strong_matching_skills": [
+    "Leadership",
+    "delivery management",
+    "hiring support"
+  ],
+  "missing_required_skills": [
+    "Architecture collaboration",
+    "Roadmap ownership"
+  ],
+  "missing_preferred_skills": [],
+  "resume_alignment_strategy": "Lead with the strongest matching skills, keep role-relevant evidence visible early, and address the missing required skills through truthful positioning or future upskilling suggestions.",
+  "ats_score_estimate": 36,
+  "ats_readiness_level": "Low",
+  "matching_keywords": [
+    "Leadership",
+    "Delivery management",
+    "Hiring",
+    "Collaboration",
+    "planning"
+  ],
+  "missing_keywords": [
+    "Architecture collaboration",
+    "Roadmap ownership",
+    "Software architecture",
+    "Project delivery methodologies",
+    "Communication",
+    "Engineering Manager"
+  ],
+  "ats_improvement_actions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Architecture collaboration, Roadmap ownership, Software architecture, Project delivery methodologies, Communication, Engineering Manager.",
+    "Place the strongest role keywords naturally in the Professional Summary: Delivery management, Hiring, Leadership.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Delivery management, Hiring, Leadership, Collaboration."
+  ],
+  "personalization_score": 90,
+  "personalization_strategy": "Balance role alignment, recruiter clarity, and truthful ATS keyword coverage.",
+  "personalization_notes": [
+    "US personalization favors fast value communication and sharp achievement-led wording.",
+    "Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.",
+    "Overall: US personalization favors fast value communication and sharp achievement-led wording. Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills."
+  ],
+  "resume_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-zeta.pdf",
+  "resume_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-zeta.docx",
+  "selected_theme": "Executive",
+  "page_count": 1,
+  "render_quality_score": 92
+}

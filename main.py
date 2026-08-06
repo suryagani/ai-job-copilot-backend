@@ -1,14 +1,18 @@
-from fastapi import FastAPI, Header, HTTPException, Request
+from fastapi import FastAPI, Header, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 import os
 import json
 import smtplib
+import time
+import uuid
+import hashlib
 from io import BytesIO
 from email.mime.text import MIMEText
 from pathlib import Path
+from threading import Lock
 from json_repair import repair_json
 from openai import OpenAI
 from docx import Document
@@ -31,6 +35,11 @@ from resume_designer import render_resume_package
 from resume_designer.regression_runner import run_regression_suite
 from resume_models import select_resume_model
 from resume_models.runtime import configure_runtime
+from core.error_handlers import register_error_handlers
+from core.exceptions import AppError, RateLimitExceeded
+from observability import clear_request_context, configure_logging, metrics_registry, set_request_context
+from observability.request_context import get_request_id
+from services.ai_client import build_openai_client
 
 # -----------------------
 # Setup
@@ -41,14 +50,21 @@ api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     raise RuntimeError("OPENAI_API_KEY not found. Put it in your .env file.")
 
-client = OpenAI(api_key=api_key)
+logger = configure_logging()
+client = build_openai_client(OpenAI(api_key=api_key))
 configure_runtime(client, lambda content: parse_json_response(content))
 
-app = FastAPI(title="AI Job Copilot", version="1.0.0")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development").strip().lower() or "development"
+ALLOWED_ORIGINS = [item.strip() for item in os.getenv("ALLOWED_ORIGINS", "").split(",") if item.strip()]
+if not ALLOWED_ORIGINS:
+    ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:4173", "http://127.0.0.1:4173"] if ENVIRONMENT == "development" else ["https://uniaiads.com", "https://www.uniaiads.com"]
+
+app = FastAPI(title="AI Job Copilot", version="2.0.0")
+register_error_handlers(app)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -63,6 +79,28 @@ SMTP_USER = os.getenv("SMTP_USER", "")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
 SMTP_FROM = os.getenv("SMTP_FROM", SMTP_USER)
 ADMIN_SECRET = os.getenv("ADMIN_SECRET", "change-me-admin-secret").strip()
+AI_REQUEST_TIMEOUT_SECONDS = int(os.getenv("AI_REQUEST_TIMEOUT_SECONDS", "120"))
+DOCUMENT_GENERATION_TIMEOUT_SECONDS = int(os.getenv("DOCUMENT_GENERATION_TIMEOUT_SECONDS", "30"))
+RATE_LIMIT_ENABLED = str(os.getenv("RATE_LIMIT_ENABLED", "true")).strip().lower() != "false"
+RATE_LIMIT_ANONYMOUS_PER_HOUR = int(os.getenv("RATE_LIMIT_ANONYMOUS_PER_HOUR", "20"))
+RATE_LIMIT_AUTHENTICATED_PER_HOUR = int(os.getenv("RATE_LIMIT_AUTHENTICATED_PER_HOUR", "60"))
+RATE_LIMIT_ADMIN_PER_HOUR = int(os.getenv("RATE_LIMIT_ADMIN_PER_HOUR", "300"))
+MAX_INPUT_CHARACTERS = int(os.getenv("MAX_INPUT_CHARACTERS", "50000"))
+MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "5"))
+
+IDEMPOTENCY_LOCK = Lock()
+IDEMPOTENCY_STORE: dict[str, dict] = {}
+RATE_LIMIT_LOCK = Lock()
+RATE_LIMIT_STORE: dict[str, list[float]] = {}
+EXPENSIVE_ENDPOINTS = {
+    "/build-resume",
+    "/optimize-resume",
+    "/generate-cover-letter",
+    "/optimize-linkedin",
+    "/generate-interview-prep",
+    "/generate-portfolio",
+    "/prepare-job-application",
+}
 
 ROLE_CATALOG = [
     "Software Engineer",
@@ -814,8 +852,185 @@ def get_current_user_required(authorization: str | None) -> tuple[dict, str]:
 
 
 def require_admin_secret(x_admin_secret: str | None) -> None:
+    if ENVIRONMENT == "production" and (not ADMIN_SECRET or ADMIN_SECRET == "change-me-admin-secret"):
+        raise HTTPException(status_code=503, detail="Admin access is not configured safely.")
     if str(x_admin_secret or "").strip() != ADMIN_SECRET:
         raise HTTPException(status_code=403, detail="Admin access denied.")
+
+
+def validate_text_inputs(payload: dict) -> None:
+    for value in payload.values():
+        if isinstance(value, str) and len(value) > MAX_INPUT_CHARACTERS:
+            raise HTTPException(status_code=413, detail="Input is too large.")
+
+
+def get_rate_limit_identity(request: Request) -> tuple[str, int]:
+    auth_header = request.headers.get("Authorization")
+    user, _ = get_current_user_optional(auth_header)
+    if request.headers.get("X-Admin-Secret") and request.headers.get("X-Admin-Secret") == ADMIN_SECRET:
+        return f"admin:{request.client.host if request.client else 'local'}", RATE_LIMIT_ADMIN_PER_HOUR
+    if user and str(user.get("id", "")).strip():
+        return f"user:{user['id']}", RATE_LIMIT_AUTHENTICATED_PER_HOUR
+    session_id = str(request.headers.get("X-Session-Id") or "").strip()
+    if session_id:
+        return f"session:{session_id}", RATE_LIMIT_ANONYMOUS_PER_HOUR
+    return f"ip:{request.client.host if request.client else 'local'}", RATE_LIMIT_ANONYMOUS_PER_HOUR
+
+
+def enforce_rate_limit(request: Request) -> None:
+    if not RATE_LIMIT_ENABLED:
+        return
+    if request.url.path.startswith("/health"):
+        return
+    if request.method.upper() != "POST":
+        return
+    identity, limit = get_rate_limit_identity(request)
+    now = time.time()
+    cutoff = now - 3600
+    with RATE_LIMIT_LOCK:
+        history = [stamp for stamp in RATE_LIMIT_STORE.get(identity, []) if stamp >= cutoff]
+        if len(history) >= limit:
+            metrics_registry.increment("rate_limit_hits")
+            raise RateLimitExceeded()
+        history.append(now)
+        RATE_LIMIT_STORE[identity] = history
+
+
+def make_idempotency_key(request: Request, raw_body: bytes) -> str:
+    identity, _ = get_rate_limit_identity(request)
+    provided = str(request.headers.get("Idempotency-Key") or "").strip()
+    digest = hashlib.sha256(raw_body).hexdigest()
+    return f"{request.url.path}:{identity}:{provided}:{digest}"
+
+
+def get_stored_idempotency_response(request: Request, raw_body: bytes):
+    key = str(request.headers.get("Idempotency-Key") or "").strip()
+    if not key or request.url.path not in EXPENSIVE_ENDPOINTS:
+        return None
+    store_key = make_idempotency_key(request, raw_body)
+    with IDEMPOTENCY_LOCK:
+        entry = IDEMPOTENCY_STORE.get(store_key)
+        if not entry:
+            IDEMPOTENCY_STORE[store_key] = {"status": "processing", "created_at": time.time()}
+            return None
+        if entry["status"] == "processing":
+            return JSONResponse(
+                status_code=202,
+                content={
+                    "success": False,
+                    "status": "processing",
+                    "message": "A matching request is already being processed.",
+                    "request_id": get_request_id(),
+                },
+            )
+        return JSONResponse(status_code=entry["status_code"], content=entry["content"])
+
+
+def store_idempotency_response(request: Request, raw_body: bytes, response_payload: dict, status_code: int = 200) -> None:
+    key = str(request.headers.get("Idempotency-Key") or "").strip()
+    if not key or request.url.path not in EXPENSIVE_ENDPOINTS:
+        return
+    store_key = make_idempotency_key(request, raw_body)
+    with IDEMPOTENCY_LOCK:
+        IDEMPOTENCY_STORE[store_key] = {"status": "completed", "status_code": status_code, "content": response_payload, "created_at": time.time()}
+
+
+def clear_idempotency_response(request: Request, raw_body: bytes) -> None:
+    key = str(request.headers.get("Idempotency-Key") or "").strip()
+    if not key or request.url.path not in EXPENSIVE_ENDPOINTS:
+        return
+    store_key = make_idempotency_key(request, raw_body)
+    with IDEMPOTENCY_LOCK:
+        IDEMPOTENCY_STORE.pop(store_key, None)
+
+
+def validate_rendered_file(path_value: str, expected_suffix: str) -> dict:
+    path = Path(path_value)
+    if not path.exists() or path.suffix.lower() != expected_suffix.lower():
+        raise AppError("DOCUMENT_GENERATION_ERROR", "Generated document could not be validated.", status_code=500, category="document_generation_error")
+    size = path.stat().st_size
+    if size <= 0:
+        raise AppError("DOCUMENT_GENERATION_ERROR", "Generated document is empty.", status_code=500, category="document_generation_error")
+    if expected_suffix.lower() == ".pdf":
+        if not path.read_bytes().startswith(b"%PDF"):
+            raise AppError("DOCUMENT_GENERATION_ERROR", "Generated PDF is invalid.", status_code=500, category="document_generation_error")
+    return {"path": str(path), "size": size}
+
+
+@app.middleware("http")
+async def request_context_middleware(request: Request, call_next):
+    request_id = str(request.headers.get("X-Request-Id") or uuid.uuid4())
+    raw_body = await request.body()
+    request._body = raw_body
+    auth_header = request.headers.get("Authorization")
+    user, _ = get_current_user_optional(auth_header)
+    session_id = str(request.headers.get("X-Session-Id") or "").strip()
+    set_request_context(request_id, str((user or {}).get("id", "")).strip(), session_id)
+    request.state.request_id = request_id
+    request.state.raw_body = raw_body
+    started = time.perf_counter()
+    try:
+        enforce_rate_limit(request)
+        if request.method.upper() in {"POST", "PUT", "PATCH"} and raw_body:
+            try:
+                validate_text_inputs(json.loads(raw_body.decode("utf-8")))
+            except json.JSONDecodeError:
+                pass
+        cached = get_stored_idempotency_response(request, raw_body)
+        if cached is not None:
+            cached.headers["X-Request-Id"] = request_id
+            return cached
+        response = await call_next(request)
+        response_body = b""
+        if hasattr(response, "body") and response.body:
+            response_body = response.body
+        elif hasattr(response, "body_iterator"):
+            async for chunk in response.body_iterator:
+                response_body += chunk
+            response = Response(
+                content=response_body,
+                status_code=response.status_code,
+                headers=dict(response.headers),
+                media_type=response.media_type,
+            )
+        if str(request.headers.get("Idempotency-Key") or "").strip() and request.url.path in EXPENSIVE_ENDPOINTS:
+            if response_body:
+                try:
+                    payload = json.loads(response_body.decode("utf-8"))
+                    store_idempotency_response(request, raw_body, payload, status_code=response.status_code)
+                except Exception:
+                    clear_idempotency_response(request, raw_body)
+        duration_ms = round((time.perf_counter() - started) * 1000, 2)
+        metrics_registry.record_latency(request.url.path, duration_ms)
+        logger.info(
+            "request.completed",
+            extra={
+                "endpoint": request.url.path,
+                "http_method": request.method,
+                "status_code": response.status_code,
+                "duration_ms": duration_ms,
+                "success": response.status_code < 400,
+            },
+        )
+        response.headers["X-Request-Id"] = request_id
+        return response
+    except AppError as exc:
+        clear_idempotency_response(request, raw_body)
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={
+                "success": False,
+                "error_code": exc.error_code,
+                "message": exc.message,
+                "request_id": request_id,
+            },
+            headers={"X-Request-Id": request_id},
+        )
+    except Exception:
+        clear_idempotency_response(request, raw_body)
+        raise
+    finally:
+        clear_request_context()
 
 
 def analytics_user_id_from_authorization(authorization: str | None) -> str | None:
@@ -2894,11 +3109,13 @@ def build_pdf_resume_legacy(export: ResumeExportInput) -> BytesIO:
 
 def build_docx_resume(export: ResumeExportInput) -> BytesIO:
     rendered = render_resume_package(export, preferred_theme=export.selected_theme)
+    validate_rendered_file(rendered["resume_docx_path"], ".docx")
     return rendered["docx_buffer"]
 
 
 def build_pdf_resume(export: ResumeExportInput) -> BytesIO:
     rendered = render_resume_package(export, preferred_theme=export.selected_theme)
+    validate_rendered_file(rendered["resume_pdf_path"], ".pdf")
     return rendered["pdf_buffer"]
 
 
@@ -2949,6 +3166,69 @@ def send_email(to_email: str, subject: str, body: str) -> None:
 @app.get("/")
 def home():
     return {"status": "running", "service": "ai-job-copilot"}
+
+
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy",
+        "version": "2.0",
+        "service": "AI Job Copilot Backend",
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
+
+@app.get("/health/ready")
+def health_ready():
+    warnings = []
+    if not api_key:
+        warnings.append("OPENAI_API_KEY missing")
+    if ENVIRONMENT == "production" and (not ADMIN_SECRET or ADMIN_SECRET == "change-me-admin-secret"):
+        warnings.append("ADMIN_SECRET is not production safe")
+    return {
+        "status": "ready" if not warnings else "degraded",
+        "version": "2.0",
+        "service": "AI Job Copilot Backend",
+        "warnings": warnings,
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
+
+@app.get("/health/database")
+def health_database():
+    auth_store = Path("auth_cloud_sync_data")
+    analytics_store = Path("analytics_data")
+    return {
+        "status": "healthy" if auth_store.exists() and analytics_store.exists() else "degraded",
+        "auth_store_exists": auth_store.exists(),
+        "analytics_store_exists": analytics_store.exists(),
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
+
+@app.get("/health/ai")
+def health_ai():
+    return {
+        "status": "healthy" if bool(api_key) else "degraded",
+        "provider": "OpenAI",
+        "configured": bool(api_key),
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
+
+@app.get("/health/storage")
+def health_storage():
+    rendered_dir = Path("rendered")
+    rendered_dir.mkdir(parents=True, exist_ok=True)
+    probe = rendered_dir / ".healthcheck"
+    probe.write_text("ok", encoding="utf-8")
+    probe.unlink(missing_ok=True)
+    return {
+        "status": "healthy",
+        "rendered_path": str(rendered_dir.resolve()),
+        "writable": True,
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
 
 
 @app.post("/suggest-role")
@@ -3616,6 +3896,54 @@ def admin_analytics_errors(x_admin_secret: str | None = Header(default=None, ali
 def admin_analytics_recent_events(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False, limit: int = 30):
     require_admin_secret(x_admin_secret)
     return analytics_recent_events(include_sample=sample, limit=limit)
+
+
+@app.get("/admin/analytics/performance")
+def admin_analytics_performance(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret")):
+    require_admin_secret(x_admin_secret)
+    latency = metrics_registry.latency_summary()
+    slowest = sorted(
+        [{"endpoint": key, **value} for key, value in latency.items()],
+        key=lambda item: item.get("average_ms", 0),
+        reverse=True,
+    )[:10]
+    return {
+        "average_response_time_ms": round(sum(item["average_ms"] for item in latency.values()) / len(latency), 2) if latency else 0,
+        "slowest_endpoints": slowest,
+        "retry_count": metrics_registry.counters.get("ai_retries_total", 0),
+        "ai_error_count": len([item for item in metrics_registry.failures if item["category"] == "ai_provider_error"]),
+        "database_error_count": len([item for item in metrics_registry.failures if item["category"] == "database_error"]),
+        "document_generation_error_count": len([item for item in metrics_registry.failures if item["category"] == "document_generation_error"]),
+        "rate_limit_count": metrics_registry.counters.get("rate_limit_hits", 0),
+    }
+
+
+@app.get("/admin/analytics/latency")
+def admin_analytics_latency(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret")):
+    require_admin_secret(x_admin_secret)
+    return metrics_registry.latency_summary()
+
+
+@app.get("/admin/analytics/failures")
+def admin_analytics_failures(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret")):
+    require_admin_secret(x_admin_secret)
+    return {"recent_critical_failures": metrics_registry.failures[-50:]}
+
+
+@app.get("/admin/analytics/health-summary")
+def admin_analytics_health_summary(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret")):
+    require_admin_secret(x_admin_secret)
+    latency = metrics_registry.latency_summary()
+    total_requests = sum(item["count"] for item in latency.values())
+    total_failures = len(metrics_registry.failures)
+    success_rate = round(((total_requests - total_failures) / total_requests) * 100, 2) if total_requests else 100.0
+    return {
+        "success_rate": success_rate,
+        "failure_rate": round(100 - success_rate, 2),
+        "recent_critical_failures": metrics_registry.failures[-10:],
+        "health": health(),
+        "ready": health_ready(),
+    }
 
 
 @app.post("/analyze-resume-intelligence", response_model=ResumeIntelligenceAnalysisOutput)

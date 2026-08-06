@@ -1,0 +1,32 @@
+Case: builder_business_analyst
+Professional title: Business Analyst
+ATS score: 68
+Recruiter confidence: 80
+Quality score: 78
+Page count: 1
+
+Top strengths:
+- Clear alignment with Business Analyst role and consulting environment
+- Strong technical skills in SQL, Power BI, and Jira
+- Demonstrated achievements in improving reporting accuracy and process standardization
+
+Top concerns:
+- Lack of specific company names, dates, and quantifiable metrics in work experience
+- No explicit mention of UK market experience or familiarity with UK consulting practices
+- Limited detail on stakeholder management scope and complexity
+
+ATS improvement actions:
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Collaboration, Analytical thinking.
+- Place the strongest role keywords naturally in the Professional Summary: Stakeholder management, Requirements gathering, Reporting.
+- Keep the Skills section ATS-safe and grouped, highlighting: Stakeholder management, Requirements gathering, Reporting, SQL.
+- Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.
+
+Improvement suggestions:
+- Consider building stronger exposure in: Requirements gathering, Dashboarding.
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Collaboration, Analytical thinking.
+- Place the strongest role keywords naturally in the Professional Summary: Stakeholder management, Requirements gathering, Reporting.
+- Keep the Skills section ATS-safe and grouped, highlighting: Stakeholder management, Requirements gathering, Reporting, SQL.
+- Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.
+
+Timing report:
+- response_time_ms: 31507.47

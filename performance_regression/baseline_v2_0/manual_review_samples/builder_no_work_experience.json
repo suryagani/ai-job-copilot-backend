@@ -1,0 +1,186 @@
+{
+  "recommended_resume_style": "Graduate ATS Resume",
+  "recommendation_reason": "Selected Graduate ATS Resume based on the candidate profile type 'Fresher', career direction 'Technical', and target role alignment for DevOps Engineer.",
+  "professional_title": "DevOps Engineer | B.Tech Computer Science Graduate",
+  "executive_summary": "Motivated Computer Science graduate with foundational knowledge in cloud computing, containerization, and automation. Experienced in designing Dockerized deployments and leading deployment efforts in academic projects. Skilled in AWS, Kubernetes, Terraform, and Linux environments, with practical exposure to CI/CD tools and infrastructure as code principles. Eager to apply technical skills and collaborative problem-solving abilities to support scalable and reliable software delivery.",
+  "resume_length_rule": "One Page",
+  "target_market_strategy": "Position the candidate as a motivated and technically skilled entry-level DevOps Engineer with a solid foundation in cloud computing, containerization, automation, and infrastructure as code. Emphasize hands-on projects and internships that demonstrate practical application of DevOps tools and methodologies. Use clear, concise language and ATS-friendly formatting to highlight relevant skills and certifications aligned with Indian software industry expectations.",
+  "recruiter_positioning": "Present the candidate as a computer science graduate with focused expertise in DevOps technologies such as Docker, Kubernetes, AWS, Jenkins, and Terraform. Highlight project leadership and internship experience to demonstrate readiness for real-world challenges. Showcase certifications and hackathon participation to underline commitment to continuous learning and practical problem-solving in cloud and automation environments.",
+  "full_resume": "EDUCATION\nBachelor of Technology in Computer Science\nSample University, Sample City\nRelevant Coursework: Cloud Computing, Automation, Infrastructure as Code\n\nPROJECTS\nDockerized Deployment Project\n- Designed and implemented a containerized application deployment using Docker to streamline development and testing environments\n- Demonstrated practical skills in container orchestration and deployment automation aligning with DevOps best practices\n- Led deployment workstream in capstone project, coordinating tasks and ensuring timely delivery of deployment components\n\nTECHNICAL SKILLS\nCloud Platforms & Infrastructure: AWS, Terraform, Linux\nContainerization & Orchestration: Docker, Kubernetes\nCI/CD & Automation Tools: Jenkins, GitHub Actions, Bash\nProgramming & Scripting: Python\nMonitoring & Visualization: Prometheus, Grafana\nVersion Control: Git\n\nCERTIFICATIONS\nSample Cloud Fundamentals Certificate",
+  "ats_keywords": [
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
+    "Linux",
+    "Terraform",
+    "Monitoring",
+    "Cloud infrastructure management",
+    "Container orchestration",
+    "Infrastructure as Code",
+    "Continuous Integration and Continuous Deployment",
+    "System monitoring and alerting",
+    "CI/CD tools",
+    "Monitoring tools",
+    "DevOps"
+  ],
+  "skill_groups": [
+    {
+      "category": "Cloud & Infrastructure",
+      "skills": [
+        "AWS",
+        "Docker",
+        "Kubernetes",
+        "Terraform"
+      ]
+    },
+    {
+      "category": "CI/CD & Automation",
+      "skills": [
+        "Jenkins",
+        "Git",
+        "Bash",
+        "GitHub Actions"
+      ]
+    },
+    {
+      "category": "Programming Languages",
+      "skills": [
+        "Python"
+      ]
+    },
+    {
+      "category": "Operating Systems",
+      "skills": [
+        "Linux"
+      ]
+    },
+    {
+      "category": "Additional Tools & Skills",
+      "skills": [
+        "Troubleshooting",
+        "collaboration",
+        "ownership",
+        "documentation",
+        "Prometheus",
+        "Grafana",
+        "VS Code"
+      ]
+    }
+  ],
+  "strengths": [
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "Showcased foundational expertise in containerization critical for scalable and consistent application deployment"
+  ],
+  "missing_information": [
+    "Details of internships including roles, responsibilities, and technologies used",
+    "Quantifiable outcomes or impact of projects or hackathon participation",
+    "Soft skills examples with context (e.g., teamwork, communication in projects)",
+    "Any additional certifications relevant to DevOps (e.g., AWS Certified Solutions Architect, Certified Kubernetes Administrator)"
+  ],
+  "improvement_suggestions": [
+    "Consider building stronger exposure in: CI/CD pipelines, Monitoring.",
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Cloud infrastructure management, Continuous Integration and Continuous Deployment, System monitoring and alerting, CI/CD tools, Monitoring tools.",
+    "Place the strongest role keywords naturally in the Professional Summary: AWS, Docker, Kubernetes.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: AWS, Docker, Kubernetes, CI/CD.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "writing_quality_score": "85/100",
+  "resume_readability": "High",
+  "ats_readiness": "Low",
+  "resume_confidence": "Strong",
+  "quality_score": 85,
+  "ats_readiness_score": 90,
+  "recruiter_readability_score": 100,
+  "role_alignment_score": 100,
+  "quality_issues_found": [
+    "Skills are not clearly grouped using the Skill Intelligence structure."
+  ],
+  "quality_fixes_applied": [],
+  "interview_probability": 75,
+  "recruiter_confidence": 70,
+  "first_impression": "The candidate presents a focused and concise resume targeting an entry-level DevOps Engineer role with relevant education, projects, and skills. The resume is ATS-friendly and highlights key DevOps tools and technologies.",
+  "shortlisting_decision": "Maybe",
+  "top_strengths": [
+    "Relevant technical skills in Docker, Kubernetes, AWS, Terraform, Jenkins",
+    "Hands-on project demonstrating containerization and deployment automation",
+    "Clear focus on DevOps-related coursework and tools"
+  ],
+  "top_concerns": [
+    "Lack of detailed internship or real-world work experience",
+    "Certifications are generic and not specific to core DevOps tools",
+    "No explicit mention of CI/CD pipeline implementation or automation scripting depth"
+  ],
+  "missing_high_value_information": [
+    "Internship or practical work experience in DevOps or related roles",
+    "Specific certifications such as AWS Certified Solutions Architect or Docker Certified Associate",
+    "Quantifiable achievements or metrics from projects"
+  ],
+  "recommended_improvements": [
+    "Include any internships, part-time roles, or freelance projects related to DevOps",
+    "Add more specific and recognized certifications relevant to the target role",
+    "Highlight any automation scripting or CI/CD pipeline creation with measurable outcomes"
+  ],
+  "industry_keywords_missing": [
+    "CI/CD",
+    "Infrastructure as Code",
+    "Automation",
+    "Cloud Computing"
+  ],
+  "resume_competitiveness": "Competitive",
+  "skill_match_percentage": 71,
+  "strong_matching_skills": [
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "Linux",
+    "Terraform"
+  ],
+  "missing_required_skills": [
+    "CI/CD",
+    "Monitoring"
+  ],
+  "missing_preferred_skills": [],
+  "resume_alignment_strategy": "Lead with the strongest matching skills, keep role-relevant evidence visible early, and address the missing required skills through truthful positioning or future upskilling suggestions.",
+  "ats_score_estimate": 59,
+  "ats_readiness_level": "Low",
+  "matching_keywords": [
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
+    "Linux",
+    "Terraform",
+    "Monitoring",
+    "Container orchestration",
+    "Infrastructure as Code",
+    "DevOps"
+  ],
+  "missing_keywords": [
+    "Cloud infrastructure management",
+    "Continuous Integration and Continuous Deployment",
+    "System monitoring and alerting",
+    "CI/CD tools",
+    "Monitoring tools"
+  ],
+  "ats_improvement_actions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Cloud infrastructure management, Continuous Integration and Continuous Deployment, System monitoring and alerting, CI/CD tools, Monitoring tools.",
+    "Place the strongest role keywords naturally in the Professional Summary: AWS, Docker, Kubernetes.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: AWS, Docker, Kubernetes, CI/CD.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "personalization_score": 86,
+  "personalization_strategy": "Balance role alignment, recruiter clarity, and truthful ATS keyword coverage.",
+  "personalization_notes": [
+    "India personalization often works best with a balanced emphasis on skills, projects, and readiness.",
+    "Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.",
+    "Overall: India personalization often works best with a balanced emphasis on skills, projects, and readiness. Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills."
+  ],
+  "resume_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-beta.pdf",
+  "resume_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-beta.docx",
+  "selected_theme": "Classic ATS",
+  "page_count": 1,
+  "render_quality_score": 92
+}

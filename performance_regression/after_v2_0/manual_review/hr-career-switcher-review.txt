@@ -1,0 +1,32 @@
+Case: builder_hr_switcher
+Professional title: HR Executive Fresher
+ATS score: 35
+Recruiter confidence: 70
+Quality score: 71
+Page count: 1
+
+Top strengths:
+- Relevant internship experience in campus coordination
+- Clear demonstration of transferable skills like scheduling and communication
+- Concise and well-structured one-page resume
+
+Top concerns:
+- Lack of explicit HR certifications or formal HR training
+- Limited use of ATS-friendly HR keywords and terminology
+- No quantifiable achievements or impact metrics in internships or projects
+
+ATS improvement actions:
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Records Management, Candidate Support, Organizational Skills, Attention to Detail, HR Executive, Human Resources.
+- Place the strongest role keywords naturally in the Professional Summary: Communication, Coordination, Excel.
+- Keep the Skills section ATS-safe and grouped, highlighting: Communication, Coordination, Excel, Interpersonal Skills.
+- Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.
+
+Improvement suggestions:
+- Consider building stronger exposure in: Employee onboarding, HR operations, Recruitment coordination.
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Records Management, Candidate Support, Organizational Skills, Attention to Detail, HR Executive, Human Resources.
+- Place the strongest role keywords naturally in the Professional Summary: Communication, Coordination, Excel.
+- Keep the Skills section ATS-safe and grouped, highlighting: Communication, Coordination, Excel, Interpersonal Skills.
+- Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.
+
+Timing report:
+- response_time_ms: 24804.59

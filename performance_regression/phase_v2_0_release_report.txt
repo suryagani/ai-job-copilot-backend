@@ -1,0 +1,37 @@
+AI Job Copilot V2.0 Release Report
+
+Objective
+Improve reliability, performance, error handling, logging, health checks, admin monitoring, rate limiting, idempotency, and document generation stability without changing the user-facing product scope.
+
+Baseline results
+Baseline checks: 31 | Success: 27 | Non-success: 4
+After checks: 38 | Success: 37 | Non-success: 1
+
+Before/After highlights
+- New health endpoint added: before=n/a ms, after=14.75 ms
+- New readiness endpoint added: before=n/a ms, after=20.94 ms
+- Resume Builder improved timing and reliability: before=38679.6 ms, after=29499.58 ms
+- Resume Optimizer remained stable with document outputs: before=40701.18 ms, after=31387.84 ms
+- Portfolio generation completed under the test timeout: before=184525.75 ms, after=142558.07 ms
+- Job application workflow completed instead of timing out: before=240046.67 ms, after=153347.43 ms
+
+Architecture changes
+- Added structured logging and request context utilities.
+- Added centralized error handlers and safe API error payloads.
+- Wrapped OpenAI chat completions with retry-aware proxy logic.
+- Added health, readiness, database, AI, and storage endpoints.
+- Added in-memory rate limiting and idempotency protection for expensive endpoints.
+- Added admin monitoring endpoints for performance, latency, failures, and health summary.
+- Added document validation for generated PDF and DOCX resume artifacts.
+- Added regression tests covering health, admin protection, rate limiting, idempotency, error handling, route compatibility, and logging safety.
+
+Known issues
+- The unauthorized admin summary check appears as a non-success in raw metrics, but this is expected protection behavior.
+- Long-running workflows such as portfolio and full job application are still the slowest paths and are candidates for future background-job offloading.
+
+Acceptance result
+- V2.0 status: Pass with known performance follow-up for the slowest orchestration flows.
+
+Manual review folder: C:\Users\surya\AI-Jobs\performance_regression\after_v2_0\manual_review
+Baseline folder: C:\Users\surya\AI-Jobs\performance_regression\baseline_v2_0
+After folder: C:\Users\surya\AI-Jobs\performance_regression\after_v2_0

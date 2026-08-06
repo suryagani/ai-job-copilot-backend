@@ -1,0 +1,32 @@
+Case: optimizer_with_job_description
+Professional title: Graduate ATS Resume
+ATS score: 57
+Recruiter confidence: 70
+Quality score: 92
+Page count: 1
+
+Top strengths:
+- Relevant technical skills including AWS, Docker, Jenkins, Git, Linux, and Python
+- Practical project experience demonstrating CI/CD pipeline development and containerization
+- Clear, concise professional summary tailored to DevOps Engineer role
+
+Top concerns:
+- Lack of formal certifications which are highly valued in DevOps roles
+- Limited professional experience beyond internship and academic projects
+- No quantifiable achievements or impact metrics included
+
+ATS improvement actions:
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Monitoring, Infrastructure as Code, Continuous Integration and Continuous Deployment, System monitoring and alerting, CI/CD tools (e.g. Jenkins, GitLab CI).
+- Place the strongest role keywords naturally in the Professional Summary: AWS, Docker, Kubernetes.
+- Keep the Skills section ATS-safe and grouped, highlighting: AWS, Docker, Kubernetes, Terraform.
+- Use simple ATS-safe formatting with standard headings and avoid tables, icons, columns, and decorative layouts.
+
+Improvement suggestions:
+- Add a clear professional summary to highlight alignment with DevOps Engineer role
+- Expand project descriptions to demonstrate impact and relevant technologies
+- Include intentions for future certification to address missing skills
+- Use standard section headings and ATS-friendly formatting
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Monitoring, Infrastructure as Code, Continuous Integration and Continuous Deployment, System monitoring and alerting, CI/CD tools (e.g. Jenkins, GitLab CI).
+
+Timing report:
+- response_time_ms: 31387.84

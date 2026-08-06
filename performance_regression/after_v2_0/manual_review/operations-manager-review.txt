@@ -1,0 +1,33 @@
+Case: builder_operations_manager
+Professional title: Operations Manager – Hospitality
+ATS score: 38
+Recruiter confidence: 80
+Quality score: 72
+Page count: 1
+
+Top strengths:
+- Clear operational management experience in hospitality
+- Strong focus on staff scheduling, vendor management, and customer service
+- Demonstrated ability to maintain stable operations during peak periods
+
+Top concerns:
+- Lack of quantified business impact or KPIs to demonstrate measurable success
+- Limited evidence of strategic leadership or higher-level management responsibilities
+- Absence of certifications related to operations management or project management
+
+ATS improvement actions:
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Inventory Control, Process Discipline, Problem Solving, Organizational Skills, Attention to Detail, Customer Focus.
+- Place the strongest role keywords naturally in the Professional Summary: Vendor Coordination, Communication, Operations Manager.
+- Keep the Skills section ATS-safe and grouped, highlighting: Vendor Coordination, Communication, Operations Manager, Hospitality Operations, customer service.
+- Use simple ATS-safe formatting with standard headings and avoid tables, icons, columns, and decorative layouts.
+- Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications.
+
+Improvement suggestions:
+- Consider building stronger exposure in: Cost control, Budget oversight, KPI reporting.
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Inventory Control, Process Discipline, Problem Solving, Organizational Skills, Attention to Detail, Customer Focus.
+- Place the strongest role keywords naturally in the Professional Summary: Vendor Coordination, Communication, Operations Manager.
+- Keep the Skills section ATS-safe and grouped, highlighting: Vendor Coordination, Communication, Operations Manager, Hospitality Operations, customer service.
+- Use simple ATS-safe formatting with standard headings and avoid tables, icons, columns, and decorative layouts.
+
+Timing report:
+- response_time_ms: 41083.65

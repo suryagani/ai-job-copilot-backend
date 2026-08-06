@@ -1,0 +1,172 @@
+{
+  "recommended_resume_style": "Graduate ATS Resume",
+  "recommendation_reason": "Selected Graduate ATS Resume based on the candidate profile type 'Fresher', career direction 'Technical', and target role alignment for VLSI Engineer.",
+  "professional_title": "Electronics and Communication Engineering Graduate | Aspiring VLSI Engineer",
+  "executive_summary": "Motivated Electronics and Communication Engineering graduate with foundational knowledge in VLSI design, digital electronics, and physical design flow. Experienced in Verilog-based academic projects and familiar with industry-standard tools such as ICC, ModelSim, and Linux. Completed internship focused on physical design flow concepts, demonstrating readiness to contribute to semiconductor design and verification teams. Strong problem-solving and teamwork skills complement technical expertise, supporting effective collaboration in VLSI engineering roles.",
+  "resume_length_rule": "One Page",
+  "target_market_strategy": "Position the candidate as a motivated Electronics and Communication Engineering graduate with foundational knowledge and hands-on academic experience in VLSI design and physical design flow. Emphasize internship exposure and academic projects using Verilog and industry-relevant tools like ICC and ModelSim to demonstrate readiness for entry-level VLSI engineering roles in the Indian semiconductor sector.",
+  "recruiter_positioning": "Highlight the candidate\u2019s technical foundation in VLSI design, digital electronics, and physical design flow, supported by practical academic projects and internship experience. Showcase familiarity with industry-standard tools and problem-solving capabilities. Present the candidate as a technically competent fresher eager to contribute to semiconductor design and verification teams.",
+  "full_resume": "Education\nBachelor of Engineering in Electronics and Communication Engineering\n- Completed coursework in VLSI Design, Digital Electronics, and Physical Design Flow\n\nProjects\n- Developed and simulated digital circuits using Verilog, reinforcing core VLSI design principles.\n- Reviewed and analyzed placement and routing concepts to understand physical design challenges and methodologies.\n\nTechnical Skills\nHardware Description Languages: Verilog\nEDA Tools and Software: ICC, ModelSim, Linux\nCore Technical Knowledge: Digital Electronics, Physical Design Flow\nSoft Skills: Problem Solving, Documentation, Teamwork, Analytical Thinking\n\nInternships\n- Gained foundational understanding of physical design flow concepts through structured training sessions, enhancing readiness for VLSI design tasks.\n\nCertifications\n- Completed VLSI workshop focused on design fundamentals and industry practices.",
+  "ats_keywords": [
+    "Physical design awareness",
+    "Semiconductor fundamentals",
+    "Linux workflows",
+    "VLSI design concepts",
+    "Physical design methodologies",
+    "Linux operating system usage",
+    "Linux",
+    "VLSI",
+    "Physical design",
+    "VLSI Design",
+    "Digital IC Design"
+  ],
+  "skill_groups": [
+    {
+      "category": "VLSI Tools",
+      "skills": [
+        "ModelSim"
+      ]
+    },
+    {
+      "category": "Design Flow",
+      "skills": [
+        "Verilog"
+      ]
+    },
+    {
+      "category": "Operating Systems",
+      "skills": [
+        "Linux"
+      ]
+    },
+    {
+      "category": "Core Electronics",
+      "skills": [
+        "Digital Electronics"
+      ]
+    },
+    {
+      "category": "Professional Skills",
+      "skills": [
+        "Problem solving",
+        "analytical thinking",
+        "teamwork"
+      ]
+    },
+    {
+      "category": "Additional Tools & Skills",
+      "skills": [
+        "ICC",
+        "Physical Design Flow",
+        "documentation",
+        "Spreadsheet tools"
+      ]
+    }
+  ],
+  "strengths": [
+    "ModelSim",
+    "Verilog",
+    "Linux",
+    "Gained foundational understanding of physical design flow concepts through structured training sessions, enhancing readiness for VLSI design tasks.",
+    "Demonstrated practical application of digital design and physical design fundamentals, supporting technical foundation for VLSI engineering roles."
+  ],
+  "missing_information": [
+    "Specific internship responsibilities and achievements",
+    "Details on project outcomes or impact",
+    "Any additional certifications or training related to VLSI",
+    "Contact information and professional summary or objective statement"
+  ],
+  "improvement_suggestions": [
+    "Consider building stronger exposure in: RTL Design, Timing Analysis, Cadence, Synopsys.",
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Physical design awareness, Semiconductor fundamentals, VLSI design concepts, Physical design methodologies, Digital IC Design.",
+    "Place the strongest role keywords naturally in the Professional Summary: Linux, VLSI, Physical design.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Linux, VLSI, Physical design, VLSI Design.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "writing_quality_score": "85/100",
+  "resume_readability": "High",
+  "ats_readiness": "Low",
+  "resume_confidence": "Strong",
+  "quality_score": 85,
+  "ats_readiness_score": 90,
+  "recruiter_readability_score": 100,
+  "role_alignment_score": 100,
+  "quality_issues_found": [
+    "Skills are not clearly grouped using the Skill Intelligence structure."
+  ],
+  "quality_fixes_applied": [],
+  "interview_probability": 70,
+  "recruiter_confidence": 75,
+  "first_impression": "The candidate presents a clear foundational knowledge in VLSI design and physical design flow with relevant academic projects and internship exposure. The resume is concise and focused on technical skills aligned with entry-level semiconductor roles.",
+  "shortlisting_decision": "Maybe",
+  "top_strengths": [
+    "Relevant academic coursework in VLSI Design, Digital Electronics, and Physical Design Flow",
+    "Hands-on experience with Verilog and industry-standard EDA tools like ICC and ModelSim"
+  ],
+  "top_concerns": [
+    "Lack of detailed description of internship responsibilities and outcomes",
+    "Absence of measurable achievements or specific project results to demonstrate impact"
+  ],
+  "missing_high_value_information": [
+    "Detailed internship project or task descriptions with outcomes",
+    "Any academic or personal projects demonstrating end-to-end VLSI design or verification",
+    "Certifications with formal credentials or recognized bodies"
+  ],
+  "recommended_improvements": [
+    "Expand internship section to include specific tasks, tools used, and contributions",
+    "Include quantifiable results or challenges solved in academic projects",
+    "Add any relevant certifications with issuing authority and dates",
+    "Consider adding a brief professional summary to highlight motivation and career goals"
+  ],
+  "industry_keywords_missing": [
+    "System Testing",
+    "Semiconductor",
+    "Design Verification",
+    "FPGA"
+  ],
+  "resume_competitiveness": "Competitive",
+  "skill_match_percentage": 33,
+  "strong_matching_skills": [
+    "Linux"
+  ],
+  "missing_required_skills": [
+    "Physical design awareness",
+    "Semiconductor fundamentals"
+  ],
+  "missing_preferred_skills": [],
+  "resume_alignment_strategy": "Lead with the strongest matching skills, keep role-relevant evidence visible early, and address the missing required skills through truthful positioning or future upskilling suggestions.",
+  "ats_score_estimate": 35,
+  "ats_readiness_level": "Low",
+  "matching_keywords": [
+    "Linux",
+    "VLSI",
+    "Physical design",
+    "VLSI Design"
+  ],
+  "missing_keywords": [
+    "Physical design awareness",
+    "Semiconductor fundamentals",
+    "VLSI design concepts",
+    "Physical design methodologies",
+    "Digital IC Design"
+  ],
+  "ats_improvement_actions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Physical design awareness, Semiconductor fundamentals, VLSI design concepts, Physical design methodologies, Digital IC Design.",
+    "Place the strongest role keywords naturally in the Professional Summary: Linux, VLSI, Physical design.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Linux, VLSI, Physical design, VLSI Design.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "personalization_score": 95,
+  "personalization_strategy": "Emphasize process control, reliability, standards, quality, and operational consistency.",
+  "personalization_notes": [
+    "Manufacturing positioning should sound structured, practical, and process-aware.",
+    "India personalization often works best with a balanced emphasis on skills, projects, and readiness.",
+    "Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.",
+    "Overall: Manufacturing positioning should sound structured, practical, and process-aware. India personalization often works best with a balanced emphasis on skills, projects, and readiness. Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills."
+  ],
+  "resume_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-alpha.pdf",
+  "resume_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-alpha.docx",
+  "selected_theme": "Classic ATS",
+  "page_count": 1,
+  "render_quality_score": 92
+}

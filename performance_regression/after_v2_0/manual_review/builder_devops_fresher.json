@@ -1,0 +1,186 @@
+{
+  "recommended_resume_style": "Graduate ATS Resume",
+  "recommendation_reason": "Selected Graduate ATS Resume based on the candidate profile type 'Fresher', career direction 'Technical', and target role alignment for DevOps Engineer.",
+  "professional_title": "DevOps Engineer | B.Tech Computer Science Graduate",
+  "executive_summary": "Motivated Computer Science graduate with foundational knowledge in cloud computing, automation, and container orchestration. Experienced in designing CI/CD pipelines, container deployment workflows, and monitoring dashboards through academic projects. Internship exposure includes supporting CI/CD documentation and Linux environment setup, demonstrating readiness to contribute to cloud infrastructure management and DevOps automation. Holds a cloud fundamentals certification and eager to apply technical skills in AWS, Docker, Kubernetes, and Terraform to support scalable software delivery.",
+  "resume_length_rule": "One Page",
+  "target_market_strategy": "Position the candidate as a motivated and technically skilled entry-level DevOps Engineer with a solid foundation in cloud computing, automation, and container orchestration. Emphasize hands-on project experience and internship exposure to CI/CD pipelines, infrastructure as code, and monitoring tools to appeal to software companies in India seeking fresh talent with practical skills and eagerness to learn.",
+  "recruiter_positioning": "Highlight the candidate\u2019s B.Tech in Computer Science with relevant coursework and certifications in cloud fundamentals. Showcase internship contributions to CI/CD documentation and Linux environment setup, along with capstone leadership experience. Prioritize projects demonstrating container deployment, pipeline automation, and monitoring dashboards. Present a concise, skill-focused profile that aligns with entry-level DevOps roles, ensuring ATS compatibility and clear role-first headings.",
+  "full_resume": "Education\nB.Tech in Computer Science\nRelevant Coursework: Cloud Computing, Automation\n\nProjects\nSample CI/CD Pipeline, Container Deployment Workflow, and Monitoring Dashboard\n- Designed and implemented a CI/CD pipeline integrating automated build, test, and deployment stages to streamline application delivery.\n- Developed container deployment workflows using Docker and Kubernetes to demonstrate scalable application orchestration.\n- Created a monitoring dashboard using Prometheus and Grafana to visualize system metrics and application health.\n\nTechnical Skills\nCloud & Infrastructure: AWS, Docker, Kubernetes, Terraform\nCI/CD & Automation: Jenkins, Git, GitHub Actions, Bash, Python\nMonitoring & Logging: Prometheus, Grafana\nOperating Systems & IDE: Linux, VS Code\n\nInternships\n- Enhanced CI/CD process understanding by developing comprehensive documentation and configuring sample Linux environments to support automation workflows.\n\nCertifications\n- Cloud Fundamentals Certificate",
+  "ats_keywords": [
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
+    "Linux",
+    "Terraform",
+    "Monitoring",
+    "Cloud infrastructure management",
+    "Container orchestration",
+    "Infrastructure as Code",
+    "Continuous Integration and Continuous Deployment",
+    "Linux system administration",
+    "System monitoring and alerting",
+    "CI/CD tools (e.g., Jenkins, GitLab CI)",
+    "DevOps"
+  ],
+  "skill_groups": [
+    {
+      "category": "Cloud & Infrastructure",
+      "skills": [
+        "AWS",
+        "Docker",
+        "Kubernetes",
+        "Terraform"
+      ]
+    },
+    {
+      "category": "CI/CD & Automation",
+      "skills": [
+        "Jenkins",
+        "Git",
+        "Bash",
+        "GitHub Actions"
+      ]
+    },
+    {
+      "category": "Programming Languages",
+      "skills": [
+        "Python"
+      ]
+    },
+    {
+      "category": "Operating Systems",
+      "skills": [
+        "Linux"
+      ]
+    },
+    {
+      "category": "Additional Tools & Skills",
+      "skills": [
+        "Troubleshooting",
+        "collaboration",
+        "ownership",
+        "documentation",
+        "Prometheus",
+        "Grafana",
+        "VS Code"
+      ]
+    }
+  ],
+  "strengths": [
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "Enhanced CI/CD process understanding by developing comprehensive documentation and configuring sample Linux environments to support automation workflows during internship.",
+    "Demonstrated practical skills in automating software delivery, container orchestration, and system monitoring aligned with DevOps best practices."
+  ],
+  "missing_information": [
+    "Specific internship duration and company name",
+    "Quantifiable outcomes or impact from projects or internship",
+    "Any additional certifications related to DevOps or cloud platforms",
+    "Soft skills examples demonstrated in projects or internships",
+    "Contact information and professional summary or objective statement"
+  ],
+  "improvement_suggestions": [
+    "Consider building stronger exposure in: CI/CD pipelines, Monitoring.",
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Cloud infrastructure management, Container orchestration, Infrastructure as Code, Continuous Integration and Continuous Deployment, System monitoring and alerting, DevOps.",
+    "Place the strongest role keywords naturally in the Professional Summary: AWS, Docker, Kubernetes.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: AWS, Docker, Kubernetes, CI/CD.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "writing_quality_score": "82/100",
+  "resume_readability": "High",
+  "ats_readiness": "Low",
+  "resume_confidence": "Promising",
+  "quality_score": 82,
+  "ats_readiness_score": 100,
+  "recruiter_readability_score": 100,
+  "role_alignment_score": 78,
+  "quality_issues_found": [
+    "Resume does not clearly align to the target role."
+  ],
+  "quality_fixes_applied": [],
+  "interview_probability": 65,
+  "recruiter_confidence": 70,
+  "first_impression": "The candidate presents a concise and focused resume suitable for an entry-level DevOps Engineer role, highlighting relevant education, projects, and internship experience with key DevOps tools and concepts.",
+  "shortlisting_decision": "Maybe",
+  "top_strengths": [
+    "Relevant B.Tech degree with coursework in Cloud Computing and Automation",
+    "Hands-on project experience with CI/CD pipelines, containerization, and monitoring tools",
+    "Familiarity with core DevOps technologies like AWS, Docker, Kubernetes, Jenkins, and Terraform"
+  ],
+  "top_concerns": [
+    "Lack of detailed internship responsibilities and measurable achievements",
+    "Certifications are minimal and not specific to AWS, Docker, or Kubernetes",
+    "No explicit mention of infrastructure as code implementation or scripting depth"
+  ],
+  "missing_high_value_information": [
+    "Specific internship project outcomes or contributions with quantifiable impact",
+    "Additional certifications aligned with target role (e.g., AWS Certified Solutions Architect, Docker Certified Associate)",
+    "Clear demonstration of leadership or teamwork in projects or internships"
+  ],
+  "recommended_improvements": [
+    "Expand internship description to include specific tasks, tools used, and results",
+    "Pursue and list additional relevant certifications to strengthen credibility",
+    "Include brief mention of scripting or automation tasks performed to showcase technical depth"
+  ],
+  "industry_keywords_missing": [
+    "infrastructure as code",
+    "automation scripting",
+    "Terraform modules",
+    "pipeline automation"
+  ],
+  "resume_competitiveness": "Competitive",
+  "skill_match_percentage": 100,
+  "strong_matching_skills": [
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
+    "Linux",
+    "Terraform",
+    "container deployment workflow and monitoring dashboard project."
+  ],
+  "missing_required_skills": [],
+  "missing_preferred_skills": [],
+  "resume_alignment_strategy": "The candidate already aligns well with the stated requirements, so the resume should focus on clarity, proof of capability, and ATS keyword coverage.",
+  "ats_score_estimate": 45,
+  "ats_readiness_level": "Low",
+  "matching_keywords": [
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
+    "Linux",
+    "Terraform",
+    "Monitoring",
+    "Jenkins"
+  ],
+  "missing_keywords": [
+    "Cloud infrastructure management",
+    "Container orchestration",
+    "Infrastructure as Code",
+    "Continuous Integration and Continuous Deployment",
+    "System monitoring and alerting",
+    "DevOps"
+  ],
+  "ats_improvement_actions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Cloud infrastructure management, Container orchestration, Infrastructure as Code, Continuous Integration and Continuous Deployment, System monitoring and alerting, DevOps.",
+    "Place the strongest role keywords naturally in the Professional Summary: AWS, Docker, Kubernetes.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: AWS, Docker, Kubernetes, CI/CD.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "personalization_score": 86,
+  "personalization_strategy": "Balance role alignment, recruiter clarity, and truthful ATS keyword coverage.",
+  "personalization_notes": [
+    "India personalization often works best with a balanced emphasis on skills, projects, and readiness.",
+    "Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.",
+    "Overall: India personalization often works best with a balanced emphasis on skills, projects, and readiness. Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills."
+  ],
+  "resume_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-beta.pdf",
+  "resume_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-beta.docx",
+  "selected_theme": "Classic ATS",
+  "page_count": 1,
+  "render_quality_score": 92
+}

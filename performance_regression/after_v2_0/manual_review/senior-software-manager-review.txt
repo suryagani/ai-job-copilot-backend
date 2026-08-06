@@ -1,0 +1,29 @@
+Case: builder_senior_software_manager
+Professional title: Engineering Manager
+ATS score: 48
+Recruiter confidence: 80
+Quality score: 78
+Page count: 1
+
+Top strengths:
+- Strong leadership experience managing multiple engineering teams
+- Clear focus on roadmap coordination, architecture review, and delivery management
+- Demonstrated process improvement and platform modernization initiatives
+
+Top concerns:
+- Lacks specific quantifiable achievements or metrics demonstrating impact
+- No explicit mention of team size managed or scale of projects
+- Limited detail on direct hiring leadership or mentoring outcomes
+
+ATS improvement actions:
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Roadmap ownership, Software architecture, Project delivery, Team hiring processes, Engineering Manager.
+- Place the strongest role keywords naturally in the Professional Summary: Delivery management, Architecture collaboration, Hiring.
+- Keep the Skills section ATS-safe and grouped, highlighting: Delivery management, Architecture collaboration, Hiring, Leadership.
+
+Improvement suggestions:
+- Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Roadmap ownership, Software architecture, Project delivery, Team hiring processes, Engineering Manager.
+- Place the strongest role keywords naturally in the Professional Summary: Delivery management, Architecture collaboration, Hiring.
+- Keep the Skills section ATS-safe and grouped, highlighting: Delivery management, Architecture collaboration, Hiring, Leadership.
+
+Timing report:
+- response_time_ms: 38808.16

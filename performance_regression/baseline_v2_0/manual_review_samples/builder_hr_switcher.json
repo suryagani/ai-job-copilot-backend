@@ -1,0 +1,166 @@
+{
+  "recommended_resume_style": "Career Switcher Resume",
+  "recommendation_reason": "Selected Career Switcher Resume based on the candidate profile type 'Fresher', career direction 'Non-Technical', and target role alignment for HR Executive.",
+  "professional_title": "HR Executive Fresher",
+  "executive_summary": "Electronics and Communication Engineering graduate transitioning into Human Resources, equipped with practical experience in event logistics, candidate scheduling, and record management through academic internships and projects. Demonstrates strong communication, coordination, and teamwork skills, supported by proficiency in Excel and Google Sheets. Committed to leveraging organizational and stakeholder management abilities to support HR operations and recruitment processes in a dynamic corporate environment.",
+  "resume_length_rule": "One Page",
+  "target_market_strategy": "Position the candidate as a motivated HR Executive fresher with a strong foundation in coordination, communication, and organizational skills gained through academic event management and internships. Emphasize transferable skills from engineering background to HR functions such as scheduling, record keeping, and stakeholder coordination. Use broad, ATS-friendly HR keywords relevant to entry-level HR roles in India\u2019s corporate and startup sectors.",
+  "recruiter_positioning": "Highlight the candidate\u2019s proactive involvement in student coordination and event logistics as practical exposure to HR-related tasks. Showcase transferable skills like communication, teamwork, and documentation to demonstrate readiness for HR executive responsibilities. Present the engineering degree as evidence of analytical thinking and problem-solving, while focusing on HR-relevant internships and projects to align with recruiter expectations for fresher HR roles.",
+  "full_resume": "Education\nB.Tech in Electronics and Communication Engineering\nSample University, Sample City\n\nInternships\nCampus Coordination Intern\n- Streamlined event logistics and maintained accurate records to ensure smooth coordination of campus activities.\n- Supported candidate scheduling and documentation, enhancing the efficiency of academic event management and candidate support.\n\nProjects\nCandidate Registration and Scheduling for Academic Event\n- Organized and maintained candidate registration records to facilitate efficient event scheduling.\n- Coordinated scheduling activities to support seamless execution of academic event processes, demonstrating effective records management.\n\nSkills\nHR & Coordination Skills: Communication, Coordination, Teamwork, Scheduling, Record Keeping\nTools & Software: Excel, Google Sheets, PowerPoint",
+  "ats_keywords": [
+    "Communication",
+    "Coordination",
+    "Records Management",
+    "Excel",
+    "Candidate Support",
+    "HR Executive"
+  ],
+  "skill_groups": [
+    {
+      "category": "Business Tools",
+      "skills": [
+        "Excel",
+        "PowerPoint",
+        "Google Sheets",
+        "documentation"
+      ]
+    },
+    {
+      "category": "Communication & Stakeholder Management",
+      "skills": [
+        "Communication",
+        "coordination",
+        "teamwork"
+      ]
+    },
+    {
+      "category": "Operations & Coordination",
+      "skills": [
+        "scheduling"
+      ]
+    },
+    {
+      "category": "Transferable Skills",
+      "skills": [
+        "Basic spreadsheet usage",
+        "record keeping"
+      ]
+    }
+  ],
+  "strengths": [
+    "Excel",
+    "PowerPoint",
+    "Google Sheets",
+    "Streamlined event logistics and maintained accurate records to ensure smooth coordination of campus activities.",
+    "Demonstrated ability to manage candidate data and scheduling, aligning with HR record management and coordination tasks."
+  ],
+  "missing_information": [
+    "Formal HR certifications or courses (e.g., SHRM, CIPD, or local HR certifications)",
+    "Quantifiable achievements or impact metrics from internships or projects",
+    "Soft skills endorsements or testimonials",
+    "Any part-time or volunteer HR-related experience"
+  ],
+  "improvement_suggestions": [
+    "Consider building stronger exposure in: Employee onboarding, HR operations, Recruitment coordination.",
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: HR Executive.",
+    "Place the strongest role keywords naturally in the Professional Summary: Communication, Coordination, Records Management.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Communication, Coordination, Records Management, Excel.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "writing_quality_score": "50/100",
+  "resume_readability": "High",
+  "ats_readiness": "Low",
+  "resume_confidence": "Developing",
+  "quality_score": 50,
+  "ats_readiness_score": 72,
+  "recruiter_readability_score": 94,
+  "role_alignment_score": 66,
+  "quality_issues_found": [
+    "Resume does not clearly align to the target role.",
+    "Target-role keywords are underrepresented.",
+    "Skills are not clearly grouped using the Skill Intelligence structure.",
+    "Section order does not fully follow the recommended resume model."
+  ],
+  "quality_fixes_applied": [
+    "Make the title, summary, and core content more role-specific.",
+    "Integrate more role-relevant keywords naturally across summary, skills, and experience.",
+    "Rebuild the skills section using the provided grouped categories instead of a flat list.",
+    "Reorder the resume sections to match the recommended structure."
+  ],
+  "interview_probability": 55,
+  "recruiter_confidence": 60,
+  "first_impression": "The candidate shows a clear intent to transition into HR with relevant internship and project experience focused on coordination and scheduling. The engineering background is evident but not well leveraged to highlight transferable skills. The resume is concise but lacks a summary and explicit HR keywords to improve ATS alignment.",
+  "shortlisting_decision": "Maybe",
+  "top_strengths": [
+    "Relevant internship experience in campus coordination",
+    "Demonstrated skills in scheduling and record keeping",
+    "Clear involvement in event logistics and candidate support"
+  ],
+  "top_concerns": [
+    "No professional summary to position the candidate as an HR executive fresher",
+    "Limited use of HR-specific keywords and ATS-friendly terms",
+    "Lack of certifications or formal HR training to strengthen candidacy"
+  ],
+  "missing_high_value_information": [
+    "Professional summary or objective statement",
+    "Details on communication and teamwork achievements",
+    "Any HR-related certifications or training"
+  ],
+  "recommended_improvements": [
+    "Add a concise professional summary emphasizing motivation for HR and transferable skills from engineering",
+    "Incorporate more ATS-friendly HR keywords such as 'HR coordination', 'candidate scheduling', and 'entry-level HR'",
+    "Highlight communication, teamwork, and documentation skills with examples",
+    "Consider adding relevant certifications or mention plans to pursue them"
+  ],
+  "industry_keywords_missing": [
+    "HR coordination",
+    "entry-level HR",
+    "candidate scheduling",
+    "internship experience",
+    "student coordination"
+  ],
+  "resume_competitiveness": "Basic",
+  "skill_match_percentage": 60,
+  "strong_matching_skills": [
+    "Communication",
+    "coordination",
+    "Excel"
+  ],
+  "missing_required_skills": [
+    "Records Management",
+    "Candidate Support"
+  ],
+  "missing_preferred_skills": [],
+  "resume_alignment_strategy": "Lead with the strongest matching skills, keep role-relevant evidence visible early, and address the missing required skills through truthful positioning or future upskilling suggestions.",
+  "ats_score_estimate": 75,
+  "ats_readiness_level": "Medium",
+  "matching_keywords": [
+    "Communication",
+    "Coordination",
+    "Records Management",
+    "Excel",
+    "Candidate Support"
+  ],
+  "missing_keywords": [
+    "HR Executive"
+  ],
+  "ats_improvement_actions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: HR Executive.",
+    "Place the strongest role keywords naturally in the Professional Summary: Communication, Coordination, Records Management.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Communication, Coordination, Records Management, Excel.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "personalization_score": 89,
+  "personalization_strategy": "Use a career-switcher narrative that translates prior strengths into target-role value without forcing unrelated detail.",
+  "personalization_notes": [
+    "India personalization often works best with a balanced emphasis on skills, projects, and readiness.",
+    "Career-change positioning should translate transferable strengths and reduce unrelated detail.",
+    "Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.",
+    "Overall: India personalization often works best with a balanced emphasis on skills, projects, and readiness. Career-change positioning should translate transferable strengths and reduce unrelated detail. Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills."
+  ],
+  "resume_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-delta.pdf",
+  "resume_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-delta.docx",
+  "selected_theme": "Minimal",
+  "page_count": 1,
+  "render_quality_score": 92
+}

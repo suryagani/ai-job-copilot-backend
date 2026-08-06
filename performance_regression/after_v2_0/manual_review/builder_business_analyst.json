@@ -1,0 +1,165 @@
+{
+  "recommended_resume_style": "Graduate ATS Resume",
+  "recommendation_reason": "Selected Graduate ATS Resume based on the candidate profile type 'Fresher', career direction 'Operations', and target role alignment for Business Analyst.",
+  "professional_title": "Business Analyst",
+  "executive_summary": "MBA graduate with 3-5 years of experience supporting operational reporting and process improvements in consulting environments. Skilled in stakeholder management, requirements gathering, and process mapping, with strong technical proficiency in SQL and Power BI. Demonstrated ability to improve reporting accuracy and standardize documentation, enhancing communication and data-driven decision-making. Prepared to contribute analytical and collaborative skills to a Business Analyst role within the UK consulting sector.",
+  "resume_length_rule": "One Page",
+  "target_market_strategy": "Position the candidate as a capable early-career Business Analyst with a strong foundation in operations and consulting environments, leveraging an MBA and practical experience in reporting, process mapping, and stakeholder coordination. Emphasize UK market-relevant skills such as SQL, Power BI, and Jira alongside business analysis certification to meet ATS and recruiter expectations in consulting firms.",
+  "recruiter_positioning": "Present the candidate as a results-oriented Business Analyst with 3-5 years of experience supporting operational improvements and reporting accuracy in consulting-related roles. Highlight practical achievements like improved reporting accuracy and leadership in mentoring junior analysts. Use clear, professional language focused on measurable contributions and collaboration with stakeholders to align with UK consulting recruiters\u2019 preferences.",
+  "full_resume": "PROFESSIONAL SUMMARY\nMBA graduate with 3-5 years of experience supporting operational reporting and process improvements in consulting environments. Skilled in stakeholder management, requirements gathering, and process mapping, with strong technical proficiency in SQL and Power BI. Demonstrated ability to improve reporting accuracy and standardize documentation, enhancing communication and data-driven decision-making. Prepared to contribute analytical and collaborative skills to a Business Analyst role within the UK consulting sector.\n\nWORK EXPERIENCE\nBusiness Analyst Support\n- Enhanced operational reporting accuracy by collaborating with stakeholders to gather detailed business requirements and map processes, facilitating clearer communication and improved data-driven decision-making.\n- Developed a reporting dashboard using Power BI to streamline data visualization and improve accessibility of key operational metrics.\n- Standardized documentation processes to ensure consistency and clarity across reporting deliverables, reducing errors and improving team efficiency.\n- Mentored junior analysts by providing guidance on data analysis techniques and reporting best practices, fostering skill development and team capability.\n- Coordinated regular review meetings to align team efforts, address challenges, and ensure timely delivery of analysis outputs.\n\nTECHNICAL SKILLS & TOOLS\nBusiness Analysis & Operations: Requirements Gathering, Process Mapping, Stakeholder Management, Documentation, Problem Solving\nTechnical Skills: SQL, Excel, Power BI, Jira, PowerPoint\n\nCERTIFICATIONS\nBusiness Analysis Foundation Certificate\n\nEDUCATION\nMBA in Operations and Finance",
+  "ats_keywords": [
+    "Stakeholder management",
+    "Requirements gathering",
+    "Reporting",
+    "SQL",
+    "Power BI",
+    "Communication",
+    "Collaboration",
+    "Analytical thinking",
+    "Business Analyst"
+  ],
+  "skill_groups": [
+    {
+      "category": "Business & Productivity Tools",
+      "skills": [
+        "Excel",
+        "PowerPoint",
+        "Power BI"
+      ]
+    },
+    {
+      "category": "Data & Analysis",
+      "skills": [
+        "SQL"
+      ]
+    },
+    {
+      "category": "Communication & Documentation",
+      "skills": [
+        "communication",
+        "documentation",
+        "Stakeholder management"
+      ]
+    },
+    {
+      "category": "Transferable Skills",
+      "skills": [
+        "process mapping",
+        "problem solving",
+        "Jira"
+      ]
+    }
+  ],
+  "strengths": [
+    "Excel",
+    "PowerPoint",
+    "Power BI",
+    "Enhanced operational reporting accuracy by collaborating with stakeholders to gather detailed business requirements and map processes, facilitating clearer communication and improved data-driven decision-making.",
+    "Improved reporting efficiency and documentation quality to support operational transparency and stakeholder alignment."
+  ],
+  "missing_information": [
+    "Specific quantifiable achievements or metrics demonstrating impact",
+    "Clear job titles and dates for work experience",
+    "Details on the scale or scope of projects or reporting dashboards",
+    "Soft skills examples aligned with consulting environments",
+    "Any additional relevant certifications or training"
+  ],
+  "improvement_suggestions": [
+    "Consider building stronger exposure in: Requirements gathering, Dashboarding.",
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Collaboration, Analytical thinking.",
+    "Place the strongest role keywords naturally in the Professional Summary: Stakeholder management, Requirements gathering, Reporting.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Stakeholder management, Requirements gathering, Reporting, SQL.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "writing_quality_score": "78/100",
+  "resume_readability": "High",
+  "ats_readiness": "Low",
+  "resume_confidence": "Promising",
+  "quality_score": 78,
+  "ats_readiness_score": 90,
+  "recruiter_readability_score": 94,
+  "role_alignment_score": 100,
+  "quality_issues_found": [
+    "Skills are not clearly grouped using the Skill Intelligence structure.",
+    "Section order does not fully follow the recommended resume model."
+  ],
+  "quality_fixes_applied": [
+    "Rebuild the skills section using the provided grouped categories instead of a flat list.",
+    "Reorder the resume sections to match the recommended structure."
+  ],
+  "interview_probability": 75,
+  "recruiter_confidence": 80,
+  "first_impression": "Well-structured, concise resume presenting a capable early-career Business Analyst with relevant consulting and operations experience, strong technical skills, and an MBA.",
+  "shortlisting_decision": "Maybe",
+  "top_strengths": [
+    "Clear alignment with Business Analyst role and consulting environment",
+    "Strong technical skills in SQL, Power BI, and Jira",
+    "Demonstrated achievements in improving reporting accuracy and process standardization"
+  ],
+  "top_concerns": [
+    "Lack of specific company names, dates, and quantifiable metrics in work experience",
+    "No explicit mention of UK market experience or familiarity with UK consulting practices",
+    "Limited detail on stakeholder management scope and complexity"
+  ],
+  "missing_high_value_information": [
+    "Employment dates and company names",
+    "Quantifiable impact metrics (e.g., % improvements, time saved)",
+    "Additional relevant certifications (e.g., Power BI, SQL certifications)"
+  ],
+  "recommended_improvements": [
+    "Add specific employment dates and company names to establish credibility and career progression",
+    "Include measurable outcomes to demonstrate impact and results",
+    "Highlight any UK market exposure or consulting-specific methodologies used",
+    "Consider adding more keywords related to consulting frameworks and tools"
+  ],
+  "industry_keywords_missing": [
+    "Requirement Gathering Techniques",
+    "Consulting Methodologies",
+    "Data Analysis",
+    "Business Process Improvement"
+  ],
+  "resume_competitiveness": "Competitive",
+  "skill_match_percentage": 67,
+  "strong_matching_skills": [
+    "Stakeholder management",
+    "Created sample reporting dashboard and documentation standardization initiative."
+  ],
+  "missing_required_skills": [
+    "Requirements gathering"
+  ],
+  "missing_preferred_skills": [],
+  "resume_alignment_strategy": "Lead with the strongest matching skills, keep role-relevant evidence visible early, and address the missing required skills through truthful positioning or future upskilling suggestions.",
+  "ats_score_estimate": 68,
+  "ats_readiness_level": "Medium",
+  "matching_keywords": [
+    "Stakeholder management",
+    "Requirements gathering",
+    "Reporting",
+    "SQL",
+    "Power BI",
+    "Communication",
+    "Business Analyst"
+  ],
+  "missing_keywords": [
+    "Collaboration",
+    "Analytical thinking"
+  ],
+  "ats_improvement_actions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Collaboration, Analytical thinking.",
+    "Place the strongest role keywords naturally in the Professional Summary: Stakeholder management, Requirements gathering, Reporting.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Stakeholder management, Requirements gathering, Reporting, SQL.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "personalization_score": 85,
+  "personalization_strategy": "Balance role alignment, recruiter clarity, and truthful ATS keyword coverage.",
+  "personalization_notes": [
+    "UK personalization favors concise, practical, and professional wording.",
+    "Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.",
+    "Overall: UK personalization favors concise, practical, and professional wording. Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills."
+  ],
+  "resume_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-gamma.pdf",
+  "resume_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-gamma.docx",
+  "selected_theme": "Classic ATS",
+  "page_count": 1,
+  "render_quality_score": 92
+}
