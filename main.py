@@ -1442,6 +1442,32 @@ def title_case_skill(skill: str) -> str:
 def get_role_skill_targets(target_role: str, career_direction: str, target_industry: str) -> dict:
     role_text = " ".join([target_role or "", career_direction or "", target_industry or ""]).lower()
 
+    if any(keyword in role_text for keyword in ["engineering manager", "software manager", "software engineering manager", "technical manager", "head of engineering"]):
+        return {
+            "categories": [
+                ("Leadership & Delivery", ["leadership", "delivery management", "roadmap coordination", "release planning", "mentoring", "hiring support"]),
+                ("Architecture & Engineering Strategy", ["architecture review", "cloud technologies", "aws", "scalability", "software delivery"]),
+                ("Stakeholder & Team Management", ["stakeholder management", "planning", "collaboration", "communication"]),
+                ("Tools & Execution", ["jira", "confluence", "java", "python"]),
+            ],
+            "missing": ["Team size", "Business outcomes", "Programme scale"],
+            "required": ["Leadership", "Delivery management", "Stakeholder management", "Planning"],
+            "preferred": ["Architecture review", "Roadmap coordination", "Mentoring", "Hiring support", "Release planning", "AWS"],
+            "supporting": ["Engineering Manager", "Software delivery", "Collaboration", "Communication", "Cloud technologies"],
+        }
+    if any(keyword in role_text for keyword in ["restaurant manager", "hospitality manager", "food service", "hospitality operations"]):
+        return {
+            "categories": [
+                ("Hospitality Operations", ["operations management", "inventory control", "stock coordination", "vendor coordination", "pos systems"]),
+                ("Leadership & Service Delivery", ["leadership", "staff management", "team coordination", "customer service", "customer handling"]),
+                ("Reporting & Scheduling", ["reporting", "scheduling", "excel", "service delivery"]),
+                ("Compliance & Standards", ["food safety", "training", "process discipline"]),
+            ],
+            "missing": ["Cost control", "Budget oversight", "KPI reporting"],
+            "required": ["Operations management", "Customer service", "Team coordination", "Reporting"],
+            "preferred": ["Inventory control", "Vendor coordination", "Scheduling", "POS systems", "Food safety", "Leadership"],
+            "supporting": ["Hospitality", "Process discipline", "Service delivery", "Restaurant Manager"],
+        }
     if any(keyword in role_text for keyword in ["devops", "sre", "cloud", "platform"]):
         return {
             "categories": [
@@ -1452,6 +1478,9 @@ def get_role_skill_targets(target_role: str, career_direction: str, target_indus
                 ("Operating Systems", ["linux", "unix", "windows server"]),
             ],
             "missing": ["Terraform", "Kubernetes", "CI/CD pipelines", "Monitoring"],
+            "required": ["AWS", "Docker", "Linux", "CI/CD", "Automation"],
+            "preferred": ["Kubernetes", "Terraform", "Jenkins", "GitHub Actions", "Python", "Monitoring"],
+            "supporting": ["Git", "Bash", "Cloud infrastructure", "Containerization"],
         }
     if any(keyword in role_text for keyword in ["business analyst", "analyst", "reporting"]):
         return {
@@ -1462,6 +1491,9 @@ def get_role_skill_targets(target_role: str, career_direction: str, target_indus
                 ("Process & Coordination", ["coordination", "requirements gathering", "process improvement"]),
             ],
             "missing": ["Requirements gathering", "Stakeholder management", "Dashboarding"],
+            "required": ["Business analysis", "Excel", "Reporting", "Documentation"],
+            "preferred": ["SQL", "Power BI", "Stakeholder management", "Requirements gathering", "Process improvement"],
+            "supporting": ["Presentation", "Dashboarding", "Data analysis", "Communication"],
         }
     if any(keyword in role_text for keyword in ["vlsi", "embedded", "electronics", "ece"]):
         return {
@@ -1473,6 +1505,9 @@ def get_role_skill_targets(target_role: str, career_direction: str, target_indus
                 ("Professional Skills", ["problem solving", "analytical thinking", "teamwork", "communication"]),
             ],
             "missing": ["RTL Design", "Timing Analysis", "Cadence", "Synopsys"],
+            "required": ["VLSI", "Verilog", "Linux", "Digital electronics"],
+            "preferred": ["RTL", "Timing analysis", "Physical design", "ModelSim", "ICC", "Cadence", "Synopsys"],
+            "supporting": ["CMOS", "FPGA", "Circuit design", "Semiconductor fundamentals"],
         }
     if any(keyword in role_text for keyword in ["hr", "human resources", "recruit", "talent"]):
         return {
@@ -1483,6 +1518,9 @@ def get_role_skill_targets(target_role: str, career_direction: str, target_indus
                 ("Reporting & Documentation", ["documentation", "reporting", "presentation"]),
             ],
             "missing": ["Employee onboarding", "HR operations", "Recruitment coordination"],
+            "required": ["Communication", "Documentation", "Coordination", "Excel"],
+            "preferred": ["Onboarding", "Scheduling", "Reporting", "Stakeholder management"],
+            "supporting": ["Presentation", "Teamwork", "Event coordination", "HR operations"],
         }
     if any(keyword in role_text for keyword in ["operations manager", "operations", "logistics", "supply chain"]):
         return {
@@ -1493,6 +1531,9 @@ def get_role_skill_targets(target_role: str, career_direction: str, target_indus
                 ("Customer & Service Delivery", ["customer issue resolution", "service quality", "operations coordination"]),
             ],
             "missing": ["Cost control", "Budget oversight", "KPI reporting"],
+            "required": ["Operations management", "Team coordination", "Reporting", "Service delivery"],
+            "preferred": ["Inventory control", "Staff training", "Cost control", "Excel", "KPI reporting"],
+            "supporting": ["Customer handling", "Vendor management", "Process improvement"],
         }
 
     if (career_direction or "").strip().lower() == "technical":
@@ -1503,6 +1544,9 @@ def get_role_skill_targets(target_role: str, career_direction: str, target_indus
                 ("Professional Skills", ["problem solving", "analytical thinking", "teamwork", "communication"]),
             ],
             "missing": [],
+            "required": ["Problem solving", "Communication"],
+            "preferred": ["Python", "SQL", "AWS", "Docker", "Linux", "Git"],
+            "supporting": ["Analytical thinking", "Teamwork"],
         }
 
     return {
@@ -1512,6 +1556,9 @@ def get_role_skill_targets(target_role: str, career_direction: str, target_indus
             ("Operations & Coordination", ["coordination", "scheduling", "stakeholder management", "teamwork"]),
         ],
         "missing": [],
+        "required": ["Communication", "Documentation", "Coordination"],
+        "preferred": ["Excel", "Reporting", "Stakeholder management", "Teamwork"],
+        "supporting": ["Presentation", "Scheduling", "CRM", "ERP"],
     }
 
 
@@ -2513,6 +2560,194 @@ Rules:
     return normalize_achievement_intelligence(parsed)
 
 
+def dedupe_preserve_strings(values) -> list[str]:
+    cleaned = []
+    seen = set()
+    for value in clean_string_list(values):
+        key = value.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        cleaned.append(value)
+    return cleaned
+
+
+def split_resume_sections_for_ats(resume_text: str) -> dict[str, str]:
+    text = str(resume_text or "")
+    if not text.strip():
+        return {}
+
+    aliases = {
+        "summary": ["professional summary", "executive summary", "summary"],
+        "skills": ["skills", "core skills", "core competencies", "technical skills"],
+        "experience": ["professional experience", "relevant experience", "experience"],
+        "projects": ["projects", "selected projects"],
+        "education": ["education", "academic background"],
+        "certifications": ["certifications", "licenses", "training"],
+    }
+    sections = {}
+    current = "header"
+    buffer = []
+
+    def flush(section_name: str) -> None:
+        if buffer:
+            sections[section_name] = "\n".join(buffer).strip()
+
+    for raw_line in text.splitlines():
+        normalized = raw_line.strip().lower().rstrip(":")
+        matched = None
+        for section_name, headings in aliases.items():
+            if normalized in headings:
+                matched = section_name
+                break
+        if matched:
+            flush(current)
+            buffer = []
+            current = matched
+            continue
+        buffer.append(raw_line)
+    flush(current)
+    return sections
+
+
+def build_candidate_evidence_map(candidate_data, resume_text: str = "") -> dict[str, dict]:
+    source_texts = {
+        "resume_text": str(resume_text or ""),
+        "technical_skills": str(getattr(candidate_data, "technical_skills", "") or ""),
+        "transferable_skills": str(getattr(candidate_data, "transferable_skills", "") or ""),
+        "tools_software": str(getattr(candidate_data, "tools_software", "") or ""),
+        "projects": str(getattr(candidate_data, "projects", "") or ""),
+        "work_experience": str(getattr(candidate_data, "work_experience", "") or ""),
+        "internships": str(getattr(candidate_data, "internships", "") or ""),
+        "education_details": str(getattr(candidate_data, "education_details", "") or ""),
+        "certifications": str(getattr(candidate_data, "certifications", "") or ""),
+        "achievements": str(getattr(candidate_data, "achievements", "") or ""),
+        "leadership_experience": str(getattr(candidate_data, "leadership_experience", "") or ""),
+    }
+    alias_map = {
+        "CI/CD": ["ci/cd", "continuous integration", "continuous deployment"],
+        "AWS": ["aws", "amazon web services"],
+        "Docker": ["docker", "containerization", "containerised", "containerized"],
+        "Linux": ["linux"],
+        "Terraform": ["terraform", "infrastructure as code"],
+        "Kubernetes": ["kubernetes", "k8s"],
+        "Monitoring": ["monitoring", "alerting", "observability"],
+        "VLSI": ["vlsi", "semiconductor"],
+        "Physical design": ["physical design", "placement", "routing"],
+        "RTL": ["rtl", "register transfer level"],
+        "Timing analysis": ["timing analysis", "sta"],
+        "Excel": ["excel", "spreadsheet"],
+        "Power BI": ["power bi"],
+        "Stakeholder management": ["stakeholder management", "stakeholder communication"],
+        "Requirements gathering": ["requirements gathering", "requirement gathering"],
+        "Operations management": ["operations management", "operations"],
+        "Team coordination": ["team coordination", "coordination"],
+    }
+
+    evidence_map: dict[str, dict] = {}
+    for source_name, text_value in source_texts.items():
+        lowered = text_value.lower()
+        if not lowered.strip():
+            continue
+        for token in split_skills_text(text_value):
+            normalized = title_case_skill(token)
+            key = normalized.lower()
+            entry = evidence_map.setdefault(
+                key,
+                {"keyword": normalized, "evidence_sources": [], "allowed_sections": [], "matched_phrases": []},
+            )
+            if source_name not in entry["evidence_sources"]:
+                entry["evidence_sources"].append(source_name)
+            if source_name in {"technical_skills", "transferable_skills", "tools_software"}:
+                entry["allowed_sections"].extend(["skills", "summary"])
+            if source_name in {"projects", "education_details"}:
+                entry["allowed_sections"].extend(["projects", "summary"])
+            if source_name in {"work_experience", "internships", "leadership_experience", "achievements"}:
+                entry["allowed_sections"].extend(["experience", "summary"])
+            entry["matched_phrases"].append(token)
+
+        for keyword, aliases in alias_map.items():
+            if any(alias in lowered for alias in aliases):
+                entry = evidence_map.setdefault(
+                    keyword.lower(),
+                    {"keyword": keyword, "evidence_sources": [], "allowed_sections": [], "matched_phrases": []},
+                )
+                if source_name not in entry["evidence_sources"]:
+                    entry["evidence_sources"].append(source_name)
+                if source_name in {"technical_skills", "transferable_skills", "tools_software"}:
+                    entry["allowed_sections"].extend(["skills", "summary"])
+                if source_name in {"projects", "education_details"}:
+                    entry["allowed_sections"].extend(["projects", "summary"])
+                if source_name in {"work_experience", "internships", "leadership_experience", "achievements"}:
+                    entry["allowed_sections"].extend(["experience", "summary"])
+                entry["matched_phrases"].extend(aliases)
+
+    for entry in evidence_map.values():
+        entry["evidence_sources"] = dedupe_preserve_strings(entry["evidence_sources"])
+        entry["allowed_sections"] = dedupe_preserve_strings(entry["allowed_sections"])
+        entry["matched_phrases"] = dedupe_preserve_strings(entry["matched_phrases"])
+    return evidence_map
+
+
+def build_ats_keyword_plan(candidate_data, job_intelligence=None, intelligence=None, skill_intelligence=None, resume_text: str = "") -> dict:
+    job_intelligence = job_intelligence or {}
+    intelligence = intelligence or {}
+    skill_intelligence = skill_intelligence or {}
+
+    target_role = str(getattr(candidate_data, "target_role", "")).strip()
+    target_industry = str(getattr(candidate_data, "target_industry", "")).strip()
+    career_direction = str(getattr(candidate_data, "career_direction", "") or intelligence.get("career_direction_detected", "")).strip()
+    role_targets = get_role_skill_targets(target_role, career_direction, target_industry)
+    evidence_map = build_candidate_evidence_map(candidate_data, resume_text)
+
+    skill_priority = []
+    for group in clean_skill_groups(skill_intelligence.get("skill_groups", [])):
+        skill_priority.extend(group.get("skills", []))
+
+    jd_required = clean_string_list(
+        job_intelligence.get("required_skills", [])
+        + job_intelligence.get("technical_skills", [])
+        + job_intelligence.get("tools_and_platforms", [])
+    )
+    jd_preferred = clean_string_list(
+        job_intelligence.get("preferred_skills", [])
+        + job_intelligence.get("soft_skills", [])
+        + job_intelligence.get("important_certifications", [])
+    )
+    jd_supporting = clean_string_list(job_intelligence.get("ats_keywords", []))
+
+    required_keywords = dedupe_preserve_strings(
+        jd_required
+        + role_targets.get("required", [])
+        + skill_priority[:2]
+    )[:8]
+    preferred_keywords = dedupe_preserve_strings(
+        jd_preferred
+        + role_targets.get("preferred", [])
+        + clean_string_list(intelligence.get("ats_keyword_strategy", []))
+        + [target_role]
+        + skill_priority[2:6]
+    )[:10]
+    supporting_keywords = dedupe_preserve_strings(
+        jd_supporting
+        + role_targets.get("supporting", [])
+        + role_targets.get("missing", [])
+        + [target_industry]
+    )[:10]
+
+    required_lower = {item.lower() for item in required_keywords}
+    preferred_keywords = [item for item in preferred_keywords if item.lower() not in required_lower]
+    preferred_lower = {item.lower() for item in preferred_keywords}
+    supporting_keywords = [item for item in supporting_keywords if item.lower() not in required_lower and item.lower() not in preferred_lower]
+
+    return {
+        "required_keywords": [title_case_skill(item) for item in required_keywords if item],
+        "preferred_keywords": [title_case_skill(item) for item in preferred_keywords if item],
+        "supporting_keywords": [title_case_skill(item) for item in supporting_keywords if item],
+        "evidence_map": evidence_map,
+    }
+
+
 def generate_ats_intelligence(candidate_data, resume_text="", job_intelligence=None, intelligence=None, skill_intelligence=None):
     job_intelligence = job_intelligence or {}
     intelligence = intelligence or {}
@@ -2525,35 +2760,17 @@ def generate_ats_intelligence(candidate_data, resume_text="", job_intelligence=N
     career_direction = str(getattr(candidate_data, "career_direction", "")).strip()
 
     role_targets = get_role_skill_targets(target_role, career_direction, target_industry)
-    library_keywords = []
-    for _, keywords in role_targets.get("categories", []):
-        library_keywords.extend(keywords)
-    library_keywords.extend(role_targets.get("missing", []))
-
-    if job_intelligence:
-        required_keywords = clean_string_list(
-            job_intelligence.get("required_skills", [])
-            + job_intelligence.get("technical_skills", [])
-            + job_intelligence.get("tools_and_platforms", [])
-            + job_intelligence.get("soft_skills", [])
-            + job_intelligence.get("ats_keywords", [])
-        )
-    else:
-        required_keywords = clean_string_list(
-            intelligence.get("ats_keyword_strategy", [])
-            + library_keywords
-            + [target_role, target_industry]
-        )
-
-    deduped_required = []
-    seen_required = set()
-    for keyword in required_keywords:
-        key = keyword.lower()
-        if not key or key in seen_required:
-            continue
-        seen_required.add(key)
-        deduped_required.append(title_case_skill(keyword))
-    required_keywords = deduped_required[:18]
+    keyword_plan = build_ats_keyword_plan(
+        candidate_data,
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        skill_intelligence=skill_intelligence,
+        resume_text=resume_text,
+    )
+    required_keywords = keyword_plan["required_keywords"]
+    preferred_keywords = keyword_plan["preferred_keywords"]
+    supporting_keywords = keyword_plan["supporting_keywords"]
+    evidence_map = keyword_plan["evidence_map"]
 
     candidate_text = "\n".join(
         [
@@ -2563,6 +2780,9 @@ def generate_ats_intelligence(candidate_data, resume_text="", job_intelligence=N
             getattr(candidate_data, "tools_software", ""),
             getattr(candidate_data, "projects", ""),
             getattr(candidate_data, "work_experience", ""),
+            getattr(candidate_data, "internships", ""),
+            getattr(candidate_data, "education_details", ""),
+            getattr(candidate_data, "certifications", ""),
         ]
     ).lower()
     candidate_skill_pool = split_skills_text(
@@ -2574,63 +2794,87 @@ def generate_ats_intelligence(candidate_data, resume_text="", job_intelligence=N
 
     matching_keywords = []
     missing_keywords = []
-    for keyword in required_keywords:
-        keyword_lower = keyword.lower()
-        matched_value = None
-        for candidate_lower, original in candidate_skill_map.items():
-            if keyword_lower in candidate_lower or candidate_lower in keyword_lower:
-                matched_value = original
-                break
-        if not matched_value and keyword_lower and keyword_lower in candidate_text:
-            matched_value = keyword
-        if matched_value:
-            matching_keywords.append(title_case_skill(keyword if keyword_lower in candidate_text else matched_value))
-        else:
-            missing_keywords.append(keyword)
+    missing_required_keywords = []
+    missing_preferred_keywords = []
+    keyword_matches = []
+    for tier, keywords in [("required", required_keywords), ("preferred", preferred_keywords), ("supporting", supporting_keywords)]:
+        for keyword in keywords:
+            keyword_lower = keyword.lower()
+            matched_value = None
+            evidence_entry = evidence_map.get(keyword_lower, {})
+            for candidate_lower, original in candidate_skill_map.items():
+                if keyword_lower in candidate_lower or candidate_lower in keyword_lower:
+                    matched_value = original
+                    break
+            if not matched_value and evidence_entry.get("matched_phrases"):
+                matched_value = evidence_entry.get("keyword", keyword)
+            if not matched_value and keyword_lower and keyword_lower in candidate_text:
+                matched_value = keyword
+            if matched_value:
+                normalized_match = title_case_skill(keyword if keyword_lower in candidate_text else matched_value)
+                matching_keywords.append(normalized_match)
+                keyword_matches.append(
+                    {
+                        "keyword": title_case_skill(keyword),
+                        "tier": tier,
+                        "matched": True,
+                        "evidence_sources": evidence_entry.get("evidence_sources", []) or (["resume_text"] if keyword_lower in candidate_text else ["skills"]),
+                        "allowed_sections": evidence_entry.get("allowed_sections", []),
+                    }
+                )
+            else:
+                normalized_missing = title_case_skill(keyword)
+                missing_keywords.append(normalized_missing)
+                if tier == "required":
+                    missing_required_keywords.append(normalized_missing)
+                elif tier == "preferred":
+                    missing_preferred_keywords.append(normalized_missing)
+                keyword_matches.append(
+                    {
+                        "keyword": normalized_missing,
+                        "tier": tier,
+                        "matched": False,
+                        "evidence_sources": evidence_entry.get("evidence_sources", []),
+                        "allowed_sections": evidence_entry.get("allowed_sections", []),
+                    }
+                )
 
-    matching_keywords = clean_string_list(matching_keywords)
-    missing_keywords = clean_string_list(missing_keywords)
-
-    def dedupe_preserve(values: list[str]) -> list[str]:
-        cleaned = []
-        seen = set()
-        for value in clean_string_list(values):
-            key = value.lower()
-            if key in seen:
-                continue
-            seen.add(key)
-            cleaned.append(value)
-        return cleaned
+    matching_keywords = dedupe_preserve_strings(matching_keywords)
+    missing_keywords = dedupe_preserve_strings(missing_keywords)
+    missing_required_keywords = dedupe_preserve_strings(missing_required_keywords)
+    missing_preferred_keywords = dedupe_preserve_strings(missing_preferred_keywords)
 
     if not resume_text:
-        base_summary = matching_keywords[:4]
-        base_skills = matching_keywords[:6]
-        base_experience = matching_keywords[:4]
-        base_projects = matching_keywords[:4]
+        base_summary = matching_keywords[:4] or required_keywords[:3]
+        base_skills = required_keywords[:4] + preferred_keywords[:2]
+        base_experience = [item["keyword"] for item in keyword_matches if item["matched"] and "experience" in item.get("allowed_sections", [])][:4]
+        base_projects = [item["keyword"] for item in keyword_matches if item["matched"] and "projects" in item.get("allowed_sections", [])][:4]
     else:
         lowered_resume = resume_text.lower()
-        present = [keyword for keyword in required_keywords if keyword.lower() in lowered_resume]
+        present = [keyword for keyword in required_keywords + preferred_keywords if keyword.lower() in lowered_resume]
         absent_but_owned = [keyword for keyword in matching_keywords if keyword.lower() not in lowered_resume]
-        base_summary = clean_string_list(present[:3] + absent_but_owned[:2])
-        base_skills = clean_string_list(present[:4] + absent_but_owned[:3])
-        base_experience = clean_string_list(present[:4])
+        base_summary = clean_string_list(present[:3] + absent_but_owned[:2] + required_keywords[:1])
+        base_skills = clean_string_list(required_keywords[:4] + preferred_keywords[:3] + absent_but_owned[:2])
+        base_experience = clean_string_list(
+            [item["keyword"] for item in keyword_matches if item["matched"] and "experience" in item.get("allowed_sections", [])][:5]
+        )
         base_projects = clean_string_list(
-            [keyword for keyword in present if any(token in keyword.lower() for token in ["python", "sql", "docker", "linux", "verilog", "cadence", "aws", "excel", "power bi", "analysis", "design"])]
-        )[:4]
+            [item["keyword"] for item in keyword_matches if item["matched"] and "projects" in item.get("allowed_sections", [])][:5]
+        )
 
     if experience_level.strip().lower() in {"student", "fresher", "1-3 years", "1â€“3 years"}:
         keyword_placement_strategy = {
-            "summary": dedupe_preserve(base_summary)[:4],
-            "skills": dedupe_preserve(base_skills)[:6],
-            "experience": dedupe_preserve(base_experience)[:3],
-            "projects": dedupe_preserve(base_projects[:4] + matching_keywords[:2])[:5],
+            "summary": dedupe_preserve_strings(base_summary)[:4],
+            "skills": dedupe_preserve_strings(base_skills)[:6],
+            "experience": dedupe_preserve_strings(base_experience)[:3],
+            "projects": dedupe_preserve_strings(base_projects[:4] + matching_keywords[:2])[:5],
         }
     else:
         keyword_placement_strategy = {
-            "summary": dedupe_preserve(base_summary)[:3],
-            "skills": dedupe_preserve(base_skills)[:6],
-            "experience": dedupe_preserve(base_experience[:5] + matching_keywords[:2])[:6],
-            "projects": dedupe_preserve(base_projects)[:4],
+            "summary": dedupe_preserve_strings(base_summary)[:3],
+            "skills": dedupe_preserve_strings(base_skills)[:6],
+            "experience": dedupe_preserve_strings(base_experience[:5] + matching_keywords[:2])[:6],
+            "projects": dedupe_preserve_strings(base_projects)[:4],
         }
 
     formatting_risks = []
@@ -2648,16 +2892,20 @@ def generate_ats_intelligence(candidate_data, resume_text="", job_intelligence=N
     formatting_risks = clean_string_list(formatting_risks)
 
     lowered_resume = str(resume_text or "").lower()
+    sections = split_resume_sections_for_ats(resume_text)
     section_risks = []
-    standard_headings = ["professional summary", "skills", "experience", "projects", "education", "certifications"]
     if resume_text:
         if not any(heading in lowered_resume for heading in ["professional summary", "executive summary", "summary"]):
             section_risks.append("Professional Summary heading is missing or non-standard.")
         if not any(heading in lowered_resume for heading in ["skills", "core skills", "core competencies", "technical skills"]):
             section_risks.append("Skills section is missing or not clearly labeled.")
-        if not any(heading in lowered_resume for heading in ["experience", "professional experience", "relevant experience"]):
+        has_projects_heading = "projects" in lowered_resume or "selected projects" in lowered_resume
+        has_internships = bool(getattr(candidate_data, "internships", ""))
+        has_projects_input = bool(getattr(candidate_data, "projects", ""))
+        experience_missing_is_material = bool(getattr(candidate_data, "work_experience", "")) or experience_level.strip().lower() not in {"student", "fresher", "1-3 years", "1â€“3 years"}
+        if not any(heading in lowered_resume for heading in ["experience", "professional experience", "relevant experience"]) and experience_missing_is_material and not (has_projects_heading or has_internships):
             section_risks.append("Experience section is missing or not clearly labeled.")
-        if getattr(candidate_data, "projects", "") and "projects" not in lowered_resume:
+        if has_projects_input and "projects" not in lowered_resume:
             section_risks.append("Projects content exists but the Projects section is not clearly surfaced.")
         if getattr(candidate_data, "technical_skills", "") and skill_intelligence and len(clean_skill_groups(skill_intelligence.get("skill_groups", []))) == 0:
             section_risks.append("Skills are not grouped clearly, which can weaken ATS and recruiter readability.")
@@ -2669,7 +2917,7 @@ def generate_ats_intelligence(candidate_data, resume_text="", job_intelligence=N
     keyword_stuffing_risk = "Low"
     if resume_text:
         overused = 0
-        for keyword in required_keywords[:12]:
+        for keyword in required_keywords[:10] + preferred_keywords[:4]:
             count = lowered_resume.count(keyword.lower())
             if count >= 5:
                 overused += 1
@@ -2678,17 +2926,32 @@ def generate_ats_intelligence(candidate_data, resume_text="", job_intelligence=N
         elif overused >= 1:
             keyword_stuffing_risk = "Medium"
 
-    total_required = len(required_keywords)
-    match_ratio = len(set(keyword.lower() for keyword in matching_keywords)) / max(1, total_required)
-    base_score = int(round(match_ratio * 100))
+    matched_lower = {keyword.lower() for keyword in matching_keywords}
+    required_match_ratio = len([keyword for keyword in required_keywords if keyword.lower() in matched_lower]) / max(1, len(required_keywords))
+    preferred_match_ratio = len([keyword for keyword in preferred_keywords if keyword.lower() in matched_lower]) / max(1, len(preferred_keywords))
+    supporting_match_ratio = len([keyword for keyword in supporting_keywords if keyword.lower() in matched_lower]) / max(1, len(supporting_keywords))
+
+    placement_hits = 0
+    placement_total = 0
+    for section_name, keywords in keyword_placement_strategy.items():
+        if not keywords:
+            continue
+        placement_total += len(keywords)
+        section_text = sections.get(section_name, lowered_resume)
+        for keyword in keywords:
+            if keyword.lower() in str(section_text).lower():
+                placement_hits += 1
+    placement_ratio = placement_hits / max(1, placement_total)
+
+    base_score = int(round((required_match_ratio * 0.55 + preferred_match_ratio * 0.2 + supporting_match_ratio * 0.05 + placement_ratio * 0.2) * 100))
     ats_score_estimate = base_score
-    ats_score_estimate -= min(12, len(formatting_risks) * 4)
-    ats_score_estimate -= min(12, len(section_risks) * 4)
+    ats_score_estimate -= min(10, len(formatting_risks) * 3)
+    ats_score_estimate -= min(10, len(section_risks) * 3)
     if keyword_stuffing_risk == "Medium":
         ats_score_estimate -= 6
     elif keyword_stuffing_risk == "High":
         ats_score_estimate -= 14
-    ats_score_estimate = max(35 if matching_keywords else 20, min(98, ats_score_estimate))
+    ats_score_estimate = max(20, min(96, ats_score_estimate))
 
     if ats_score_estimate >= 90:
         ats_readiness_level = "Excellent"
@@ -2700,9 +2963,9 @@ def generate_ats_intelligence(candidate_data, resume_text="", job_intelligence=N
         ats_readiness_level = "Low"
 
     ats_improvement_actions = []
-    if missing_keywords:
+    if missing_required_keywords:
         ats_improvement_actions.append(
-            f"Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: {', '.join(missing_keywords[:6])}."
+            f"Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: {', '.join(missing_required_keywords[:6])}."
         )
     if keyword_placement_strategy["summary"]:
         ats_improvement_actions.append(
@@ -2724,19 +2987,26 @@ def generate_ats_intelligence(candidate_data, resume_text="", job_intelligence=N
         ats_strategy_note += " For fresher profiles, concentrate more ATS evidence in Summary, Skills, Projects, and Education."
     elif str(getattr(candidate_data, "career_change", "No")).strip().lower() in {"yes", "true", "1"}:
         ats_strategy_note += " For career-change profiles, emphasize transferable language that is supported by real experience."
+    elif any(keyword in target_role.lower() for keyword in ["manager", "head", "lead", "director"]):
+        ats_strategy_note += " For senior profiles, prioritize leadership, delivery, and business-impact evidence over entry-level keyword density."
 
     return {
         "ats_score_estimate": ats_score_estimate,
         "ats_readiness_level": ats_readiness_level,
         "required_keywords": required_keywords,
-        "matching_keywords": dedupe_preserve(matching_keywords)[:12],
-        "missing_keywords": dedupe_preserve(missing_keywords)[:12],
+        "preferred_keywords": preferred_keywords,
+        "supporting_keywords": supporting_keywords,
+        "matching_keywords": dedupe_preserve_strings(matching_keywords)[:12],
+        "missing_keywords": dedupe_preserve_strings(missing_keywords)[:12],
+        "missing_required_keywords": missing_required_keywords[:8],
+        "missing_preferred_keywords": missing_preferred_keywords[:8],
         "keyword_placement_strategy": {
             "summary": clean_string_list(keyword_placement_strategy["summary"])[:6],
             "skills": clean_string_list(keyword_placement_strategy["skills"])[:8],
             "experience": clean_string_list(keyword_placement_strategy["experience"])[:6],
             "projects": clean_string_list(keyword_placement_strategy["projects"])[:6],
         },
+        "keyword_evidence_map": keyword_matches[:24],
         "formatting_risks": formatting_risks[:8],
         "section_risks": section_risks[:8],
         "keyword_stuffing_risk": keyword_stuffing_risk,

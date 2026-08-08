@@ -1,0 +1,68 @@
+{
+  "ats_score_estimate": 62,
+  "ats_readiness_level": "Medium",
+  "required_keywords": [
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "Terraform",
+    "Linux",
+    "Jenkins",
+    "Git",
+    "CI/CD"
+  ],
+  "matching_keywords": [
+    "AWS",
+    "Docker",
+    "Linux",
+    "Jenkins",
+    "Git",
+    "CI/CD",
+    "AWS Certified Solutions Architect",
+    "Docker Certified Associate",
+    "GitHub Actions",
+    "Python",
+    "DevOps Engineer"
+  ],
+  "missing_keywords": [
+    "Kubernetes",
+    "Terraform",
+    "Certified Kubernetes Administrator",
+    "HashiCorp Certified: Terraform Associate",
+    "Monitoring",
+    "Bash"
+  ],
+  "keyword_placement_strategy": {
+    "summary": [
+      "AWS",
+      "Docker",
+      "Linux",
+      "GitHub Actions"
+    ],
+    "skills": [
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "Terraform",
+      "AWS Certified Solutions Architect",
+      "Docker Certified Associate"
+    ],
+    "experience": [],
+    "projects": [
+      "AWS",
+      "Docker"
+    ]
+  },
+  "formatting_risks": [
+    "Possible table-style formatting detected; ATS parsers can misread table layouts."
+  ],
+  "section_risks": [],
+  "keyword_stuffing_risk": "Low",
+  "ats_improvement_actions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Kubernetes, Terraform.",
+    "Place the strongest role keywords naturally in the Professional Summary: AWS, Docker, Linux, GitHub Actions.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: AWS, Docker, Kubernetes, Terraform, AWS Certified Solutions Architect.",
+    "Use simple ATS-safe formatting with standard headings and avoid tables, icons, columns, and decorative layouts."
+  ],
+  "ats_strategy_note": "Prioritize employer keywords from the job description, but only where the candidate has real supporting evidence. For fresher profiles, concentrate more ATS evidence in Summary, Skills, Projects, and Education."
+}

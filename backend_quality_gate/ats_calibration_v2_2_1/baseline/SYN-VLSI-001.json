@@ -1,0 +1,175 @@
+{
+  "recommended_resume_style": "Graduate ATS Resume",
+  "recommendation_reason": "Selected Graduate ATS Resume based on the candidate profile type 'Fresher', career direction 'Technical', and target role alignment for VLSI Engineer.",
+  "professional_title": "Electronics and Communication Engineering Graduate | Aspiring VLSI Engineer",
+  "executive_summary": "Motivated Electronics and Communication Engineering graduate with foundational knowledge in VLSI design and digital electronics. Gained practical exposure to physical design flow concepts and Verilog through academic projects and internship training. Proficient in Linux environments and industry-standard tools such as ICC and ModelSim. Demonstrates strong problem-solving, analytical thinking, and teamwork skills, ready to contribute to semiconductor design and verification tasks.",
+  "resume_length_rule": "One Page",
+  "target_market_strategy": "Position the candidate as a motivated Electronics and Communication Engineering graduate with foundational knowledge and hands-on academic experience in VLSI design and physical design flow. Emphasize relevant coursework, internships, and academic projects that demonstrate practical application of Verilog and digital electronics concepts. Highlight familiarity with industry-standard tools like ICC and ModelSim to align with semiconductor industry expectations in India. Use clear, concise language and ATS-friendly formatting to ensure visibility in recruiter searches for entry-level VLSI engineering roles.",
+  "recruiter_positioning": "Present the candidate as a technically proficient fresher with a solid academic foundation in VLSI and digital electronics, complemented by practical exposure through internships and projects. Showcase problem-solving abilities, teamwork, and analytical skills as key strengths. Prioritize clarity and relevance by leading with technical skills and project experience to quickly communicate suitability for VLSI engineering roles in semiconductor companies. Avoid overemphasis on generic or unrelated experiences to maintain focus on the target role.",
+  "full_resume": "Education\nBachelor of Engineering in Electronics and Communication Engineering\n- Completed coursework in VLSI Design, Digital Electronics, and Physical Design Flow\n\nProjects\nVerilog-based Academic Projects with Placement and Routing Concepts\n- Developed Verilog modules to simulate digital circuits, reinforcing digital IC design principles\n- Reviewed placement and routing methodologies to understand physical design challenges in VLSI\n- Presented project outcomes during academic showcase, demonstrating effective communication of technical concepts\n\nTechnical Skills\nHardware Description Languages: Verilog\nDesign and Simulation Tools: ICC, ModelSim\nOperating Systems: Linux\nCore Technical Knowledge: Digital Electronics, Physical Design Flow\nProductivity Tools: Spreadsheet tools\n\nInternships\nPhysical Design Flow Training\n- Gained foundational understanding of physical design flow concepts through structured training sessions, enhancing readiness for VLSI design tasks\n\nCertifications\nVLSI Workshop\n- Completed workshop focused on VLSI design fundamentals and practical applications",
+  "ats_keywords": [
+    "Physical design awareness",
+    "Semiconductor fundamentals",
+    "Linux workflows",
+    "VLSI design concepts",
+    "Physical design methodologies",
+    "Linux operating system usage",
+    "Linux",
+    "VLSI",
+    "Physical design",
+    "Digital IC Design",
+    "VLSI Design"
+  ],
+  "skill_groups": [
+    {
+      "category": "VLSI Tools",
+      "skills": [
+        "ModelSim"
+      ]
+    },
+    {
+      "category": "Design Flow",
+      "skills": [
+        "Verilog"
+      ]
+    },
+    {
+      "category": "Operating Systems",
+      "skills": [
+        "Linux"
+      ]
+    },
+    {
+      "category": "Core Electronics",
+      "skills": [
+        "Digital Electronics"
+      ]
+    },
+    {
+      "category": "Professional Skills",
+      "skills": [
+        "Problem solving",
+        "analytical thinking",
+        "teamwork"
+      ]
+    },
+    {
+      "category": "Additional Tools & Skills",
+      "skills": [
+        "ICC",
+        "Physical Design Flow",
+        "documentation",
+        "Spreadsheet tools"
+      ]
+    }
+  ],
+  "strengths": [
+    "ModelSim",
+    "Verilog",
+    "Linux",
+    "Gained foundational understanding of physical design flow concepts through structured training sessions, enhancing readiness for VLSI design tasks.",
+    "Demonstrated practical application of VLSI design and physical design concepts, supporting technical proficiency for entry-level VLSI roles."
+  ],
+  "missing_information": [
+    "Specific internship responsibilities and achievements",
+    "Details of academic projects including objectives, technologies used, and outcomes",
+    "Any additional certifications or training related to VLSI or semiconductor design",
+    "Quantifiable results or impact from projects or internships"
+  ],
+  "improvement_suggestions": [
+    "Consider building stronger exposure in: RTL Design, Timing Analysis, Cadence, Synopsys.",
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Physical design awareness, Semiconductor fundamentals, VLSI design concepts, Physical design methodologies.",
+    "Place the strongest role keywords naturally in the Professional Summary: Linux, VLSI, Physical design.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Linux, VLSI, Physical design, Digital IC Design.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "writing_quality_score": "85/100",
+  "resume_readability": "High",
+  "ats_readiness": "Low",
+  "resume_confidence": "Strong",
+  "quality_score": 85,
+  "ats_readiness_score": 90,
+  "recruiter_readability_score": 100,
+  "role_alignment_score": 100,
+  "quality_issues_found": [
+    "Skills are not clearly grouped using the Skill Intelligence structure."
+  ],
+  "quality_fixes_applied": [],
+  "interview_probability": 70,
+  "recruiter_confidence": 75,
+  "first_impression": "The candidate presents a focused academic background in Electronics and Communication Engineering with relevant coursework and projects aligned to VLSI design. The resume is concise and mostly ATS-friendly, highlighting key technical skills and tools used in semiconductor design.",
+  "shortlisting_decision": "Maybe",
+  "top_strengths": [
+    "Relevant academic projects demonstrating Verilog and physical design concepts",
+    "Familiarity with industry-standard tools like ICC and ModelSim",
+    "Clear focus on VLSI and digital electronics in education and training"
+  ],
+  "top_concerns": [
+    "Lack of detailed internship experience or measurable outcomes",
+    "Absence of quantified achievements or specific contributions in projects",
+    "Limited demonstration of leadership, teamwork, or problem-solving examples"
+  ],
+  "missing_high_value_information": [
+    "Specific internship duration and responsibilities",
+    "Any academic or project results showcasing impact or improvements",
+    "Certifications with recognized accreditation or detailed content"
+  ],
+  "recommended_improvements": [
+    "Add more detail on internship tasks and any hands-on experience gained",
+    "Include measurable outcomes or technical challenges solved in projects",
+    "Highlight soft skills such as teamwork or problem-solving with examples",
+    "Use bullet points to improve readability and ATS parsing",
+    "Consider adding a brief summary or objective to position motivation and career goals"
+  ],
+  "industry_keywords_missing": [
+    "System Testing",
+    "Design Verification",
+    "RTL",
+    "Timing Analysis"
+  ],
+  "resume_competitiveness": "Basic",
+  "skill_match_percentage": 33,
+  "strong_matching_skills": [
+    "Linux"
+  ],
+  "missing_required_skills": [
+    "Physical design awareness",
+    "Semiconductor fundamentals"
+  ],
+  "missing_preferred_skills": [],
+  "resume_alignment_strategy": "Lead with the strongest matching skills, keep role-relevant evidence visible early, and address the missing required skills through truthful positioning or future upskilling suggestions.",
+  "ats_score_estimate": 35,
+  "ats_readiness_level": "Low",
+  "matching_keywords": [
+    "Linux",
+    "VLSI",
+    "Physical design",
+    "Digital IC Design",
+    "VLSI Design"
+  ],
+  "missing_keywords": [
+    "Physical design awareness",
+    "Semiconductor fundamentals",
+    "VLSI design concepts",
+    "Physical design methodologies"
+  ],
+  "ats_improvement_actions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Physical design awareness, Semiconductor fundamentals, VLSI design concepts, Physical design methodologies.",
+    "Place the strongest role keywords naturally in the Professional Summary: Linux, VLSI, Physical design.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Linux, VLSI, Physical design, Digital IC Design.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "personalization_score": 95,
+  "personalization_strategy": "Emphasize process control, reliability, standards, quality, and operational consistency.",
+  "personalization_notes": [
+    "Manufacturing positioning should sound structured, practical, and process-aware.",
+    "India personalization often works best with a balanced emphasis on skills, projects, and readiness.",
+    "Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.",
+    "Overall: Manufacturing positioning should sound structured, practical, and process-aware. India personalization often works best with a balanced emphasis on skills, projects, and readiness. Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills."
+  ],
+  "resume_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-alpha.pdf",
+  "resume_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\candidate-alpha.docx",
+  "selected_theme": "Classic ATS",
+  "page_count": 1,
+  "render_quality_score": 92
+}

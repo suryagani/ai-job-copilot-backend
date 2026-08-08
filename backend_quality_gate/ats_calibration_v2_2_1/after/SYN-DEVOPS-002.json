@@ -1,0 +1,62 @@
+{
+  "ats_score_estimate": 90,
+  "ats_readiness_level": "Excellent",
+  "required_keywords": [
+    "AWS",
+    "Docker",
+    "Linux",
+    "CI/CD",
+    "Automation"
+  ],
+  "matching_keywords": [
+    "AWS",
+    "Docker",
+    "Linux",
+    "CI/CD",
+    "Automation",
+    "Kubernetes",
+    "Terraform",
+    "Jenkins",
+    "GitHub Actions",
+    "Python",
+    "Monitoring",
+    "Git"
+  ],
+  "missing_keywords": [
+    "DevOps Engineer",
+    "Cloud infrastructure",
+    "Containerization",
+    "CI/CD pipelines"
+  ],
+  "keyword_placement_strategy": {
+    "summary": [
+      "AWS",
+      "Docker",
+      "Linux"
+    ],
+    "skills": [
+      "AWS",
+      "Docker",
+      "Linux",
+      "CI/CD",
+      "Kubernetes",
+      "Terraform"
+    ],
+    "experience": [],
+    "projects": [
+      "AWS",
+      "Docker"
+    ]
+  },
+  "formatting_risks": [],
+  "section_risks": [
+    "Professional Summary heading is missing or non-standard."
+  ],
+  "keyword_stuffing_risk": "Low",
+  "ats_improvement_actions": [
+    "Place the strongest role keywords naturally in the Professional Summary: AWS, Docker, Linux.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: AWS, Docker, Linux, CI/CD, Kubernetes.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "ats_strategy_note": "Use target-role and industry terminology naturally across summary, grouped skills, projects, and experience without keyword stuffing. For fresher profiles, concentrate more ATS evidence in Summary, Skills, Projects, and Education."
+}

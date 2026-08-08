@@ -128,11 +128,16 @@ Core Rules:
 - Skills must reflect grouped skills from Skill Intelligence.
 - Use Achievement Intelligence to strengthen bullets truthfully.
 - Use ATS Intelligence to place matching keywords naturally without keyword stuffing.
+- Use the ATS keyword evidence map to mention verified keywords only in supported sections.
+- Keep the most important verified target-role keywords visible in the Professional Summary, grouped Skills section, and the strongest matching Experience or Projects bullets.
+- Use standard ATS-safe headings such as Professional Summary, Skills, Professional Experience, Projects, Education, and Certifications whenever those sections exist.
 - Use Resume Personalization to adapt tone, emphasis, and order.
 - Use Job Intelligence only to sharpen truthful alignment.
 - Hide empty sections completely.
 - Do not use placeholders such as [Current Employer], [Dates], [Institution], [Company], N/A, or Not Provided.
 - Keep the resume aligned to the recommended length rule.
+- Do not bury role-critical verified skills beneath weaker supporting details.
+- If a keyword is missing evidence, leave it out of the resume and keep it for improvement suggestions only.
 
 Return ONLY valid JSON in this exact format:
 {{

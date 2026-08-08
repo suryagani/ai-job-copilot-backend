@@ -1,0 +1,65 @@
+{
+  "ats_score_estimate": 70,
+  "ats_readiness_level": "Medium",
+  "required_keywords": [
+    "VLSI",
+    "Verilog",
+    "Linux",
+    "Digital electronics",
+    "ModelSim"
+  ],
+  "matching_keywords": [
+    "VLSI",
+    "Verilog",
+    "Linux",
+    "Digital electronics",
+    "ModelSim",
+    "Timing analysis",
+    "Physical design",
+    "ICC"
+  ],
+  "missing_keywords": [
+    "RTL",
+    "Cadence",
+    "Synopsys",
+    "VLSI Engineer",
+    "CMOS",
+    "FPGA",
+    "Circuit design",
+    "Semiconductor fundamentals",
+    "RTL Design",
+    "Semiconductor"
+  ],
+  "keyword_placement_strategy": {
+    "summary": [
+      "VLSI",
+      "Verilog",
+      "Linux",
+      "Timing analysis"
+    ],
+    "skills": [
+      "VLSI",
+      "Verilog",
+      "Linux",
+      "Digital electronics",
+      "RTL",
+      "Timing analysis"
+    ],
+    "experience": [],
+    "projects": [
+      "VLSI",
+      "Verilog"
+    ]
+  },
+  "formatting_risks": [],
+  "section_risks": [
+    "Professional Summary heading is missing or non-standard."
+  ],
+  "keyword_stuffing_risk": "Medium",
+  "ats_improvement_actions": [
+    "Place the strongest role keywords naturally in the Professional Summary: VLSI, Verilog, Linux, Timing analysis.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: VLSI, Verilog, Linux, Digital electronics, RTL.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "ats_strategy_note": "Use target-role and industry terminology naturally across summary, grouped skills, projects, and experience without keyword stuffing. For fresher profiles, concentrate more ATS evidence in Summary, Skills, Projects, and Education."
+}

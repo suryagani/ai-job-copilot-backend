@@ -1,0 +1,234 @@
+[
+  {
+    "case_id": "SYN-VLSI-001",
+    "ats_score_estimate": 70,
+    "matching_keywords": [
+      "VLSI",
+      "Verilog",
+      "Linux",
+      "Digital electronics",
+      "ModelSim",
+      "Timing analysis",
+      "Physical design",
+      "ICC"
+    ],
+    "missing_keywords": [
+      "RTL",
+      "Cadence",
+      "Synopsys",
+      "VLSI Engineer",
+      "CMOS",
+      "FPGA",
+      "Circuit design",
+      "Semiconductor fundamentals",
+      "RTL Design",
+      "Semiconductor"
+    ],
+    "keyword_stuffing_risk": "Medium",
+    "formatting_risks": [],
+    "section_risks": [
+      "Professional Summary heading is missing or non-standard."
+    ]
+  },
+  {
+    "case_id": "SYN-DEVOPS-002",
+    "ats_score_estimate": 90,
+    "matching_keywords": [
+      "AWS",
+      "Docker",
+      "Linux",
+      "CI/CD",
+      "Automation",
+      "Kubernetes",
+      "Terraform",
+      "Jenkins",
+      "GitHub Actions",
+      "Python",
+      "Monitoring",
+      "Git"
+    ],
+    "missing_keywords": [
+      "DevOps Engineer",
+      "Cloud infrastructure",
+      "Containerization",
+      "CI/CD pipelines"
+    ],
+    "keyword_stuffing_risk": "Low",
+    "formatting_risks": [],
+    "section_risks": [
+      "Professional Summary heading is missing or non-standard."
+    ]
+  },
+  {
+    "case_id": "SYN-BA-003",
+    "ats_score_estimate": 84,
+    "matching_keywords": [
+      "Business analysis",
+      "Excel",
+      "Reporting",
+      "Documentation",
+      "PowerPoint",
+      "SQL",
+      "Power BI",
+      "Stakeholder management",
+      "Requirements gathering",
+      "Business Analyst",
+      "Google Sheets",
+      "Data analysis"
+    ],
+    "missing_keywords": [
+      "Process improvement",
+      "Presentation",
+      "Dashboarding"
+    ],
+    "keyword_stuffing_risk": "Medium",
+    "formatting_risks": [],
+    "section_risks": []
+  },
+  {
+    "case_id": "SYN-HR-004",
+    "ats_score_estimate": 66,
+    "matching_keywords": [
+      "Communication",
+      "Documentation",
+      "Coordination",
+      "Excel",
+      "PowerPoint",
+      "Scheduling",
+      "Google Sheets",
+      "Teamwork"
+    ],
+    "missing_keywords": [
+      "Onboarding",
+      "Reporting",
+      "Stakeholder management",
+      "HR Executive",
+      "Presentation",
+      "HR operations",
+      "Employee onboarding",
+      "Human Resources"
+    ],
+    "keyword_stuffing_risk": "Medium",
+    "formatting_risks": [],
+    "section_risks": [
+      "Professional Summary heading is missing or non-standard."
+    ]
+  },
+  {
+    "case_id": "SYN-RESTAURANT-005",
+    "ats_score_estimate": 76,
+    "matching_keywords": [
+      "Operations management",
+      "Team coordination",
+      "Reporting",
+      "POS systems",
+      "Team leadership",
+      "Inventory control",
+      "Vendor coordination",
+      "Scheduling",
+      "Food safety",
+      "Leadership",
+      "customer handling",
+      "Excel"
+    ],
+    "missing_keywords": [
+      "Customer service",
+      "Restaurant Manager",
+      "Cost control",
+      "Budget oversight",
+      "KPI reporting"
+    ],
+    "keyword_stuffing_risk": "Low",
+    "formatting_risks": [],
+    "section_risks": [
+      "Professional Summary heading is missing or non-standard."
+    ]
+  },
+  {
+    "case_id": "SYN-SOFTWARE-MANAGER-007",
+    "ats_score_estimate": 82,
+    "matching_keywords": [
+      "Leadership",
+      "Delivery management",
+      "Stakeholder management",
+      "Planning",
+      "Architecture review",
+      "Mentoring",
+      "Hiring support",
+      "Release planning",
+      "AWS",
+      "Software delivery",
+      "Collaboration",
+      "Cloud technologies"
+    ],
+    "missing_keywords": [
+      "Roadmap coordination",
+      "Engineering Manager",
+      "Communication",
+      "Team size",
+      "Business outcomes",
+      "Programme scale"
+    ],
+    "keyword_stuffing_risk": "Medium",
+    "formatting_risks": [],
+    "section_risks": []
+  },
+  {
+    "case_id": "SYN-OPS-006",
+    "ats_score_estimate": 76,
+    "matching_keywords": [
+      "Leadership",
+      "Delivery management",
+      "Stakeholder management",
+      "Planning",
+      "Architecture review",
+      "Roadmap coordination",
+      "Mentoring",
+      "Hiring support",
+      "Release planning",
+      "AWS",
+      "Software delivery",
+      "Collaboration"
+    ],
+    "missing_keywords": [
+      "Engineering Manager",
+      "Communication",
+      "Team size",
+      "Business outcomes",
+      "Programme scale"
+    ],
+    "keyword_stuffing_risk": "Medium",
+    "formatting_risks": [],
+    "section_risks": []
+  },
+  {
+    "case_id": "SYN-CLOUD-OPTIMIZER-008",
+    "ats_score_estimate": 62,
+    "matching_keywords": [
+      "AWS",
+      "Docker",
+      "Linux",
+      "Jenkins",
+      "Git",
+      "CI/CD",
+      "AWS Certified Solutions Architect",
+      "Docker Certified Associate",
+      "GitHub Actions",
+      "Python",
+      "DevOps Engineer"
+    ],
+    "missing_keywords": [
+      "Kubernetes",
+      "Terraform",
+      "Certified Kubernetes Administrator",
+      "HashiCorp Certified: Terraform Associate",
+      "Monitoring",
+      "Bash"
+    ],
+    "keyword_stuffing_risk": "Low",
+    "formatting_risks": [
+      "Possible table-style formatting detected; ATS parsers can misread table layouts."
+    ],
+    "section_risks": []
+  }
+]

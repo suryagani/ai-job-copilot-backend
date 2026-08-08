@@ -1,0 +1,22 @@
+{
+  "ats_score_estimate": 49,
+  "matching_keywords": [
+    "AWS",
+    "Docker",
+    "CI/CD",
+    "Linux",
+    "Cloud infrastructure management",
+    "Containerization",
+    "Linux system administration",
+    "DevOps Engineer"
+  ],
+  "missing_keywords": [
+    "Kubernetes",
+    "Terraform",
+    "Monitoring",
+    "Infrastructure as Code",
+    "Continuous Integration and Continuous Deployment",
+    "System monitoring and alerting",
+    "CI/CD tools (e.g. Jenkins, GitLab CI)"
+  ]
+}

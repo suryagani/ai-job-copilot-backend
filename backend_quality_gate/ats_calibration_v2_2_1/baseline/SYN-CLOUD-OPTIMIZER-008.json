@@ -1,0 +1,117 @@
+{
+  "recommended_resume_style": "Graduate ATS Resume",
+  "recommendation_reason": "The candidate is a recent Computer Science graduate with internship and project experience but limited professional work history. A Graduate ATS Resume style is best suited to highlight relevant skills, academic background, and practical projects aligned with the DevOps Engineer role in the UK market, ensuring clarity and ATS compatibility.",
+  "optimized_resume": "Candidate Beta\nDevOps Engineer | Computer Science Graduate\n\nProfessional Summary\nMotivated Computer Science graduate with foundational experience in DevOps practices including AWS cloud services, Docker containerization, and CI/CD pipeline development. Demonstrated ability to support Linux server environments and automate software delivery workflows. Eager to apply technical skills and grow expertise in cloud infrastructure management and DevOps engineering within a dynamic UK technology environment.\n\nCore Competencies\n- Cloud Platforms: AWS\n- Containerization: Docker\n- Continuous Integration / Continuous Deployment (CI/CD): Jenkins, Git\n- Operating Systems: Linux system administration\n- Programming & Scripting: Python\n\nProfessional Experience\nInternship \u2013 DevOps Support\n- Assisted in configuring and documenting Linux server environments to improve setup clarity and reproducibility.\n- Supported basic automation tasks and infrastructure setup under supervision, gaining hands-on exposure to Linux system administration.\n\nProjects\nCI/CD Pipeline Development\n- Developed a sample CI/CD pipeline integrating Jenkins and Git to automate build and deployment processes.\n- Implemented Docker containerization within the pipeline to streamline application deployment.\n- Demonstrated practical understanding of continuous integration and deployment aligned with DevOps best practices.\n\nEducation\nBachelor of Science in Computer Science\n\nCertifications\nNone currently held; pursuing relevant certifications such as AWS Certified Solutions Architect and Docker Certified Associate is recommended.",
+  "ats_keywords": [
+    "DevOps Engineer",
+    "AWS",
+    "Docker",
+    "CI/CD",
+    "Linux",
+    "Jenkins",
+    "Git",
+    "Python"
+  ],
+  "strengths": [
+    "Relevant foundational skills in AWS, Docker, CI/CD, and Linux",
+    "Clear project demonstrating practical DevOps pipeline experience"
+  ],
+  "weaknesses_found": [
+    "Limited professional experience and missing Kubernetes, Terraform, and Monitoring skills",
+    "No certifications listed",
+    "Lack of a formal Professional Summary heading and clear Experience section in original resume"
+  ],
+  "improvement_suggestions": [
+    "Add a professional summary to highlight strongest skills and role alignment",
+    "Use standard section headings for ATS clarity",
+    "Pursue certifications in AWS, Docker, Kubernetes, and Terraform to strengthen candidacy",
+    "Gain practical experience or training in Kubernetes, Terraform, and monitoring tools to improve skill match",
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Kubernetes, Terraform, Monitoring, Infrastructure as Code, Continuous Integration and Continuous Deployment, System monitoring and alerting.",
+    "Place the strongest role keywords naturally in the Professional Summary: AWS, Docker, CI/CD.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: AWS, Docker, CI/CD, Linux.",
+    "Use simple ATS-safe formatting with standard headings and avoid tables, icons, columns, and decorative layouts."
+  ],
+  "ats_score_estimate": 49,
+  "ats_readiness_level": "Low",
+  "matching_keywords": [
+    "AWS",
+    "Docker",
+    "CI/CD",
+    "Linux",
+    "Cloud infrastructure management",
+    "Containerization",
+    "Linux system administration",
+    "DevOps Engineer"
+  ],
+  "missing_keywords": [
+    "Kubernetes",
+    "Terraform",
+    "Monitoring",
+    "Infrastructure as Code",
+    "Continuous Integration and Continuous Deployment",
+    "System monitoring and alerting",
+    "CI/CD tools (e.g. Jenkins, GitLab CI)"
+  ],
+  "ats_improvement_actions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Kubernetes, Terraform, Monitoring, Infrastructure as Code, Continuous Integration and Continuous Deployment, System monitoring and alerting.",
+    "Place the strongest role keywords naturally in the Professional Summary: AWS, Docker, CI/CD.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: AWS, Docker, CI/CD, Linux.",
+    "Use simple ATS-safe formatting with standard headings and avoid tables, icons, columns, and decorative layouts."
+  ],
+  "personalization_score": 76,
+  "personalization_strategy": "Balance role alignment, recruiter clarity, and truthful ATS keyword coverage.",
+  "personalization_notes": [
+    "UK personalization favors concise, practical, and professional wording.",
+    "Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.",
+    "Overall: UK personalization favors concise, practical, and professional wording. Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills."
+  ],
+  "resume_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\devops-engineer.pdf",
+  "resume_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\devops-engineer.docx",
+  "selected_theme": "Classic ATS",
+  "page_count": 1,
+  "render_quality_score": 92,
+  "interview_probability": 55,
+  "recruiter_confidence": 60,
+  "first_impression": "The candidate presents a clear and concise Graduate ATS-style resume with relevant foundational skills and project experience aligned to a DevOps Engineer role. The summary is polished and the technical skills are well grouped, but professional experience is limited to an internship with minimal detail.",
+  "shortlisting_decision": "Maybe",
+  "top_strengths": [
+    "Relevant technical skills including AWS, Docker, Jenkins, Git, Linux, and Python",
+    "Clear and focused professional summary tailored to DevOps",
+    "Practical project demonstrating CI/CD pipeline and containerization"
+  ],
+  "top_concerns": [
+    "Lack of professional certifications which are highly valued in UK DevOps roles",
+    "Limited professional experience beyond a basic internship",
+    "No quantifiable achievements or impact metrics included"
+  ],
+  "missing_high_value_information": [
+    "Details on specific tools or technologies used during internship",
+    "Certifications or planned certification timelines",
+    "Any teamwork, leadership, or collaboration examples"
+  ],
+  "recommended_improvements": [
+    "Add any relevant certifications or clearly state certification plans with expected dates",
+    "Expand internship description with specific responsibilities, tools used, and any measurable outcomes",
+    "Include soft skills or examples of collaboration to demonstrate well-roundedness",
+    "Consider adding a skills section with proficiency levels and relevant keywords for ATS optimization"
+  ],
+  "industry_keywords_missing": [
+    "Kubernetes",
+    "Terraform"
+  ],
+  "resume_competitiveness": "Basic",
+  "skill_match_percentage": 57,
+  "strong_matching_skills": [
+    "AWS",
+    "Docker",
+    "CI/CD",
+    "Linux"
+  ],
+  "missing_required_skills": [
+    "Kubernetes",
+    "Terraform",
+    "Monitoring"
+  ],
+  "missing_preferred_skills": [],
+  "resume_alignment_strategy": "Lead with the strongest matching skills, keep role-relevant evidence visible early, and address the missing required skills through truthful positioning or future upskilling suggestions."
+}

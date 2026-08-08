@@ -1,0 +1,60 @@
+{
+  "ats_score_estimate": 82,
+  "ats_readiness_level": "High",
+  "required_keywords": [
+    "Leadership",
+    "Delivery management",
+    "Stakeholder management",
+    "Planning"
+  ],
+  "matching_keywords": [
+    "Leadership",
+    "Delivery management",
+    "Stakeholder management",
+    "Planning",
+    "Architecture review",
+    "Mentoring",
+    "Hiring support",
+    "Release planning",
+    "AWS",
+    "Software delivery",
+    "Collaboration",
+    "Cloud technologies"
+  ],
+  "missing_keywords": [
+    "Roadmap coordination",
+    "Engineering Manager",
+    "Communication",
+    "Team size",
+    "Business outcomes",
+    "Programme scale"
+  ],
+  "keyword_placement_strategy": {
+    "summary": [
+      "Leadership",
+      "Delivery management",
+      "Stakeholder management"
+    ],
+    "skills": [
+      "Leadership",
+      "Delivery management",
+      "Stakeholder management",
+      "Planning",
+      "Architecture review",
+      "Roadmap coordination"
+    ],
+    "experience": [
+      "Leadership",
+      "Delivery management"
+    ],
+    "projects": []
+  },
+  "formatting_risks": [],
+  "section_risks": [],
+  "keyword_stuffing_risk": "Medium",
+  "ats_improvement_actions": [
+    "Place the strongest role keywords naturally in the Professional Summary: Leadership, Delivery management, Stakeholder management.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Leadership, Delivery management, Stakeholder management, Planning, Architecture review."
+  ],
+  "ats_strategy_note": "Use target-role and industry terminology naturally across summary, grouped skills, projects, and experience without keyword stuffing. For senior profiles, prioritize leadership, delivery, and business-impact evidence over entry-level keyword density."
+}

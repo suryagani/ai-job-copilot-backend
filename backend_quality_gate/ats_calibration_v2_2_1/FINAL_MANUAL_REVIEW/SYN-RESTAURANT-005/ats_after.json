@@ -1,0 +1,65 @@
+{
+  "ats_score_estimate": 76,
+  "ats_readiness_level": "Medium",
+  "required_keywords": [
+    "Operations management",
+    "Customer service",
+    "Team coordination",
+    "Reporting",
+    "POS systems",
+    "Team leadership"
+  ],
+  "matching_keywords": [
+    "Operations management",
+    "Team coordination",
+    "Reporting",
+    "POS systems",
+    "Team leadership",
+    "Inventory control",
+    "Vendor coordination",
+    "Scheduling",
+    "Food safety",
+    "Leadership",
+    "customer handling",
+    "Excel"
+  ],
+  "missing_keywords": [
+    "Customer service",
+    "Restaurant Manager",
+    "Cost control",
+    "Budget oversight",
+    "KPI reporting"
+  ],
+  "keyword_placement_strategy": {
+    "summary": [
+      "Operations management",
+      "Team coordination",
+      "Reporting"
+    ],
+    "skills": [
+      "Operations management",
+      "Customer service",
+      "Team coordination",
+      "Reporting",
+      "Inventory control",
+      "Vendor coordination"
+    ],
+    "experience": [
+      "Operations management",
+      "Team coordination"
+    ],
+    "projects": []
+  },
+  "formatting_risks": [],
+  "section_risks": [
+    "Professional Summary heading is missing or non-standard."
+  ],
+  "keyword_stuffing_risk": "Low",
+  "ats_improvement_actions": [
+    "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Customer service.",
+    "Place the strongest role keywords naturally in the Professional Summary: Operations management, Team coordination, Reporting.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Operations management, Customer service, Team coordination, Reporting, Inventory control.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "ats_strategy_note": "Use target-role and industry terminology naturally across summary, grouped skills, projects, and experience without keyword stuffing. For senior profiles, prioritize leadership, delivery, and business-impact evidence over entry-level keyword density."
+}

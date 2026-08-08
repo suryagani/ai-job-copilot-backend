@@ -1,0 +1,59 @@
+{
+  "ats_score_estimate": 84,
+  "ats_readiness_level": "High",
+  "required_keywords": [
+    "Business analysis",
+    "Excel",
+    "Reporting",
+    "Documentation",
+    "PowerPoint"
+  ],
+  "matching_keywords": [
+    "Business analysis",
+    "Excel",
+    "Reporting",
+    "Documentation",
+    "PowerPoint",
+    "SQL",
+    "Power BI",
+    "Stakeholder management",
+    "Requirements gathering",
+    "Business Analyst",
+    "Google Sheets",
+    "Data analysis"
+  ],
+  "missing_keywords": [
+    "Process improvement",
+    "Presentation",
+    "Dashboarding"
+  ],
+  "keyword_placement_strategy": {
+    "summary": [
+      "Business analysis",
+      "Excel",
+      "Reporting",
+      "Google Sheets"
+    ],
+    "skills": [
+      "Business analysis",
+      "Excel",
+      "Reporting",
+      "Documentation",
+      "SQL",
+      "Power BI"
+    ],
+    "experience": [],
+    "projects": [
+      "Business analysis",
+      "Excel"
+    ]
+  },
+  "formatting_risks": [],
+  "section_risks": [],
+  "keyword_stuffing_risk": "Medium",
+  "ats_improvement_actions": [
+    "Place the strongest role keywords naturally in the Professional Summary: Business analysis, Excel, Reporting, Google Sheets.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Business analysis, Excel, Reporting, Documentation, SQL."
+  ],
+  "ats_strategy_note": "Use target-role and industry terminology naturally across summary, grouped skills, projects, and experience without keyword stuffing."
+}

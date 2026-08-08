@@ -1,0 +1,62 @@
+{
+  "ats_score_estimate": 66,
+  "ats_readiness_level": "Medium",
+  "required_keywords": [
+    "Communication",
+    "Documentation",
+    "Coordination",
+    "Excel",
+    "PowerPoint"
+  ],
+  "matching_keywords": [
+    "Communication",
+    "Documentation",
+    "Coordination",
+    "Excel",
+    "PowerPoint",
+    "Scheduling",
+    "Google Sheets",
+    "Teamwork"
+  ],
+  "missing_keywords": [
+    "Onboarding",
+    "Reporting",
+    "Stakeholder management",
+    "HR Executive",
+    "Presentation",
+    "HR operations",
+    "Employee onboarding",
+    "Human Resources"
+  ],
+  "keyword_placement_strategy": {
+    "summary": [
+      "Communication",
+      "Documentation",
+      "Coordination"
+    ],
+    "skills": [
+      "Communication",
+      "Documentation",
+      "Coordination",
+      "Excel",
+      "Onboarding",
+      "Scheduling"
+    ],
+    "experience": [],
+    "projects": [
+      "Communication",
+      "Documentation"
+    ]
+  },
+  "formatting_risks": [],
+  "section_risks": [
+    "Professional Summary heading is missing or non-standard."
+  ],
+  "keyword_stuffing_risk": "Medium",
+  "ats_improvement_actions": [
+    "Place the strongest role keywords naturally in the Professional Summary: Communication, Documentation, Coordination.",
+    "Keep the Skills section ATS-safe and grouped, highlighting: Communication, Documentation, Coordination, Excel, Onboarding.",
+    "Use standard section titles such as Professional Summary, Skills, Experience, Projects, Education, and Certifications."
+  ],
+  "ats_strategy_note": "Use target-role and industry terminology naturally across summary, grouped skills, projects, and experience without keyword stuffing. For fresher profiles, concentrate more ATS evidence in Summary, Skills, Projects, and Education."
+}

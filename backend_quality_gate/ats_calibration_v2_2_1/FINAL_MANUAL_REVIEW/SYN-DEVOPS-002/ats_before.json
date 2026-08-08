@@ -1,0 +1,22 @@
+{
+  "ats_score_estimate": 36,
+  "matching_keywords": [
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
+    "Linux",
+    "Terraform",
+    "Monitoring"
+  ],
+  "missing_keywords": [
+    "Cloud Infrastructure",
+    "Containerization",
+    "Infrastructure as Code",
+    "Continuous Integration/Continuous Deployment",
+    "System Monitoring",
+    "CI/CD tools",
+    "Monitoring tools",
+    "DevOps Engineer"
+  ]
+}
