@@ -35,6 +35,7 @@ from resume_designer import render_resume_package
 from resume_designer.regression_runner import run_regression_suite
 from resume_models import select_resume_model
 from resume_models.runtime import configure_runtime
+from background_jobs import BackgroundJobManager, JOB_STATUS_COMPLETED, JOB_STATUS_EXPIRED, JOB_STATUS_FAILED
 from core.error_handlers import register_error_handlers
 from core.exceptions import AppError, RateLimitExceeded
 from observability import clear_request_context, configure_logging, metrics_registry, set_request_context
@@ -85,6 +86,8 @@ RATE_LIMIT_ENABLED = str(os.getenv("RATE_LIMIT_ENABLED", "true")).strip().lower(
 RATE_LIMIT_ANONYMOUS_PER_HOUR = int(os.getenv("RATE_LIMIT_ANONYMOUS_PER_HOUR", "20"))
 RATE_LIMIT_AUTHENTICATED_PER_HOUR = int(os.getenv("RATE_LIMIT_AUTHENTICATED_PER_HOUR", "60"))
 RATE_LIMIT_ADMIN_PER_HOUR = int(os.getenv("RATE_LIMIT_ADMIN_PER_HOUR", "300"))
+BACKGROUND_JOB_POLL_PER_HOUR = int(os.getenv("BACKGROUND_JOB_POLL_PER_HOUR", "300"))
+BACKGROUND_JOB_TTL_HOURS = int(os.getenv("BACKGROUND_JOB_TTL_HOURS", "24"))
 MAX_INPUT_CHARACTERS = int(os.getenv("MAX_INPUT_CHARACTERS", "50000"))
 MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "5"))
 
@@ -100,7 +103,10 @@ EXPENSIVE_ENDPOINTS = {
     "/generate-interview-prep",
     "/generate-portfolio",
     "/prepare-job-application",
+    "/jobs/portfolio",
+    "/jobs/job-application",
 }
+background_job_manager = BackgroundJobManager(ttl_hours=BACKGROUND_JOB_TTL_HOURS)
 
 ROLE_CATALOG = [
     "Software Engineer",
@@ -434,6 +440,26 @@ class PortfolioOutput(BaseModel):
     portfolio_docx_path: str
     portfolio_pdf_path: str
     portfolio_json_path: str
+
+
+class BackgroundJobCreateOutput(BaseModel):
+    job_id: str
+    status: str
+    progress_percent: int
+    message: str
+
+
+class BackgroundJobStatusOutput(BaseModel):
+    job_id: str
+    job_type: str
+    status: str
+    progress_percent: int
+    current_stage: str
+    created_at: str
+    started_at: str
+    completed_at: str
+    retry_count: int
+    message: str
 
 
 class ResumeSkillGroup(BaseModel):
@@ -882,6 +908,18 @@ def enforce_rate_limit(request: Request) -> None:
         return
     if request.url.path.startswith("/health"):
         return
+    if request.method.upper() == "GET" and request.url.path.startswith("/jobs/"):
+        identity, _ = get_rate_limit_identity(request)
+        now = time.time()
+        cutoff = now - 3600
+        with RATE_LIMIT_LOCK:
+            history = [stamp for stamp in RATE_LIMIT_STORE.get(identity + ":poll", []) if stamp >= cutoff]
+            if len(history) >= BACKGROUND_JOB_POLL_PER_HOUR:
+                metrics_registry.increment("rate_limit_hits")
+                raise RateLimitExceeded("Too many polling requests. Please try again shortly.")
+            history.append(now)
+            RATE_LIMIT_STORE[identity + ":poll"] = history
+        return
     if request.method.upper() != "POST":
         return
     identity, limit = get_rate_limit_identity(request)
@@ -955,6 +993,14 @@ def validate_rendered_file(path_value: str, expected_suffix: str) -> dict:
         if not path.read_bytes().startswith(b"%PDF"):
             raise AppError("DOCUMENT_GENERATION_ERROR", "Generated PDF is invalid.", status_code=500, category="document_generation_error")
     return {"path": str(path), "size": size}
+
+
+def current_request_identity(request: Request) -> tuple[str, str]:
+    auth_header = request.headers.get("Authorization")
+    user, _ = get_current_user_optional(auth_header)
+    user_id = str((user or {}).get("id", "")).strip()
+    session_id = str(request.headers.get("X-Session-Id") or "").strip()
+    return user_id, session_id
 
 
 @app.middleware("http")
@@ -3630,8 +3676,14 @@ def generate_interview_prep(data: InterviewPrepInput, authorization: str | None 
     return result
 
 
-@app.post("/generate-portfolio", response_model=PortfolioOutput)
-def generate_portfolio(data: PortfolioInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
+def run_portfolio_workflow(
+    data: PortfolioInput,
+    authorization: str | None = None,
+    x_session_id: str | None = None,
+    progress_callback=None,
+) -> dict:
+    progress_callback = progress_callback or (lambda stage, percent, message="": None)
+    progress_callback("analyzing_profile", 10, "Analyzing candidate profile.")
     intelligence_request = build_resume_intelligence_request(data)
     intelligence = generate_resume_intelligence(intelligence_request)
     career_knowledge = get_career_knowledge_context(
@@ -3663,7 +3715,11 @@ def generate_portfolio(data: PortfolioInput, authorization: str | None = Header(
         intelligence=intelligence,
         skill_intelligence=skill_intelligence,
     )
-    recruiter_source = "\n".join(part for part in [data.resume_text, data.current_background, data.work_experience, data.internships, data.projects, data.achievements] if str(part or "").strip())
+    recruiter_source = "\n".join(
+        part
+        for part in [data.resume_text, data.current_background, data.work_experience, data.internships, data.projects, data.achievements]
+        if str(part or "").strip()
+    )
     recruiter_context = dict(intelligence)
     recruiter_context.update({
         "ats_keyword_strategy": ats_intelligence.get("required_keywords", []),
@@ -3674,6 +3730,14 @@ def generate_portfolio(data: PortfolioInput, authorization: str | None = Header(
         "career_graph_growth_roles": career_knowledge.get("future_growth_roles", []),
     })
     recruiter_feedback = recruiter_review(recruiter_source, data, recruiter_context)
+    progress_callback("building_portfolio_strategy", 35, "Building portfolio strategy.")
+    personalization = generate_resume_personalization(
+        data,
+        job_intelligence=job_intelligence,
+        intelligence=intelligence,
+        ats_intelligence=ats_intelligence,
+        recruiter_intelligence=None,
+    )
     linkedin_context = generate_linkedin_optimization_package(
         candidate_data=data,
         intelligence=intelligence,
@@ -3681,7 +3745,7 @@ def generate_portfolio(data: PortfolioInput, authorization: str | None = Header(
         job_intelligence=job_intelligence,
         recruiter_intelligence=recruiter_feedback,
         ats_intelligence=ats_intelligence,
-        personalization=generate_resume_personalization(data, job_intelligence=job_intelligence, intelligence=intelligence, ats_intelligence=ats_intelligence, recruiter_intelligence=None),
+        personalization=personalization,
         career_knowledge=career_knowledge,
         client=client,
         parse_json_response=parse_json_response,
@@ -3696,6 +3760,7 @@ def generate_portfolio(data: PortfolioInput, authorization: str | None = Header(
         client=client,
         parse_json_response=parse_json_response,
     )
+    progress_callback("generating_content", 65, "Generating portfolio content.")
     result = generate_portfolio_package(
         candidate_data=data,
         intelligence=intelligence,
@@ -3710,6 +3775,7 @@ def generate_portfolio(data: PortfolioInput, authorization: str | None = Header(
         client=client,
         parse_json_response=parse_json_response,
     )
+    progress_callback("generating_documents", 88, "Generating portfolio documents.")
     if str(data.job_description or "").strip():
         register_job_description(data, data.job_description, job_intelligence)
     register_asset(
@@ -3726,6 +3792,7 @@ def generate_portfolio(data: PortfolioInput, authorization: str | None = Header(
         text_key="about_me",
         metadata={"selected_theme": result.get("selected_theme", "")},
     )
+    progress_callback("quality_review", 96, "Final portfolio quality review.")
     log_analytics_event(
         event_name="portfolio_generated",
         tool_name="portfolio",
@@ -3736,7 +3803,209 @@ def generate_portfolio(data: PortfolioInput, authorization: str | None = Header(
         recruiter_score=result.get("recruiter_score", 0),
         metadata_json={"portfolio_score": result.get("portfolio_score", 0), "selected_theme": result.get("selected_theme", "")},
     )
+    progress_callback("completed", 100, "Portfolio is ready.")
     return result
+
+
+def run_job_application_workflow(
+    data: JobApplicationInput,
+    authorization: str | None = None,
+    x_session_id: str | None = None,
+    progress_callback=None,
+) -> dict:
+    progress_callback = progress_callback or (lambda stage, percent, message="": None)
+    progress_callback("analyzing_resume", 8, "Analyzing resume input.")
+    progress_callback("optimizing_resume", 25, "Optimizing resume.")
+    optimized_resume = optimize_resume(
+        ResumeOptimizerInput(
+            target_role=data.target_role,
+            target_country=data.target_country,
+            resume_text=data.resume_text,
+            job_description=data.job_description,
+            target_location=data.target_country,
+        )
+    )
+
+    optimized_resume_text = str(optimized_resume.get("optimized_resume", "")).strip()
+    background_snapshot = "\n".join(
+        part
+        for part in [
+            data.current_background,
+            data.work_experience,
+            data.internships,
+            data.projects,
+            data.achievements,
+            data.resume_text,
+            optimized_resume_text,
+        ]
+        if str(part or "").strip()
+    )
+
+    application_payload = data.model_dump()
+    application_payload.update({
+        "resume_text": optimized_resume_text or data.resume_text,
+        "current_background": data.current_background or background_snapshot,
+        "work_experience": data.work_experience or data.resume_text,
+        "projects": data.projects or data.resume_text,
+        "years_of_experience": data.years_of_experience or data.experience_level,
+    })
+
+    progress_callback("generating_cover_letter", 45, "Generating cover letter.")
+    cover_letter = generate_cover_letter_endpoint(CoverLetterInput(**application_payload))
+    progress_callback("preparing_linkedin", 60, "Preparing LinkedIn recommendations.")
+    linkedin_recommendations = optimize_linkedin(LinkedInOptimizationInput(**application_payload))
+    progress_callback("preparing_interview", 75, "Preparing interview guidance.")
+    interview_preparation = generate_interview_prep(InterviewPrepInput(**application_payload))
+
+    ats_report = {
+        "ats_score_estimate": optimized_resume.get("ats_score_estimate", 0),
+        "ats_readiness_level": optimized_resume.get("ats_readiness_level", ""),
+        "matching_keywords": optimized_resume.get("matching_keywords", []),
+        "missing_keywords": optimized_resume.get("missing_keywords", []),
+        "ats_improvement_actions": optimized_resume.get("ats_improvement_actions", []),
+    }
+    recruiter_report = {
+        "interview_probability": optimized_resume.get("interview_probability", 0),
+        "recruiter_confidence": optimized_resume.get("recruiter_confidence", 0),
+        "first_impression": optimized_resume.get("first_impression", ""),
+        "shortlisting_decision": optimized_resume.get("shortlisting_decision", ""),
+        "top_strengths": optimized_resume.get("top_strengths", []),
+        "top_concerns": optimized_resume.get("top_concerns", []),
+        "missing_high_value_information": optimized_resume.get("missing_high_value_information", []),
+        "recommended_improvements": optimized_resume.get("recommended_improvements", []),
+        "industry_keywords_missing": optimized_resume.get("industry_keywords_missing", []),
+        "resume_competitiveness": optimized_resume.get("resume_competitiveness", ""),
+    }
+
+    progress_callback("generating_documents", 88, "Generating application report documents.")
+    result = generate_job_application_package(
+        candidate_data=data,
+        optimized_resume=optimized_resume,
+        cover_letter=cover_letter,
+        linkedin_recommendations=linkedin_recommendations,
+        interview_preparation=interview_preparation,
+        ats_report=ats_report,
+        recruiter_report=recruiter_report,
+    )
+
+    register_asset(
+        "application_report",
+        data,
+        {
+            "ats_score_estimate": result.get("ats_report", {}).get("ats_score_estimate", 0),
+            "recruiter_confidence": result.get("recruiter_report", {}).get("recruiter_confidence", 0),
+            "application_readiness": result.get("application_readiness", ""),
+        },
+        files={
+            "pdf_path": result.get("application_report_pdf_path", ""),
+            "docx_path": result.get("application_report_docx_path", ""),
+        },
+        text_key="application_readiness",
+        metadata={"origin": "job_application_engine", "overall_application_score": result.get("overall_application_score", 0)},
+    )
+    progress_callback("quality_review", 96, "Final application quality review.")
+    log_analytics_event(
+        event_name="job_application_prepared",
+        tool_name="job_application",
+        authorization=authorization,
+        x_session_id=x_session_id,
+        target_role=data.target_role,
+        target_country=data.target_country,
+        resume_model=result.get("optimized_resume", {}).get("recommended_resume_style", ""),
+        ats_score=result.get("ats_report", {}).get("ats_score_estimate", 0),
+        recruiter_score=result.get("recruiter_report", {}).get("recruiter_confidence", 0),
+        metadata_json={"overall_application_score": result.get("overall_application_score", 0)},
+    )
+    progress_callback("completed", 100, "Job application package is ready.")
+    return result
+
+
+@app.post("/generate-portfolio", response_model=PortfolioOutput)
+def generate_portfolio(data: PortfolioInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
+    return run_portfolio_workflow(data, authorization=authorization, x_session_id=x_session_id)
+
+
+@app.post("/jobs/portfolio", response_model=BackgroundJobCreateOutput)
+def create_portfolio_job(
+    data: PortfolioInput,
+    request: Request,
+    authorization: str | None = Header(default=None),
+    x_session_id: str | None = Header(default=None, alias="X-Session-Id"),
+):
+    user_id, session_id = current_request_identity(request)
+    payload = data.model_dump()
+    response, _ = background_job_manager.create_job(
+        job_type="portfolio",
+        request_id=getattr(request.state, "request_id", str(uuid.uuid4())),
+        user_id=user_id,
+        session_id=session_id or str(x_session_id or ""),
+        idempotency_key=str(request.headers.get("Idempotency-Key") or "").strip(),
+        payload=payload,
+        worker=lambda progress: run_portfolio_workflow(
+            PortfolioInput(**payload),
+            authorization=authorization,
+            x_session_id=x_session_id,
+            progress_callback=progress,
+        ),
+    )
+    return response
+
+
+@app.post("/jobs/job-application", response_model=BackgroundJobCreateOutput)
+def create_job_application_job(
+    data: JobApplicationInput,
+    request: Request,
+    authorization: str | None = Header(default=None),
+    x_session_id: str | None = Header(default=None, alias="X-Session-Id"),
+):
+    user_id, session_id = current_request_identity(request)
+    payload = data.model_dump()
+    response, _ = background_job_manager.create_job(
+        job_type="job_application",
+        request_id=getattr(request.state, "request_id", str(uuid.uuid4())),
+        user_id=user_id,
+        session_id=session_id or str(x_session_id or ""),
+        idempotency_key=str(request.headers.get("Idempotency-Key") or "").strip(),
+        payload=payload,
+        worker=lambda progress: run_job_application_workflow(
+            JobApplicationInput(**payload),
+            authorization=authorization,
+            x_session_id=x_session_id,
+            progress_callback=progress,
+        ),
+    )
+    return response
+
+
+@app.get("/jobs/{job_id}", response_model=BackgroundJobStatusOutput)
+def get_background_job_status(job_id: str):
+    return background_job_manager.get_status(job_id)
+
+
+@app.get("/jobs/{job_id}/result")
+def get_background_job_result(job_id: str):
+    status = background_job_manager.get_status(job_id)
+    if status["status"] in {"queued", "processing"}:
+        return JSONResponse(status_code=202, content=status)
+    if status["status"] == JOB_STATUS_FAILED:
+        job = background_job_manager.store.get(job_id)
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "error_code": job.safe_error_code or "INTERNAL_ERROR",
+                "message": job.safe_error_message or "Something went wrong. Please try again.",
+                "request_id": job.request_id,
+            },
+        )
+    if status["status"] == JOB_STATUS_EXPIRED:
+        raise AppError("JOB_EXPIRED", "This background job has expired.", status_code=410, category="validation_error")
+    return background_job_manager.get_result(job_id)
+
+
+@app.delete("/jobs/{job_id}", response_model=BackgroundJobStatusOutput)
+def cancel_background_job(job_id: str):
+    return background_job_manager.cancel(job_id)
 
 
 @app.get("/auth/config", response_model=AuthConfigOutput)
@@ -3944,6 +4213,12 @@ def admin_analytics_health_summary(x_admin_secret: str | None = Header(default=N
         "health": health(),
         "ready": health_ready(),
     }
+
+
+@app.get("/admin/analytics/background-jobs")
+def admin_analytics_background_jobs(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret")):
+    require_admin_secret(x_admin_secret)
+    return background_job_manager.background_metrics()
 
 
 @app.post("/analyze-resume-intelligence", response_model=ResumeIntelligenceAnalysisOutput)
@@ -4648,104 +4923,7 @@ def generate_cover_letter_endpoint(data: CoverLetterInput, authorization: str | 
 
 @app.post("/prepare-job-application", response_model=JobApplicationOutput)
 def prepare_job_application(data: JobApplicationInput, authorization: str | None = Header(default=None), x_session_id: str | None = Header(default=None, alias="X-Session-Id")):
-    optimized_resume = optimize_resume(
-        ResumeOptimizerInput(
-            target_role=data.target_role,
-            target_country=data.target_country,
-            resume_text=data.resume_text,
-            job_description=data.job_description,
-            target_location=data.target_country,
-        )
-    )
-
-    optimized_resume_text = str(optimized_resume.get("optimized_resume", "")).strip()
-    background_snapshot = "\n".join(
-        part
-        for part in [
-            data.current_background,
-            data.work_experience,
-            data.internships,
-            data.projects,
-            data.achievements,
-            data.resume_text,
-            optimized_resume_text,
-        ]
-        if str(part or "").strip()
-    )
-
-    application_payload = data.model_dump()
-    application_payload.update({
-        "resume_text": optimized_resume_text or data.resume_text,
-        "current_background": data.current_background or background_snapshot,
-        "work_experience": data.work_experience or data.resume_text,
-        "projects": data.projects or data.resume_text,
-        "years_of_experience": data.years_of_experience or data.experience_level,
-    })
-
-    cover_letter = generate_cover_letter_endpoint(CoverLetterInput(**application_payload))
-
-    linkedin_recommendations = optimize_linkedin(LinkedInOptimizationInput(**application_payload))
-
-    interview_preparation = generate_interview_prep(InterviewPrepInput(**application_payload))
-
-    ats_report = {
-        "ats_score_estimate": optimized_resume.get("ats_score_estimate", 0),
-        "ats_readiness_level": optimized_resume.get("ats_readiness_level", ""),
-        "matching_keywords": optimized_resume.get("matching_keywords", []),
-        "missing_keywords": optimized_resume.get("missing_keywords", []),
-        "ats_improvement_actions": optimized_resume.get("ats_improvement_actions", []),
-    }
-    recruiter_report = {
-        "interview_probability": optimized_resume.get("interview_probability", 0),
-        "recruiter_confidence": optimized_resume.get("recruiter_confidence", 0),
-        "first_impression": optimized_resume.get("first_impression", ""),
-        "shortlisting_decision": optimized_resume.get("shortlisting_decision", ""),
-        "top_strengths": optimized_resume.get("top_strengths", []),
-        "top_concerns": optimized_resume.get("top_concerns", []),
-        "missing_high_value_information": optimized_resume.get("missing_high_value_information", []),
-        "recommended_improvements": optimized_resume.get("recommended_improvements", []),
-        "industry_keywords_missing": optimized_resume.get("industry_keywords_missing", []),
-        "resume_competitiveness": optimized_resume.get("resume_competitiveness", ""),
-    }
-
-    result = generate_job_application_package(
-        candidate_data=data,
-        optimized_resume=optimized_resume,
-        cover_letter=cover_letter,
-        linkedin_recommendations=linkedin_recommendations,
-        interview_preparation=interview_preparation,
-        ats_report=ats_report,
-        recruiter_report=recruiter_report,
-    )
-
-    register_asset(
-        "application_report",
-        data,
-        {
-            "ats_score_estimate": result.get("ats_report", {}).get("ats_score_estimate", 0),
-            "recruiter_confidence": result.get("recruiter_report", {}).get("recruiter_confidence", 0),
-            "application_readiness": result.get("application_readiness", ""),
-        },
-        files={
-            "pdf_path": result.get("application_report_pdf_path", ""),
-            "docx_path": result.get("application_report_docx_path", ""),
-        },
-        text_key="application_readiness",
-        metadata={"origin": "job_application_engine", "overall_application_score": result.get("overall_application_score", 0)},
-    )
-    log_analytics_event(
-        event_name="job_application_prepared",
-        tool_name="job_application",
-        authorization=authorization,
-        x_session_id=x_session_id,
-        target_role=data.target_role,
-        target_country=data.target_country,
-        resume_model=result.get("optimized_resume", {}).get("recommended_resume_style", ""),
-        ats_score=result.get("ats_report", {}).get("ats_score_estimate", 0),
-        recruiter_score=result.get("recruiter_report", {}).get("recruiter_confidence", 0),
-        metadata_json={"overall_application_score": result.get("overall_application_score", 0)},
-    )
-    return result
+    return run_job_application_workflow(data, authorization=authorization, x_session_id=x_session_id)
 
 
 @app.post("/review-resume", response_model=ResumeReviewerOutput)

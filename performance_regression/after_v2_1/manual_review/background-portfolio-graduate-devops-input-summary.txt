@@ -1,0 +1,6 @@
+Name: Anita Rao
+Role: DevOps Engineer
+Country: India
+Industry: Technology
+Career direction: Technical
+Experience level: Fresher

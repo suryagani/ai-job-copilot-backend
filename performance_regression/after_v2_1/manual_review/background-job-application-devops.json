@@ -1,0 +1,539 @@
+{
+  "optimized_resume": {
+    "recommended_resume_style": "Technical Professional Resume",
+    "recommendation_reason": "The candidate is a recent graduate with internship experience targeting a mid-level DevOps Engineer role. A Technical Professional Resume style best highlights technical skills, relevant projects, and practical experience while maintaining ATS-friendly formatting and recruiter clarity. This style balances skills and project evidence, which is crucial given the candidate\u2019s limited full-time experience but strong internship and project exposure.",
+    "optimized_resume": "Anita Rao\nDevOps Engineer\n\nProfessional Summary\nDetail-oriented Computer Science graduate with hands-on internship experience in Linux system administration, AWS cloud services, Docker containerization, Jenkins automation, and CI/CD pipeline documentation. Demonstrated ability to design and implement automated deployment pipelines using GitHub Actions and Docker, streamlining application release workflows. Eager to leverage technical skills and collaborative mindset to support cloud infrastructure and application deployment in a DevOps Engineer role.\n\nCore Technical Skills\n- Linux System Administration: User management, shell commands, basic troubleshooting\n- Cloud Platforms: AWS (EC2, S3, IAM basics)\n- Containerization: Docker image creation, container lifecycle management\n- CI/CD Tools: Jenkins, GitHub Actions pipeline setup and documentation\n- Scripting: Basic Bash scripting for automation tasks\n- Version Control: Git\n\nProfessional Experience\nIntern \u2013 DevOps Engineering\n- Gained practical experience in Linux system administration, including managing user permissions and performing routine maintenance tasks.\n- Assisted in containerizing applications using Docker, creating Dockerfiles and managing containers to support development workflows.\n- Supported AWS cloud services by provisioning and configuring EC2 instances and managing S3 storage.\n- Documented CI/CD pipeline processes using Jenkins and GitHub Actions, contributing to automation and deployment consistency.\n- Collaborated with team members to understand deployment requirements and improve pipeline efficiency.\n\nProjects\nSample Deployment Pipeline for Student Application\n- Designed and implemented a deployment pipeline using GitHub Actions and Docker to automate the release workflow of a student application.\n- Streamlined application deployment process by integrating containerization and continuous integration practices, enhancing deployment consistency and repeatability.\n\nEducation\nBachelor of Technology in Computer Science\n\nCertifications\n- [List any certifications if applicable, otherwise omit this section]\n\nAdditional Information\n- Strong communication and teamwork skills developed through collaborative projects and internship experience.\n- Committed to continuous learning and upskilling in scripting and monitoring tools to enhance DevOps capabilities.",
+    "ats_keywords": [
+      "DevOps Engineer",
+      "Linux",
+      "AWS",
+      "Docker",
+      "CI/CD",
+      "Jenkins",
+      "GitHub Actions",
+      "Scripting",
+      "Collaboration",
+      "Linux system administration",
+      "AWS cloud services",
+      "Docker containerization",
+      "Continuous Integration and Continuous Deployment pipelines"
+    ],
+    "strengths": [
+      "Strong foundational knowledge in Linux, AWS, Docker, and CI/CD",
+      "Practical project experience automating deployment pipelines using GitHub Actions and Docker"
+    ],
+    "weaknesses_found": [
+      "Limited explicit evidence of scripting beyond basic Bash",
+      "No direct mention of monitoring tools experience",
+      "Collaboration with application teams is implied but not strongly detailed"
+    ],
+    "improvement_suggestions": [
+      "Gain hands-on experience or training in scripting languages such as Python or advanced Bash",
+      "Develop familiarity with monitoring tools like Prometheus or Nagios",
+      "Seek opportunities to collaborate directly with application development teams to strengthen teamwork evidence",
+      "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Collaboration with application teams, Continuous Integration and Continuous Deployment pipelines, Scripting languages (e.g., Bash, Python), Monitoring tools (e.g., Prometheus, Nagios), CI/CD tools (e.g., Jenkins, GitLab CI), Collaboration.",
+      "Place the strongest role keywords naturally in the Professional Summary: Linux, AWS, Docker.",
+      "Keep the Skills section ATS-safe and grouped, highlighting: Linux, AWS, Docker, CI/CD."
+    ],
+    "ats_score_estimate": 61,
+    "ats_readiness_level": "Medium",
+    "matching_keywords": [
+      "Linux",
+      "AWS",
+      "Docker",
+      "CI/CD",
+      "Scripting",
+      "Monitoring",
+      "Linux system administration",
+      "AWS cloud services",
+      "Docker containerization",
+      "Monitoring tools",
+      "Communication",
+      "Teamwork"
+    ],
+    "missing_keywords": [
+      "Collaboration with application teams",
+      "Continuous Integration and Continuous Deployment pipelines",
+      "Scripting languages (e.g., Bash, Python)",
+      "Monitoring tools (e.g., Prometheus, Nagios)",
+      "CI/CD tools (e.g., Jenkins, GitLab CI)",
+      "Collaboration"
+    ],
+    "ats_improvement_actions": [
+      "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Collaboration with application teams, Continuous Integration and Continuous Deployment pipelines, Scripting languages (e.g., Bash, Python), Monitoring tools (e.g., Prometheus, Nagios), CI/CD tools (e.g., Jenkins, GitLab CI), Collaboration.",
+      "Place the strongest role keywords naturally in the Professional Summary: Linux, AWS, Docker.",
+      "Keep the Skills section ATS-safe and grouped, highlighting: Linux, AWS, Docker, CI/CD."
+    ],
+    "personalization_score": 76,
+    "personalization_strategy": "Balance role alignment, recruiter clarity, and truthful ATS keyword coverage.",
+    "personalization_notes": [
+      "India personalization often works best with a balanced emphasis on skills, projects, and readiness.",
+      "Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills.",
+      "Overall: India personalization often works best with a balanced emphasis on skills, projects, and readiness. Missing ATS keywords should guide future improvement suggestions, not be inserted as unsupported skills."
+    ],
+    "interview_probability": 65,
+    "recruiter_confidence": 70,
+    "first_impression": "The candidate is a recent graduate with relevant internship experience and foundational skills in DevOps tools and practices. The resume is clear, concise, and ATS-friendly, highlighting key technical skills and a relevant project. However, the experience is limited to internship and academic projects, with no full-time role or certifications.",
+    "shortlisting_decision": "Maybe",
+    "top_strengths": [
+      "Relevant internship experience in Linux, AWS, Docker, Jenkins, and CI/CD",
+      "Clear demonstration of practical project applying DevOps tools",
+      "Good ATS alignment with targeted keywords and technical skills"
+    ],
+    "top_concerns": [
+      "Lack of full-time professional experience",
+      "No listed certifications to validate skills",
+      "Basic scripting skills and limited depth in cloud services"
+    ],
+    "missing_high_value_information": [
+      "Certifications such as AWS, Docker, or Kubernetes",
+      "Quantifiable achievements or impact metrics from internship or projects",
+      "More advanced scripting or automation experience"
+    ],
+    "recommended_improvements": [
+      "Add relevant certifications to strengthen credibility",
+      "Include measurable outcomes or improvements from internship tasks or projects",
+      "Expand scripting skills and mention any additional automation or monitoring tools"
+    ],
+    "industry_keywords_missing": [
+      "Kubernetes",
+      "Terraform",
+      "Monitoring",
+      "Infrastructure as Code"
+    ],
+    "resume_competitiveness": "Competitive",
+    "skill_match_percentage": 57,
+    "strong_matching_skills": [
+      "Linux",
+      "AWS",
+      "Docker",
+      "CI/CD"
+    ],
+    "missing_required_skills": [
+      "Scripting",
+      "Monitoring",
+      "Collaboration with application teams"
+    ],
+    "missing_preferred_skills": [],
+    "resume_alignment_strategy": "Lead with the strongest matching skills, keep role-relevant evidence visible early, and address the missing required skills through truthful positioning or future upskilling suggestions.",
+    "resume_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\devops-engineer.pdf",
+    "resume_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\devops-engineer.docx",
+    "selected_theme": "Technical Professional",
+    "page_count": 1,
+    "render_quality_score": 92
+  },
+  "cover_letter": {
+    "cover_letter_text": "Dear Hiring Team,\n\nAs a Computer Science graduate with focused internship experience in Linux system administration, containerization, and cloud services, I am eager to contribute to CloudBridge Labs as a DevOps Engineer. My hands-on exposure to AWS, Docker, Jenkins, and CI/CD pipeline automation aligns well with your cloud infrastructure and SaaS environment, and I am motivated to apply my technical skills to support scalable deployment workflows.\n\nDuring my internship at a campus innovation lab, I gained practical experience managing Linux environments and documenting deployment processes. I developed a sample deployment pipeline using GitHub Actions and Docker, automating release workflows for a student application. Additionally, I created Bash scripts to monitor Linux services, enhancing system reliability through proactive checks. These projects demonstrate my ability to implement foundational DevOps practices and collaborate effectively with development teams.\n\nI am particularly drawn to CloudBridge Labs for its focus on cloud infrastructure innovation and commitment to leveraging automation for efficient software delivery. I am confident that my technical foundation and eagerness to learn will allow me to contribute meaningfully to your DevOps initiatives and support your teams in maintaining robust, automated deployment pipelines.\n\nThank you for considering my application. I look forward to the opportunity to bring my technical skills and problem-solving mindset to CloudBridge Labs and contribute to your cloud infrastructure projects.\n\nSincerely,\nAnita Rao",
+    "cover_letter_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\anita-rao-cloudbridge-labs-devops-engineer.pdf",
+    "cover_letter_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\cover_letters\\anita-rao-cloudbridge-labs-devops-engineer.docx",
+    "cover_letter_quality_score": 85,
+    "ats_alignment_score": 90,
+    "recruiter_confidence": 80
+  },
+  "linkedin_recommendations": {
+    "professional_headline": "DevOps Engineer | Skilled in AWS Cloud, Docker Containerization & CI/CD Automation | Linux System Administration | Passionate About Streamlining Deployment Pipelines",
+    "about_section": "I am a detail-oriented Computer Science graduate with focused internship experience in DevOps engineering, specializing in Linux system administration, AWS cloud services, Docker containerization, and CI/CD pipeline automation. During my internship, I gained hands-on expertise in provisioning and managing AWS EC2 instances, containerizing applications using Docker, and automating deployment workflows with Jenkins and GitHub Actions. I designed and implemented a sample deployment pipeline that integrated containerization and continuous integration practices, improving deployment consistency and repeatability.\n\nMy technical foundation is complemented by scripting skills in Bash, enabling me to automate routine tasks and support infrastructure monitoring. I am committed to continuous learning and actively expanding my knowledge in advanced scripting, monitoring tools, and infrastructure as code to enhance my DevOps capabilities. I thrive in collaborative environments, having worked closely with teams to understand deployment requirements and improve pipeline efficiency.\n\nAs an entry-level DevOps Engineer targeting opportunities in India\u2019s technology sector, I bring a strong blend of practical skills, project experience, and a proactive mindset. I am eager to contribute to cloud infrastructure management and application deployment, supporting organizations in achieving scalable, reliable, and automated delivery processes. My goal is to leverage my technical proficiency and teamwork skills to drive operational excellence and innovation in DevOps practices.",
+    "experience_rewrite": [
+      "Managed Linux system administration tasks including user permissions and routine maintenance during internship, ensuring stable development environments.",
+      "Containerized applications by creating Dockerfiles and managing container lifecycles to support streamlined development workflows.",
+      "Provisioned and configured AWS EC2 instances and managed S3 storage to support cloud infrastructure needs.",
+      "Documented CI/CD pipeline processes using Jenkins and GitHub Actions, contributing to automation consistency and deployment reliability.",
+      "Collaborated with cross-functional teams to gather deployment requirements and optimize pipeline efficiency."
+    ],
+    "featured_section": [
+      "Portfolio / GitHub: https://portfolio.example.com/anita-rao",
+      "Pin 1-2 strongest project case studies with problem, approach, and result.",
+      "Add the most relevant certification or workshop proof to Featured.",
+      "Publish one short post highlighting a project or career insight and pin it in Featured.",
+      "Suggested portfolio angle: CI/CD pipeline automation"
+    ],
+    "skills_order": [
+      "AWS",
+      "Docker",
+      "Jenkins",
+      "Git",
+      "Bash",
+      "GitHub Actions",
+      "Python",
+      "Linux",
+      "Documentation",
+      "collaboration",
+      "troubleshooting",
+      "Jira",
+      "VS Code",
+      "DevOps Engineer",
+      "CI/CD",
+      "Scripting",
+      "Monitoring",
+      "Linux system administration",
+      "AWS cloud services",
+      "Docker containerization",
+      "Collaboration with application teams",
+      "Continuous Integration/Continuous Deployment pipelines",
+      "Scripting languages (e.g., Bash, Python)",
+      "Monitoring tools and techniques",
+      "CI/CD tools (e.g., Jenkins, GitLab CI)",
+      "Monitoring tools (e.g., Prometheus, Nagios)",
+      "Communication",
+      "Teamwork",
+      "DevOps",
+      "Software Engineer",
+      "Backend Engineer",
+      "Frontend Engineer",
+      "Full Stack Engineer",
+      "Cloud Engineer",
+      "AI Engineer",
+      "Data Engineer",
+      "Cybersecurity Engineer",
+      "QA Engineer",
+      "Kubernetes",
+      "Terraform"
+    ],
+    "top_50_recruiter_keywords": [
+      "DevOps Engineer",
+      "AWS",
+      "Docker",
+      "Jenkins",
+      "Git",
+      "Bash",
+      "GitHub Actions",
+      "Python",
+      "Linux",
+      "Documentation",
+      "collaboration",
+      "troubleshooting",
+      "Jira",
+      "VS Code",
+      "CI/CD",
+      "Scripting",
+      "Monitoring",
+      "Linux system administration",
+      "AWS cloud services",
+      "Docker containerization",
+      "Collaboration with application teams",
+      "Continuous Integration/Continuous Deployment pipelines",
+      "Scripting languages (e.g., Bash, Python)",
+      "Monitoring tools and techniques",
+      "CI/CD tools (e.g., Jenkins, GitLab CI)",
+      "Monitoring tools (e.g., Prometheus, Nagios)",
+      "Communication",
+      "Teamwork",
+      "DevOps",
+      "Software Engineer",
+      "Backend Engineer",
+      "Frontend Engineer",
+      "Full Stack Engineer",
+      "Cloud Engineer",
+      "AI Engineer",
+      "Data Engineer",
+      "Cybersecurity Engineer",
+      "QA Engineer",
+      "Kubernetes",
+      "Terraform"
+    ],
+    "creator_profile_suggestions": [
+      "Add a professional profile photo with a clear, approachable expression to enhance recruiter engagement.",
+      "Include contact information such as a professional email address and phone number in the LinkedIn contact section for easy recruiter outreach.",
+      "List any relevant certifications such as AWS Certified Solutions Architect or Docker Certified Associate to strengthen credibility.",
+      "Expand the Skills section with prioritized keywords like Linux, AWS, Docker, Jenkins, GitHub Actions, Bash scripting, and CI/CD to improve ATS visibility.",
+      "Add a dedicated Projects section highlighting the sample deployment pipeline and other hands-on work with clear descriptions of tools and outcomes.",
+      "Incorporate quantifiable impacts or improvements where possible, such as deployment time reduction or automation success, even if approximate.",
+      "Use consistent, action-oriented language with bullet points in the Experience and Projects sections to clearly communicate technical contributions."
+    ],
+    "networking_suggestions": [
+      "Connect with DevOps professionals and recruiters in the Indian technology sector to increase visibility and access to opportunities.",
+      "Join LinkedIn groups focused on DevOps, AWS, Docker, and cloud computing to engage in discussions and showcase expertise.",
+      "Follow and engage with companies and thought leaders in cloud technology startups and SaaS providers to stay updated on industry trends.",
+      "Request informational interviews or mentorship from experienced DevOps engineers to gain insights and guidance on career growth.",
+      "Share posts or articles related to DevOps tools, automation, and cloud infrastructure to demonstrate ongoing learning and passion.",
+      "Attend virtual or local tech meetups and webinars related to DevOps and cloud technologies to expand professional network."
+    ],
+    "headline_score": 92,
+    "linkedin_score": 92,
+    "recruiter_visibility_score": 100,
+    "quality_notes": [
+      "Professional headline is well-crafted, keyword-rich, and clearly aligned with the target DevOps Engineer role.",
+      "About section is detailed, authentic, and demonstrates relevant technical skills, internship experience, and a growth mindset.",
+      "Experience rewrite uses clear, action-oriented bullet points focusing on technical contributions and collaboration.",
+      "Skills are well prioritized and grouped, covering core DevOps tools and technologies with good ATS keyword coverage.",
+      "Featured section suggestions align well with enhancing portfolio visibility and showcasing practical projects.",
+      "Missing contact information and certifications reduce recruiter confidence and ATS completeness.",
+      "Lack of quantified achievements or impact metrics in experience and projects limits differentiation.",
+      "Some ATS keywords related to monitoring tools and infrastructure as code are missing or underrepresented.",
+      "Tone and writing style are balanced and appropriate for a startup-focused, entry-level DevOps profile targeting India."
+    ],
+    "visibility_explanation": "The profile is well optimized for recruiter discoverability with strong keyword alignment to DevOps roles in India\u2019s technology sector. The headline and summary effectively highlight relevant skills and internship experience. However, missing certifications, contact details, and quantifiable impact metrics slightly reduce recruiter confidence and ATS scoring. Expanding scripting skills and adding monitoring tool experience would improve keyword coverage and competitiveness. Overall, the profile presents a credible and authentic entry-level DevOps candidate with good potential for recruiter engagement.",
+    "linkedin_report_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\linkedin\\anita-rao-devops-engineer.docx",
+    "linkedin_report_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\linkedin\\anita-rao-devops-engineer.pdf"
+  },
+  "interview_preparation": {
+    "technical_questions": [
+      "Can you explain how you have used Docker to containerize applications during your internship?",
+      "Describe the steps you took to design and implement the CI/CD pipeline using GitHub Actions for your student application project.",
+      "How do you manage user permissions and perform basic troubleshooting in Linux system administration?",
+      "What AWS services have you worked with, and how did you provision and configure EC2 instances during your internship?",
+      "Can you walk me through a Bash script you wrote to automate a monitoring or maintenance task?",
+      "How do Jenkins and GitHub Actions differ, and what are the advantages of using each in a CI/CD pipeline?",
+      "What challenges did you face while integrating Docker containers into your deployment workflows, and how did you overcome them?",
+      "How would you monitor system performance and troubleshoot issues in a Linux-based cloud environment, considering you have limited experience with monitoring tools?"
+    ],
+    "behavioral_questions": [
+      "Tell me about a time during your internship when you had to collaborate with team members to solve a technical problem.",
+      "Describe a situation where you had to learn a new tool or technology quickly to complete a project or task.",
+      "How do you prioritize tasks when working on multiple responsibilities such as scripting, documentation, and deployment?",
+      "Give an example of how you handled feedback or criticism during your internship or academic projects.",
+      "Describe a time when you presented a technical demo or project to peers or faculty. How did you prepare and handle questions?"
+    ],
+    "hr_questions": [
+      "Why are you interested in working as a DevOps Engineer at CloudBridge Labs?",
+      "How do you handle working under pressure or tight deadlines?",
+      "What motivates you to pursue a career in DevOps, especially as a fresher?",
+      "How do you approach continuous learning and upskilling in a fast-evolving technology field?",
+      "Where do you see yourself in the next 3 to 5 years in your DevOps career?"
+    ],
+    "company_specific_questions": [
+      "CloudBridge Labs is a cloud technology startup focused on scalable SaaS solutions. How would you ensure reliability and scalability in the CI/CD pipelines you build here?",
+      "How would you contribute to cross-team collaboration between DevOps and application development teams at CloudBridge Labs?",
+      "Given CloudBridge Labs\u2019 emphasis on professionalism and clarity, how do you ensure your documentation and communication meet these standards?",
+      "CloudBridge Labs uses AWS extensively. How would you optimize AWS resource usage while maintaining performance and security?",
+      "What strategies would you use to quickly adapt to new tools or processes introduced at CloudBridge Labs?"
+    ],
+    "star_answer_examples": [
+      "Situation: During my internship, our team needed to automate the deployment of a student application. Task: I was responsible for designing a CI/CD pipeline. Action: I used GitHub Actions to automate build and deployment steps and Docker to containerize the application. Result: This streamlined the deployment process, making it consistent and repeatable, which I demonstrated successfully to faculty and peers.",
+      "Situation: I was assigned to manage Linux user permissions during my internship. Task: Ensure secure access and proper user management. Action: I applied Linux commands to add, modify, and remove users and groups, and documented the procedures. Result: This improved system security and helped the team maintain clear access controls.",
+      "Situation: I needed to present a deployment automation demo to my peers and faculty. Task: Prepare and deliver a clear technical presentation. Action: I rehearsed the demo, created concise slides, and anticipated questions. Result: The presentation was well received, and I gained confidence in communicating technical concepts.",
+      "Situation: During a project, I had to learn Bash scripting to automate Linux service monitoring. Task: Create scripts to check service status and alert on failures. Action: I researched scripting techniques and wrote monitoring scripts. Result: The scripts reduced manual checks and improved system reliability during the internship."
+    ],
+    "candidate_strengths": [
+      "Strong foundational knowledge of Linux system administration and AWS cloud services.",
+      "Hands-on experience with Docker containerization and CI/CD pipeline implementation using GitHub Actions and Jenkins.",
+      "Demonstrated ability to document technical processes clearly and collaborate effectively in team settings.",
+      "Proactive in continuous learning and upskilling, especially in scripting and automation.",
+      "Clear communication skills evidenced by successful technical presentations."
+    ],
+    "candidate_weaknesses": [
+      "Limited professional experience beyond internship and academic projects.",
+      "No formal certifications in AWS, Docker, or related DevOps technologies.",
+      "Minimal exposure to advanced monitoring tools such as Prometheus or Nagios.",
+      "Basic scripting skills primarily in Bash, with limited Python experience.",
+      "Lack of quantifiable impact metrics or detailed outcomes from projects and internship."
+    ],
+    "likely_follow_up_questions": [
+      "Can you provide more details on the specific Docker commands or configurations you used?",
+      "How did you handle any failures or errors in your CI/CD pipeline during testing?",
+      "What challenges did you face when provisioning AWS resources, and how did you resolve them?",
+      "Have you explored any monitoring tools beyond basic scripting? If not, how would you approach learning them?",
+      "How do you ensure security best practices when managing Linux users or AWS IAM roles?"
+    ],
+    "interview_tips": [
+      "Emphasize your hands-on internship and project experience with concrete examples.",
+      "Be honest about your current skill level and express eagerness to learn and grow.",
+      "Prepare to discuss your technical contributions clearly and concisely, focusing on tools like Linux, AWS, Docker, and CI/CD.",
+      "Highlight your teamwork and communication skills, especially how you collaborated during your internship.",
+      "Research CloudBridge Labs\u2019 products and culture to tailor your answers to their startup environment and cloud focus.",
+      "Practice explaining technical concepts in simple terms to demonstrate clarity and professionalism.",
+      "Prepare questions about the company\u2019s DevOps practices and growth opportunities to show engagement."
+    ],
+    "confidence_score": 91,
+    "readiness_score": 92,
+    "mock_interview_plan": [
+      "Start with a brief introduction and professional summary tailored to DevOps at CloudBridge Labs.",
+      "Practice answering technical questions on Linux administration, AWS provisioning, Docker containerization, and CI/CD pipelines.",
+      "Role-play behavioral questions focusing on teamwork, learning agility, and communication.",
+      "Simulate company-specific questions emphasizing scalability, collaboration, and professionalism.",
+      "Review STAR method answers based on internship and project experiences.",
+      "Conduct feedback sessions to improve clarity, confidence, and technical depth.",
+      "Discuss plans for certification and continuous learning to address experience gaps."
+    ],
+    "interview_report_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\anita-rao-devops-engineer.docx",
+    "interview_report_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\interview\\anita-rao-devops-engineer.pdf"
+  },
+  "ats_report": {
+    "ats_score_estimate": 61,
+    "ats_readiness_level": "Medium",
+    "matching_keywords": [
+      "Linux",
+      "AWS",
+      "Docker",
+      "CI/CD",
+      "Scripting",
+      "Monitoring",
+      "Linux system administration",
+      "AWS cloud services",
+      "Docker containerization",
+      "Monitoring tools",
+      "Communication",
+      "Teamwork"
+    ],
+    "missing_keywords": [
+      "Collaboration with application teams",
+      "Continuous Integration and Continuous Deployment pipelines",
+      "Scripting languages (e.g., Bash, Python)",
+      "Monitoring tools (e.g., Prometheus, Nagios)",
+      "CI/CD tools (e.g., Jenkins, GitLab CI)",
+      "Collaboration"
+    ],
+    "ats_improvement_actions": [
+      "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Collaboration with application teams, Continuous Integration and Continuous Deployment pipelines, Scripting languages (e.g., Bash, Python), Monitoring tools (e.g., Prometheus, Nagios), CI/CD tools (e.g., Jenkins, GitLab CI), Collaboration.",
+      "Place the strongest role keywords naturally in the Professional Summary: Linux, AWS, Docker.",
+      "Keep the Skills section ATS-safe and grouped, highlighting: Linux, AWS, Docker, CI/CD."
+    ]
+  },
+  "recruiter_report": {
+    "interview_probability": 65,
+    "recruiter_confidence": 70,
+    "first_impression": "The candidate is a recent graduate with relevant internship experience and foundational skills in DevOps tools and practices. The resume is clear, concise, and ATS-friendly, highlighting key technical skills and a relevant project. However, the experience is limited to internship and academic projects, with no full-time role or certifications.",
+    "shortlisting_decision": "Maybe",
+    "top_strengths": [
+      "Relevant internship experience in Linux, AWS, Docker, Jenkins, and CI/CD",
+      "Clear demonstration of practical project applying DevOps tools",
+      "Good ATS alignment with targeted keywords and technical skills"
+    ],
+    "top_concerns": [
+      "Lack of full-time professional experience",
+      "No listed certifications to validate skills",
+      "Basic scripting skills and limited depth in cloud services"
+    ],
+    "missing_high_value_information": [
+      "Certifications such as AWS, Docker, or Kubernetes",
+      "Quantifiable achievements or impact metrics from internship or projects",
+      "More advanced scripting or automation experience"
+    ],
+    "recommended_improvements": [
+      "Add relevant certifications to strengthen credibility",
+      "Include measurable outcomes or improvements from internship tasks or projects",
+      "Expand scripting skills and mention any additional automation or monitoring tools"
+    ],
+    "industry_keywords_missing": [
+      "Kubernetes",
+      "Terraform",
+      "Monitoring",
+      "Infrastructure as Code"
+    ],
+    "resume_competitiveness": "Competitive"
+  },
+  "job_match_score": 42,
+  "overall_application_score": 71,
+  "recommended_next_steps": [
+    "Strengthen evidence for these missing role keywords before applying: Collaboration with application teams, Continuous Integration and Continuous Deployment pipelines, Scripting languages (e.g., Bash, Python), Monitoring tools (e.g., Prometheus, Nagios), CI/CD tools (e.g., Jenkins, GitLab CI).",
+    "Address recruiter concerns in the resume and interview narrative: Lack of full-time professional experience; No listed certifications to validate skills; Basic scripting skills and limited depth in cloud services.",
+    "Tighten the weakest resume areas next: Limited explicit evidence of scripting beyond basic Bash; No direct mention of monitoring tools experience; Collaboration with application teams is implied but not strongly detailed."
+  ],
+  "application_readiness": "Not Ready",
+  "application_report_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\job-applications\\anita-rao-devops-engineer-application-report.docx",
+  "application_report_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\job-applications\\anita-rao-devops-engineer-application-report.pdf",
+  "application_report": {
+    "candidate_name": "Anita Rao",
+    "target_role": "DevOps Engineer",
+    "target_company": "CloudBridge Labs",
+    "target_country": "India",
+    "application_readiness": "Not Ready",
+    "overall_application_score": 71,
+    "job_match_score": 42,
+    "resume_summary": {
+      "recommended_style": "Technical Professional Resume",
+      "recommendation_reason": "The candidate is a recent graduate with internship experience targeting a mid-level DevOps Engineer role. A Technical Professional Resume style best highlights technical skills, relevant projects, and practical experience while maintaining ATS-friendly formatting and recruiter clarity. This style balances skills and project evidence, which is crucial given the candidate\u2019s limited full-time experience but strong internship and project exposure.",
+      "ats_score_estimate": 61,
+      "quality_score": 0,
+      "strengths": [
+        "Strong foundational knowledge in Linux, AWS, Docker, and CI/CD",
+        "Practical project experience automating deployment pipelines using GitHub Actions and Docker"
+      ],
+      "weaknesses_found": [
+        "Limited explicit evidence of scripting beyond basic Bash",
+        "No direct mention of monitoring tools experience",
+        "Collaboration with application teams is implied but not strongly detailed"
+      ]
+    },
+    "ats_summary": {
+      "ats_readiness_level": "Medium",
+      "matching_keywords": [
+        "Linux",
+        "AWS",
+        "Docker",
+        "CI/CD",
+        "Scripting",
+        "Monitoring",
+        "Linux system administration",
+        "AWS cloud services"
+      ],
+      "missing_keywords": [
+        "Collaboration with application teams",
+        "Continuous Integration and Continuous Deployment pipelines",
+        "Scripting languages (e.g., Bash, Python)",
+        "Monitoring tools (e.g., Prometheus, Nagios)",
+        "CI/CD tools (e.g., Jenkins, GitLab CI)",
+        "Collaboration"
+      ],
+      "ats_improvement_actions": [
+        "Do not add unsupported skills; instead strengthen truthful evidence around existing strengths and treat these as missing: Collaboration with application teams, Continuous Integration and Continuous Deployment pipelines, Scripting languages (e.g., Bash, Python), Monitoring tools (e.g., Prometheus, Nagios), CI/CD tools (e.g., Jenkins, GitLab CI), Collaboration.",
+        "Place the strongest role keywords naturally in the Professional Summary: Linux, AWS, Docker.",
+        "Keep the Skills section ATS-safe and grouped, highlighting: Linux, AWS, Docker, CI/CD."
+      ]
+    },
+    "recruiter_summary": {
+      "shortlisting_decision": "Maybe",
+      "resume_competitiveness": "Competitive",
+      "first_impression": "The candidate is a recent graduate with relevant internship experience and foundational skills in DevOps tools and practices. The resume is clear, concise, and ATS-friendly, highlighting key technical skills and a relevant project. However, the experience is limited to internship and academic projects, with no full-time role or certifications.",
+      "top_strengths": [
+        "Relevant internship experience in Linux, AWS, Docker, Jenkins, and CI/CD",
+        "Clear demonstration of practical project applying DevOps tools",
+        "Good ATS alignment with targeted keywords and technical skills"
+      ],
+      "top_concerns": [
+        "Lack of full-time professional experience",
+        "No listed certifications to validate skills",
+        "Basic scripting skills and limited depth in cloud services"
+      ]
+    },
+    "cover_letter_summary": {
+      "quality_score": 85,
+      "ats_alignment_score": 90,
+      "recruiter_confidence": 80
+    },
+    "linkedin_summary": {
+      "headline_score": 92,
+      "linkedin_score": 92,
+      "recruiter_visibility_score": 100,
+      "quality_notes": [
+        "Professional headline is well-crafted, keyword-rich, and clearly aligned with the target DevOps Engineer role.",
+        "About section is detailed, authentic, and demonstrates relevant technical skills, internship experience, and a growth mindset.",
+        "Experience rewrite uses clear, action-oriented bullet points focusing on technical contributions and collaboration.",
+        "Skills are well prioritized and grouped, covering core DevOps tools and technologies with good ATS keyword coverage.",
+        "Featured section suggestions align well with enhancing portfolio visibility and showcasing practical projects.",
+        "Missing contact information and certifications reduce recruiter confidence and ATS completeness."
+      ]
+    },
+    "interview_plan": {
+      "confidence_score": 91,
+      "readiness_score": 92,
+      "technical_questions": [
+        "Can you explain how you have used Docker to containerize applications during your internship?",
+        "Describe the steps you took to design and implement the CI/CD pipeline using GitHub Actions for your student application project.",
+        "How do you manage user permissions and perform basic troubleshooting in Linux system administration?",
+        "What AWS services have you worked with, and how did you provision and configure EC2 instances during your internship?",
+        "Can you walk me through a Bash script you wrote to automate a monitoring or maintenance task?"
+      ],
+      "behavioral_questions": [
+        "Tell me about a time during your internship when you had to collaborate with team members to solve a technical problem.",
+        "Describe a situation where you had to learn a new tool or technology quickly to complete a project or task.",
+        "How do you prioritize tasks when working on multiple responsibilities such as scripting, documentation, and deployment?",
+        "Give an example of how you handled feedback or criticism during your internship or academic projects.",
+        "Describe a time when you presented a technical demo or project to peers or faculty. How did you prepare and handle questions?"
+      ],
+      "interview_tips": [
+        "Emphasize your hands-on internship and project experience with concrete examples.",
+        "Be honest about your current skill level and express eagerness to learn and grow.",
+        "Prepare to discuss your technical contributions clearly and concisely, focusing on tools like Linux, AWS, Docker, and CI/CD.",
+        "Highlight your teamwork and communication skills, especially how you collaborated during your internship.",
+        "Research CloudBridge Labs\u2019 products and culture to tailor your answers to their startup environment and cloud focus.",
+        "Practice explaining technical concepts in simple terms to demonstrate clarity and professionalism."
+      ]
+    },
+    "recommended_next_steps": [
+      "Strengthen evidence for these missing role keywords before applying: Collaboration with application teams, Continuous Integration and Continuous Deployment pipelines, Scripting languages (e.g., Bash, Python), Monitoring tools (e.g., Prometheus, Nagios), CI/CD tools (e.g., Jenkins, GitLab CI).",
+      "Address recruiter concerns in the resume and interview narrative: Lack of full-time professional experience; No listed certifications to validate skills; Basic scripting skills and limited depth in cloud services.",
+      "Tighten the weakest resume areas next: Limited explicit evidence of scripting beyond basic Bash; No direct mention of monitoring tools experience; Collaboration with application teams is implied but not strongly detailed."
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+AI Job Copilot V2.1 Release Report
+
+Objective
+Move the slowest long-running portfolio and job-application workflows to additive background-job endpoints without breaking the existing synchronous APIs.
+
+Baseline timing
+- Synchronous portfolio baseline (portfolio_devops): 160120.09 ms
+- Synchronous job application baseline (job_application_devops): 160457.99 ms
+
+New architecture
+- Added in-memory background job manager, store, runner, lifecycle models, and expiry handling.
+- Added additive background endpoints for portfolio and job-application creation, polling, result retrieval, and cancellation.
+- Kept synchronous endpoints intact by routing both sync and async paths through shared workflow helpers.
+- Added background-job analytics endpoint protected by the existing admin secret.
+
+Performance comparison
+- Background portfolio create latency: 12.51 ms
+- Background portfolio total processing: 114759.76 ms
+- Background job application create latency: 6.47 ms
+- Background job application total processing: 181586.65 ms
+
+Files changed
+- C:\Users\surya\AI-Jobs\main.py
+- C:\Users\surya\AI-Jobs\background_jobs\__init__.py
+- C:\Users\surya\AI-Jobs\background_jobs\job_models.py
+- C:\Users\surya\AI-Jobs\background_jobs\job_errors.py
+- C:\Users\surya\AI-Jobs\background_jobs\job_store.py
+- C:\Users\surya\AI-Jobs\background_jobs\job_runner.py
+- C:\Users\surya\AI-Jobs\background_jobs\job_cleanup.py
+- C:\Users\surya\AI-Jobs\background_jobs\job_manager.py
+- New backend tests under C:\Users\surya\AI-Jobs\tests\test_background_*.py and job lifecycle tests.
+
+Job lifecycle behavior
+- Jobs now move through queued, processing, completed, failed, cancelled, and expired states.
+- Progress stages are monotonic and exposed through GET /jobs/{job_id}.
+- Results are retrieved through GET /jobs/{job_id}/result with safe 202, 410, and failure behavior.
+
+Backward compatibility
+- Existing synchronous endpoints /generate-portfolio and /prepare-job-application remain present in OpenAPI.
+- Automated tests confirmed synchronous route compatibility.
+
+Testing
+- Automated backend tests passed: 17
+- Real synthetic workflow checks completed: 6
+
+Known issues
+- Background jobs are currently in-memory only; they are designed for future queue backends but do not yet survive process restarts.
+- Admin background-job analytics are operational summaries of the current in-memory store, not long-term persisted history.
+
+Artifacts
+- Baseline folder: C:\Users\surya\AI-Jobs\performance_regression\baseline_v2_1
+- After folder: C:\Users\surya\AI-Jobs\performance_regression\after_v2_1
+- Manual review folder: C:\Users\surya\AI-Jobs\performance_regression\after_v2_1\manual_review
+
+Acceptance result
+V2.1 status: PASS WITH ISSUES
+Reason: core background workflow reliability is complete and validated, with only future infrastructure persistence deferred.

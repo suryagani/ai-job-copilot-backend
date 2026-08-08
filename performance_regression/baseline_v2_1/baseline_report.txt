@@ -1,0 +1,56 @@
+AI Job Copilot V2.1 Baseline Report
+
+Objective
+Capture the pre-change V2.1 baseline using the same synthetic fixtures from V2.0 before adding background jobs for the longest workflows.
+
+Total checks: 38
+Successful checks: 37
+Non-success checks: 1
+
+Slowest workflows
+- portfolio_devops: 160120.09 ms
+- job_application_devops: 160457.99 ms
+- linkedin_devops: 57453.97 ms
+- builder_operations_manager: 35532.11 ms
+
+Full result summary
+## Results
+- root: status=200 success=True time_ms=192.32
+- docs: status=200 success=True time_ms=17.78
+- auth_config: status=200 success=True time_ms=16.91
+- dashboard: status=200 success=True time_ms=154.49
+- career_assets: status=200 success=True time_ms=95.51
+- admin_summary_unauthorized: status=403 success=False time_ms=20.75
+  error={'detail': 'Admin access denied.', 'request_id': '3f6c5a8b-015a-42a8-8444-a9982de9facf'}
+- admin_summary_authorized: status=200 success=True time_ms=47.55
+- health: status=200 success=True time_ms=16.1
+- health_ready: status=200 success=True time_ms=16.93
+- health_database: status=200 success=True time_ms=16.88
+- health_ai: status=200 success=True time_ms=20.33
+- health_storage: status=200 success=True time_ms=19.65
+- resume_intelligence_vlsi: status=200 success=True time_ms=8570.82
+- job_description_devops: status=200 success=True time_ms=7225.36
+- career_knowledge_vlsi: status=200 success=True time_ms=16.82
+- ats_devops: status=200 success=True time_ms=7488.05
+- achievements_devops: status=200 success=True time_ms=4707.56
+- review_resume_devops: status=200 success=True time_ms=6733.64
+- builder_vlsi_fresher: status=200 success=True time_ms=29372.63
+- builder_devops_fresher: status=200 success=True time_ms=34096.23
+- builder_business_analyst: status=200 success=True time_ms=37228.21
+- builder_hr_switcher: status=200 success=True time_ms=32510.03
+- builder_restaurant_manager: status=200 success=True time_ms=37587.09
+- builder_operations_manager: status=200 success=True time_ms=35532.11
+- builder_senior_software_manager: status=200 success=True time_ms=40663.42
+- builder_no_work_experience: status=200 success=True time_ms=28692.64
+- optimizer_with_job_description: status=200 success=True time_ms=30105.75
+- cover_letter_devops: status=200 success=True time_ms=31973.4
+- linkedin_devops: status=200 success=True time_ms=57453.97
+- interview_devops: status=200 success=True time_ms=33439.86
+- portfolio_devops: status=200 success=True time_ms=160120.09
+- job_application_devops: status=200 success=True time_ms=160457.99
+- admin_performance: status=200 success=True time_ms=31.65
+- admin_latency: status=200 success=True time_ms=35.74
+- admin_failures: status=200 success=True time_ms=32.6
+- admin_health_summary: status=200 success=True time_ms=33.75
+- export_docx: status=200 success=True time_ms=213.42
+- export_pdf: status=200 success=True time_ms=182.31

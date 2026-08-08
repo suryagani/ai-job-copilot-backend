@@ -1,0 +1,57 @@
+{
+  "professional_bio": "Priya Menon is a Business Analyst specializing in operations-focused consulting environments. With an MBA in Operations and Finance and a B.Tech in Electronics and Communication Engineering, she combines strong analytical skills with technical proficiency in SQL, Power BI, Excel, and Python. Priya has experience in developing and standardizing reporting templates, building interactive dashboards, and coordinating with stakeholders to drive process improvements and data-driven decision-making. She is also skilled in mentoring junior analysts, ensuring quality and consistency in reporting outputs.",
+  "about_me": "As a Business Analyst passionate about bridging operations and analytics, I leverage my MBA in Operations and Finance alongside technical expertise in SQL and Power BI to deliver actionable insights and improve business processes. I have supported operations teams by standardizing reporting formats, creating automated SQL templates, and developing dashboards that enhance visibility into service performance. My approach emphasizes clear stakeholder communication, thorough documentation, and continuous process improvement. I am eager to contribute to consulting projects that require data-driven decision support and collaborative problem-solving.",
+  "personal_tagline": "Business Analyst | Operations & Reporting Specialist | Driving Data-Driven Insights and Process Improvement",
+  "project_showcase": [
+    "Service Turnaround Tracking Dashboard",
+    "SQL Reporting Template Automation"
+  ],
+  "project_case_studies": [
+    "{'Problem': 'Operations teams lacked real-time visibility into service turnaround times, causing delays in identifying bottlenecks and inefficiencies.', 'Solution': 'Developed an interactive Power BI dashboard that visualizes service turnaround metrics, enabling teams to monitor performance and make timely decisions.', 'Technology': 'Power BI, SQL', 'Contribution': 'Gathered stakeholder requirements, designed dashboard visualizations focusing on key performance indicators, and iterated based on user feedback.', 'Outcome': 'Improved operational transparency and supported data-driven decision-making for service delivery management.', 'Lessons Learned': 'Engaging stakeholders early in the design process ensures dashboards meet user needs and drive adoption.'}",
+    "{'Problem': 'Weekly operational reviews were time-consuming due to manual report generation and inconsistent reporting formats.', 'Solution': 'Created reusable SQL reporting templates to automate data extraction and standardized tracker formats to improve reporting consistency.', 'Technology': 'SQL, Excel', 'Contribution': 'Led the development and implementation of SQL templates and standardized reporting trackers, collaborating with operations teams for alignment.', 'Outcome': 'Reduced manual effort in report preparation and enhanced accuracy and consistency of weekly operational reports.', 'Lessons Learned': 'Standardization and automation significantly increase efficiency and reduce errors in recurring reporting tasks.'}"
+  ],
+  "github_readme": "# Priya Menon - Business Analyst Portfolio\n\nWelcome to my GitHub repository showcasing projects and code samples related to business analysis, operations reporting, and data visualization.\n\n## About Me\nI am a Business Analyst with expertise in SQL, Power BI, Excel, and Python, focused on improving operational efficiency and enabling data-driven decision-making in consulting environments.\n\n## Projects\n- **Service Turnaround Tracking Dashboard:** Interactive Power BI dashboard for monitoring service performance.\n- **SQL Reporting Templates:** Automated SQL scripts for weekly operational reviews.\n\n## Skills\n- Data Analysis & Reporting: SQL, Power BI, Excel\n- Programming & Automation: Python\n- Operations & Process Management: Process Mapping, Documentation\n- Stakeholder Management & Communication\n\n## Contact\nFeel free to reach out via my portfolio website or LinkedIn for collaboration or inquiries.\n\n[Portfolio](https://portfolio.example.com/priya-menon)",
+  "personal_website_content": "### Hero Section\nHi, I'm Priya Menon - Business Analyst specializing in operations and reporting. I help consulting teams transform data into actionable insights through effective dashboards and process improvements.\n\n### About\nWith an MBA in Operations and Finance and a background in Electronics and Communication Engineering, I bring a unique blend of business acumen and technical skills. My expertise lies in SQL-based analysis, Power BI dashboard development, and stakeholder collaboration to enhance operational efficiency.\n\n### Skills\n- SQL, Power BI, Excel, Python\n- Process Mapping & Documentation\n- Stakeholder Management & Communication\n- Reporting Consistency & Dashboard Development\n\n### Projects\n- Service Turnaround Tracking Dashboard: Developed an interactive dashboard to monitor and improve service delivery times.\n- SQL Reporting Template Automation: Created reusable SQL scripts to streamline weekly operational reporting.\n\n### Experience\nOperations Analyst supporting reporting and process coordination for operations teams. Led initiatives to standardize reporting formats and mentor junior analysts.\n\n### Achievements\n- Improved reporting consistency across teams by standardizing tracker formats.\n- Mentored junior analysts to enhance dashboard maintenance and reporting quality.\n\n### Education\n- MBA in Operations and Finance, Cochin Management Institute, 2023\n- B.Tech in Electronics and Communication Engineering, 2021\n\n### Certifications\n- Power BI Fundamentals\n- Microsoft Excel for Business\n\n### Contact\nConnect with me via my portfolio website or GitHub for project collaborations and opportunities.",
+  "skills_section": [
+    "Data Analysis & Reporting Tools: SQL, Power BI, Excel, PowerPoint",
+    "Programming & Automation: Python",
+    "Operations & Process Management: Process Mapping, Process Documentation, Reporting Consistency",
+    "Soft Skills & Stakeholder Management: Stakeholder Management, Communication, Documentation, Mentoring",
+    "Project Management & Collaboration Tools: Jira"
+  ],
+  "timeline": [
+    "2021: Completed B.Tech in Electronics and Communication Engineering",
+    "2023: Earned MBA in Operations and Finance from Cochin Management Institute",
+    "2023-Present: Operations Analyst supporting reporting, process coordination, and stakeholder management",
+    "2023: Completed certifications in Power BI Fundamentals and Microsoft Excel for Business"
+  ],
+  "contact_section": [
+    "Portfolio: https://portfolio.example.com/priya-menon",
+    "GitHub: https://github.com/priya-menon-synthetic",
+    "Email: [Add candidate's professional email here]",
+    "LinkedIn: [Add LinkedIn profile URL here]"
+  ],
+  "professional_footer": "\u00a9 2024 Priya Menon | Business Analyst | All rights reserved.",
+  "seo_meta_title": "Priya Menon - Business Analyst | Operations & Reporting Specialist | Consulting India",
+  "seo_meta_description": "Explore the professional portfolio of Priya Menon, a Business Analyst with expertise in SQL, Power BI, and operations reporting. Skilled in stakeholder management and process improvement, ready to drive data-driven insights in consulting.",
+  "selected_theme": "Business",
+  "portfolio_score": 85,
+  "recruiter_score": 80,
+  "quality_notes": [
+    "Portfolio content is professional, well-structured, and aligned with the target Business Analyst role in consulting.",
+    "Strong emphasis on technical skills (SQL, Power BI, Excel, Python) and relevant projects with clear problem-solution-outcome format.",
+    "MBA education and certifications are clearly presented, enhancing credibility and recruiter confidence.",
+    "Skills are logically grouped and comprehensive, supporting ATS parsing and recruiter scanning.",
+    "Project case studies effectively demonstrate practical application and impact, though quantifiable metrics could be more explicit.",
+    "Personal and professional bios are concise, clear, and tailored to the consulting industry and Indian market.",
+    "SEO meta title and description are well-crafted for online visibility and keyword relevance.",
+    "Contact information is mostly complete but placeholders remain for email and LinkedIn URLs, which should be updated.",
+    "The portfolio maintains a consistent professional tone and readability, suitable for recruiters and hiring managers.",
+    "Some minor improvements needed in explicitly quantifying achievements and integrating more business analysis methodology keywords."
+  ],
+  "portfolio_html_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\portfolio\\priya-menon-business-analyst.html",
+  "portfolio_readme_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\portfolio\\priya-menon-business-analyst-README.md",
+  "portfolio_json_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\portfolio\\priya-menon-business-analyst.json",
+  "portfolio_docx_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\portfolio\\priya-menon-business-analyst.docx",
+  "portfolio_pdf_path": "C:\\Users\\surya\\AI-Jobs\\rendered\\portfolio\\priya-menon-business-analyst.pdf"
+}
