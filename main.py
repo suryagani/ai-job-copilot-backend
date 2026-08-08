@@ -60,7 +60,9 @@ ALLOWED_ORIGINS = [item.strip() for item in os.getenv("ALLOWED_ORIGINS", "").spl
 if not ALLOWED_ORIGINS:
     ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:4173", "http://127.0.0.1:4173"] if ENVIRONMENT == "development" else ["https://uniaiads.com", "https://www.uniaiads.com"]
 
-app = FastAPI(title="AI Job Copilot", version="2.0.0")
+APP_VERSION = os.getenv("APP_VERSION", "2.2").strip() or "2.2"
+
+app = FastAPI(title="AI Job Copilot", version=APP_VERSION)
 register_error_handlers(app)
 
 app.add_middleware(
@@ -3218,7 +3220,7 @@ def home():
 def health():
     return {
         "status": "healthy",
-        "version": "2.0",
+        "version": APP_VERSION,
         "service": "AI Job Copilot Backend",
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
@@ -3233,7 +3235,7 @@ def health_ready():
         warnings.append("ADMIN_SECRET is not production safe")
     return {
         "status": "ready" if not warnings else "degraded",
-        "version": "2.0",
+        "version": APP_VERSION,
         "service": "AI Job Copilot Backend",
         "warnings": warnings,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -3244,10 +3246,12 @@ def health_ready():
 def health_database():
     auth_store = Path("auth_cloud_sync_data")
     analytics_store = Path("analytics_data")
+    background_jobs_store = Path("background_jobs_data")
     return {
-        "status": "healthy" if auth_store.exists() and analytics_store.exists() else "degraded",
+        "status": "healthy" if auth_store.exists() and analytics_store.exists() and background_jobs_store.exists() else "degraded",
         "auth_store_exists": auth_store.exists(),
         "analytics_store_exists": analytics_store.exists(),
+        "background_jobs_store_exists": background_jobs_store.exists(),
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
 

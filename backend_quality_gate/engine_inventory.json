@@ -1,0 +1,208 @@
+[
+  {
+    "component": "main.py",
+    "type": "file",
+    "status": "ACTIVE",
+    "python_file_count": 1,
+    "files": [
+      "main.py"
+    ]
+  },
+  {
+    "component": "career_knowledge_engine.py",
+    "type": "file",
+    "status": "ACTIVE",
+    "python_file_count": 1,
+    "files": [
+      "career_knowledge_engine.py"
+    ]
+  },
+  {
+    "component": "analytics_engine.py",
+    "type": "file",
+    "status": "ACTIVE",
+    "python_file_count": 1,
+    "files": [
+      "analytics_engine.py"
+    ]
+  },
+  {
+    "component": "auth_cloud_sync.py",
+    "type": "file",
+    "status": "ACTIVE",
+    "python_file_count": 1,
+    "files": [
+      "auth_cloud_sync.py"
+    ]
+  },
+  {
+    "component": "background_jobs",
+    "type": "directory",
+    "status": "ACTIVE",
+    "python_file_count": 8,
+    "files": [
+      "background_jobs\\__init__.py",
+      "background_jobs\\job_cleanup.py",
+      "background_jobs\\job_errors.py",
+      "background_jobs\\job_manager.py",
+      "background_jobs\\job_models.py",
+      "background_jobs\\job_runner.py",
+      "background_jobs\\job_store.py",
+      "background_jobs\\persistence.py"
+    ]
+  },
+  {
+    "component": "career_dashboard",
+    "type": "directory",
+    "status": "ACTIVE",
+    "python_file_count": 7,
+    "files": [
+      "career_dashboard\\__init__.py",
+      "career_dashboard\\career_assets.py",
+      "career_dashboard\\career_timeline.py",
+      "career_dashboard\\dashboard_engine.py",
+      "career_dashboard\\dashboard_reports.py",
+      "career_dashboard\\dashboard_stats.py",
+      "career_dashboard\\version_manager.py"
+    ]
+  },
+  {
+    "component": "cover_letter",
+    "type": "directory",
+    "status": "ACTIVE",
+    "python_file_count": 6,
+    "files": [
+      "cover_letter\\__init__.py",
+      "cover_letter\\company_research.py",
+      "cover_letter\\cover_letter_engine.py",
+      "cover_letter\\cover_letter_quality.py",
+      "cover_letter\\cover_letter_renderer.py",
+      "cover_letter\\cover_letter_templates.py"
+    ]
+  },
+  {
+    "component": "interview_engine",
+    "type": "directory",
+    "status": "ACTIVE",
+    "python_file_count": 9,
+    "files": [
+      "interview_engine\\__init__.py",
+      "interview_engine\\behavioral_questions.py",
+      "interview_engine\\company_research_engine.py",
+      "interview_engine\\feedback_engine.py",
+      "interview_engine\\hr_questions.py",
+      "interview_engine\\interview_engine.py",
+      "interview_engine\\mock_interview_engine.py",
+      "interview_engine\\star_answer_engine.py",
+      "interview_engine\\technical_questions.py"
+    ]
+  },
+  {
+    "component": "job_application_engine",
+    "type": "directory",
+    "status": "ACTIVE",
+    "python_file_count": 6,
+    "files": [
+      "job_application_engine\\__init__.py",
+      "job_application_engine\\application_engine.py",
+      "job_application_engine\\application_export.py",
+      "job_application_engine\\application_planner.py",
+      "job_application_engine\\application_report.py",
+      "job_application_engine\\application_validator.py"
+    ]
+  },
+  {
+    "component": "linkedin_engine",
+    "type": "directory",
+    "status": "ACTIVE",
+    "python_file_count": 10,
+    "files": [
+      "linkedin_engine\\__init__.py",
+      "linkedin_engine\\about_engine.py",
+      "linkedin_engine\\creator_engine.py",
+      "linkedin_engine\\experience_engine.py",
+      "linkedin_engine\\featured_engine.py",
+      "linkedin_engine\\headline_engine.py",
+      "linkedin_engine\\keyword_engine.py",
+      "linkedin_engine\\linkedin_engine.py",
+      "linkedin_engine\\linkedin_quality.py",
+      "linkedin_engine\\skills_engine.py"
+    ]
+  },
+  {
+    "component": "resume_designer",
+    "type": "directory",
+    "status": "ACTIVE",
+    "python_file_count": 9,
+    "files": [
+      "resume_designer\\__init__.py",
+      "resume_designer\\docx_generator.py",
+      "resume_designer\\layout_engine.py",
+      "resume_designer\\pdf_generator.py",
+      "resume_designer\\regression_runner.py",
+      "resume_designer\\resume_renderer.py",
+      "resume_designer\\spacing_engine.py",
+      "resume_designer\\theme_engine.py",
+      "resume_designer\\typography_engine.py"
+    ]
+  },
+  {
+    "component": "resume_models",
+    "type": "directory",
+    "status": "ACTIVE",
+    "python_file_count": 9,
+    "files": [
+      "resume_models\\__init__.py",
+      "resume_models\\_shared.py",
+      "resume_models\\business_professional.py",
+      "resume_models\\career_switcher.py",
+      "resume_models\\executive_leadership.py",
+      "resume_models\\graduate_ats.py",
+      "resume_models\\resume_model_selector.py",
+      "resume_models\\runtime.py",
+      "resume_models\\technical_professional.py"
+    ]
+  },
+  {
+    "component": "observability",
+    "type": "directory",
+    "status": "ACTIVE",
+    "python_file_count": 5,
+    "files": [
+      "observability\\__init__.py",
+      "observability\\error_reporting.py",
+      "observability\\logging_config.py",
+      "observability\\performance_metrics.py",
+      "observability\\request_context.py"
+    ]
+  },
+  {
+    "component": "services",
+    "type": "directory",
+    "status": "ACTIVE",
+    "python_file_count": 3,
+    "files": [
+      "services\\__init__.py",
+      "services\\ai_client.py",
+      "services\\retry_policy.py"
+    ]
+  },
+  {
+    "component": "core",
+    "type": "directory",
+    "status": "ACTIVE",
+    "python_file_count": 3,
+    "files": [
+      "core\\__init__.py",
+      "core\\error_handlers.py",
+      "core\\exceptions.py"
+    ]
+  },
+  {
+    "component": "linkedin-extension",
+    "type": "directory",
+    "status": "LEGACY",
+    "python_file_count": 0,
+    "files": []
+  }
+]

@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -30,6 +31,10 @@ class JobExpiryTests(unittest.TestCase):
             main.run_portfolio_workflow = fake_workflow
             create = self.client.post("/jobs/portfolio", json={"target_role": "DevOps Engineer"}, headers={"X-Session-Id": "bg-f"})
             job_id = create.json()["job_id"]
+            for _ in range(20):
+                if main.background_job_manager.store.get(job_id).status == "completed":
+                    break
+                time.sleep(0.05)
             job = main.background_job_manager.store.get(job_id)
             job.completed_at = (datetime.now(timezone.utc) - timedelta(hours=25)).isoformat()
             main.background_job_manager.store.ttl_hours = 24

@@ -1,0 +1,408 @@
+[
+  {
+    "path": "/",
+    "method": "GET",
+    "summary": "Home",
+    "operation_id": "home__get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/admin/analytics/background-jobs",
+    "method": "GET",
+    "summary": "Admin Analytics Background Jobs",
+    "operation_id": "admin_analytics_background_jobs_admin_analytics_background_jobs_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/admin/analytics/countries",
+    "method": "GET",
+    "summary": "Admin Analytics Countries",
+    "operation_id": "admin_analytics_countries_admin_analytics_countries_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/admin/analytics/downloads",
+    "method": "GET",
+    "summary": "Admin Analytics Downloads",
+    "operation_id": "admin_analytics_downloads_admin_analytics_downloads_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/admin/analytics/errors",
+    "method": "GET",
+    "summary": "Admin Analytics Errors",
+    "operation_id": "admin_analytics_errors_admin_analytics_errors_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/admin/analytics/failures",
+    "method": "GET",
+    "summary": "Admin Analytics Failures",
+    "operation_id": "admin_analytics_failures_admin_analytics_failures_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/admin/analytics/health-summary",
+    "method": "GET",
+    "summary": "Admin Analytics Health Summary",
+    "operation_id": "admin_analytics_health_summary_admin_analytics_health_summary_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/admin/analytics/latency",
+    "method": "GET",
+    "summary": "Admin Analytics Latency",
+    "operation_id": "admin_analytics_latency_admin_analytics_latency_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/admin/analytics/performance",
+    "method": "GET",
+    "summary": "Admin Analytics Performance",
+    "operation_id": "admin_analytics_performance_admin_analytics_performance_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/admin/analytics/recent-events",
+    "method": "GET",
+    "summary": "Admin Analytics Recent Events",
+    "operation_id": "admin_analytics_recent_events_admin_analytics_recent_events_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/admin/analytics/roles",
+    "method": "GET",
+    "summary": "Admin Analytics Roles",
+    "operation_id": "admin_analytics_roles_admin_analytics_roles_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/admin/analytics/summary",
+    "method": "GET",
+    "summary": "Admin Analytics Summary",
+    "operation_id": "admin_analytics_summary_admin_analytics_summary_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/admin/analytics/tool-usage",
+    "method": "GET",
+    "summary": "Admin Analytics Tool Usage",
+    "operation_id": "admin_analytics_tool_usage_admin_analytics_tool_usage_get",
+    "status": "ADMIN"
+  },
+  {
+    "path": "/analyze-ats",
+    "method": "POST",
+    "summary": "Analyze Ats",
+    "operation_id": "analyze_ats_analyze_ats_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/analyze-career-knowledge",
+    "method": "POST",
+    "summary": "Analyze Career Knowledge",
+    "operation_id": "analyze_career_knowledge_analyze_career_knowledge_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/analyze-job-description",
+    "method": "POST",
+    "summary": "Analyze Job Description",
+    "operation_id": "analyze_job_description_analyze_job_description_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/analyze-resume-intelligence",
+    "method": "POST",
+    "summary": "Analyze Resume Intelligence",
+    "operation_id": "analyze_resume_intelligence_analyze_resume_intelligence_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/auth/config",
+    "method": "GET",
+    "summary": "Auth Config",
+    "operation_id": "auth_config_auth_config_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/auth/login",
+    "method": "POST",
+    "summary": "Auth Login",
+    "operation_id": "auth_login_auth_login_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/auth/signup",
+    "method": "POST",
+    "summary": "Auth Signup",
+    "operation_id": "auth_signup_auth_signup_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/build-resume",
+    "method": "POST",
+    "summary": "Build Resume",
+    "operation_id": "build_resume_build_resume_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/career-assets",
+    "method": "GET",
+    "summary": "Career Assets",
+    "operation_id": "career_assets_career_assets_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/career-assets/{asset_id}",
+    "method": "DELETE",
+    "summary": "Delete Career Asset Endpoint",
+    "operation_id": "delete_career_asset_endpoint_career_assets__asset_id__delete",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/career-assets/{asset_id}",
+    "method": "GET",
+    "summary": "Career Asset By Id",
+    "operation_id": "career_asset_by_id_career_assets__asset_id__get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/career-history",
+    "method": "GET",
+    "summary": "Career History",
+    "operation_id": "career_history_career_history_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/career-statistics",
+    "method": "GET",
+    "summary": "Career Statistics",
+    "operation_id": "career_statistics_career_statistics_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/career-timeline",
+    "method": "GET",
+    "summary": "Career Timeline",
+    "operation_id": "career_timeline_career_timeline_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/dashboard",
+    "method": "GET",
+    "summary": "Dashboard",
+    "operation_id": "dashboard_dashboard_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/export-resume-docx",
+    "method": "POST",
+    "summary": "Export Resume Docx",
+    "operation_id": "export_resume_docx_export_resume_docx_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/export-resume-pdf",
+    "method": "POST",
+    "summary": "Export Resume Pdf",
+    "operation_id": "export_resume_pdf_export_resume_pdf_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/format-linkedin",
+    "method": "POST",
+    "summary": "Format Linkedin",
+    "operation_id": "format_linkedin_format_linkedin_post",
+    "status": "LEGACY"
+  },
+  {
+    "path": "/generate-achievements",
+    "method": "POST",
+    "summary": "Generate Achievements",
+    "operation_id": "generate_achievements_generate_achievements_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/generate-cover-letter",
+    "method": "POST",
+    "summary": "Generate Cover Letter Endpoint",
+    "operation_id": "generate_cover_letter_endpoint_generate_cover_letter_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/generate-hiring-messages",
+    "method": "POST",
+    "summary": "Generate Hiring Messages",
+    "operation_id": "generate_hiring_messages_generate_hiring_messages_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/generate-interview-prep",
+    "method": "POST",
+    "summary": "Generate Interview Prep",
+    "operation_id": "generate_interview_prep_generate_interview_prep_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/generate-portfolio",
+    "method": "POST",
+    "summary": "Generate Portfolio",
+    "operation_id": "generate_portfolio_generate_portfolio_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/generate-profile-from-scratch",
+    "method": "POST",
+    "summary": "Generate Profile From Scratch",
+    "operation_id": "generate_profile_from_scratch_generate_profile_from_scratch_post",
+    "status": "LEGACY"
+  },
+  {
+    "path": "/health",
+    "method": "GET",
+    "summary": "Health",
+    "operation_id": "health_health_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/health/ai",
+    "method": "GET",
+    "summary": "Health Ai",
+    "operation_id": "health_ai_health_ai_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/health/database",
+    "method": "GET",
+    "summary": "Health Database",
+    "operation_id": "health_database_health_database_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/health/ready",
+    "method": "GET",
+    "summary": "Health Ready",
+    "operation_id": "health_ready_health_ready_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/health/storage",
+    "method": "GET",
+    "summary": "Health Storage",
+    "operation_id": "health_storage_health_storage_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/job-alert-config",
+    "method": "GET",
+    "summary": "Get Job Alert Config",
+    "operation_id": "get_job_alert_config_job_alert_config_get",
+    "status": "LEGACY"
+  },
+  {
+    "path": "/jobs/job-application",
+    "method": "POST",
+    "summary": "Create Job Application Job",
+    "operation_id": "create_job_application_job_jobs_job_application_post",
+    "status": "BACKGROUND"
+  },
+  {
+    "path": "/jobs/portfolio",
+    "method": "POST",
+    "summary": "Create Portfolio Job",
+    "operation_id": "create_portfolio_job_jobs_portfolio_post",
+    "status": "BACKGROUND"
+  },
+  {
+    "path": "/jobs/{job_id}",
+    "method": "DELETE",
+    "summary": "Cancel Background Job",
+    "operation_id": "cancel_background_job_jobs__job_id__delete",
+    "status": "BACKGROUND"
+  },
+  {
+    "path": "/jobs/{job_id}",
+    "method": "GET",
+    "summary": "Get Background Job Status",
+    "operation_id": "get_background_job_status_jobs__job_id__get",
+    "status": "BACKGROUND"
+  },
+  {
+    "path": "/jobs/{job_id}/result",
+    "method": "GET",
+    "summary": "Get Background Job Result",
+    "operation_id": "get_background_job_result_jobs__job_id__result_get",
+    "status": "BACKGROUND"
+  },
+  {
+    "path": "/me",
+    "method": "GET",
+    "summary": "Me",
+    "operation_id": "me_me_get",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/optimize-linkedin",
+    "method": "POST",
+    "summary": "Optimize Linkedin",
+    "operation_id": "optimize_linkedin_optimize_linkedin_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/optimize-profile",
+    "method": "POST",
+    "summary": "Optimize Profile",
+    "operation_id": "optimize_profile_optimize_profile_post",
+    "status": "LEGACY"
+  },
+  {
+    "path": "/optimize-resume",
+    "method": "POST",
+    "summary": "Optimize Resume",
+    "operation_id": "optimize_resume_optimize_resume_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/prepare-job-application",
+    "method": "POST",
+    "summary": "Prepare Job Application",
+    "operation_id": "prepare_job_application_prepare_job_application_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/review-resume",
+    "method": "POST",
+    "summary": "Review Resume",
+    "operation_id": "review_resume_review_resume_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/save-career-asset",
+    "method": "POST",
+    "summary": "Save Career Asset Endpoint",
+    "operation_id": "save_career_asset_endpoint_save_career_asset_post",
+    "status": "ACTIVE"
+  },
+  {
+    "path": "/save-job-alert",
+    "method": "POST",
+    "summary": "Save Job Alert",
+    "operation_id": "save_job_alert_save_job_alert_post",
+    "status": "LEGACY"
+  },
+  {
+    "path": "/send-test-job-alert",
+    "method": "POST",
+    "summary": "Send Test Job Alert",
+    "operation_id": "send_test_job_alert_send_test_job_alert_post",
+    "status": "LEGACY"
+  },
+  {
+    "path": "/suggest-role",
+    "method": "POST",
+    "summary": "Suggest Role",
+    "operation_id": "suggest_role_suggest_role_post",
+    "status": "LEGACY"
+  }
+]

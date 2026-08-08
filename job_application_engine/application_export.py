@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from io import BytesIO
 from pathlib import Path
+import json
 import re
 
 from docx import Document
@@ -82,9 +83,12 @@ def export_application_report(full_name: str, target_role: str, target_country: 
     slug = _slug('-'.join(part for part in [full_name, target_role, 'application-report'] if str(part or '').strip()))
     docx_path = out_dir / f'{slug}.docx'
     pdf_path = out_dir / f'{slug}.pdf'
+    json_path = out_dir / f'{slug}.json'
     docx_path.write_bytes(_render_docx(report).getvalue())
     pdf_path.write_bytes(_render_pdf(report, target_country=target_country).getvalue())
+    json_path.write_text(json.dumps(report, indent=2), encoding='utf-8')
     return {
         'application_report_docx_path': str(docx_path.resolve()),
         'application_report_pdf_path': str(pdf_path.resolve()),
+        'application_report_json_path': str(json_path.resolve()),
     }

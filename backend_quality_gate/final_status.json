@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-08-08T21:39:11+00:00",
+  "version": "2.2",
+  "tests_passed": 18,
+  "tests_failed": 0,
+  "scores": {
+    "resume_quality": 82,
+    "ats_quality": 50,
+    "recruiter_readability": 76,
+    "document_rendering": 82,
+    "api_reliability": 100,
+    "security": 88,
+    "privacy": 90,
+    "performance": 76,
+    "background_job_reliability": 84,
+    "backward_compatibility": 93
+  },
+  "report_pdf": "C:\\Users\\surya\\AI-Jobs\\backend_quality_gate\\phase_v2_2_backend_quality_report.pdf",
+  "report_docx": "C:\\Users\\surya\\AI-Jobs\\backend_quality_gate\\phase_v2_2_backend_quality_report.docx",
+  "final_decision": "BACKEND READY WITH MINOR ISSUES"
+}
