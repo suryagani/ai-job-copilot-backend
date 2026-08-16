@@ -12,10 +12,14 @@ from pathlib import Path
 
 import httpx
 
-SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
-SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "").strip()
-SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "").strip()
-SUPABASE_REDIRECT_URL = os.getenv("SUPABASE_REDIRECT_URL", "").strip()
+from services.supabase_client import (
+    SUPABASE_ANON_KEY,
+    SUPABASE_REDIRECT_URL,
+    SUPABASE_SERVICE_ROLE_KEY,
+    SUPABASE_URL,
+    get_supabase_public_config,
+    is_supabase_configured,
+)
 AUTH_SECRET_KEY = os.getenv("AUTH_SECRET_KEY", "change-me-auth-secret").encode("utf-8")
 AUTH_DATA_DIR = Path("auth_cloud_sync_data")
 LOCAL_USERS_FILE = AUTH_DATA_DIR / "users.json"
@@ -102,7 +106,7 @@ def _verify_local_token(token: str) -> dict | None:
 
 
 def get_auth_mode() -> str:
-    if SUPABASE_URL and SUPABASE_ANON_KEY:
+    if is_supabase_configured():
         return "supabase"
     return "local"
 
@@ -111,10 +115,8 @@ def get_auth_config() -> dict:
     return {
         "auth_mode": get_auth_mode(),
         "email_login_enabled": True,
-        "google_login_enabled": bool(SUPABASE_URL and SUPABASE_ANON_KEY),
-        "supabase_url": SUPABASE_URL if SUPABASE_URL and SUPABASE_ANON_KEY else "",
-        "supabase_anon_key": SUPABASE_ANON_KEY if SUPABASE_URL and SUPABASE_ANON_KEY else "",
-        "supabase_redirect_url": SUPABASE_REDIRECT_URL,
+        "google_login_enabled": bool(is_supabase_configured()),
+        **get_supabase_public_config(),
     }
 
 

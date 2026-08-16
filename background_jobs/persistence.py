@@ -8,7 +8,7 @@ from typing import Any
 
 import httpx
 
-from auth_cloud_sync import SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_URL
+from services.supabase_client import SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_URL
 
 
 JOB_DATA_DIR = Path("background_jobs_data")

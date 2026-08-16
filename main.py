@@ -41,6 +41,7 @@ from core.exceptions import AppError, RateLimitExceeded
 from observability import clear_request_context, configure_logging, metrics_registry, set_request_context
 from observability.request_context import get_request_id
 from services.ai_client import build_openai_client
+from services.supabase_client import check_supabase_auth, check_supabase_database, check_supabase_storage, is_supabase_admin_configured, is_supabase_configured
 
 # -----------------------
 # Setup
@@ -109,6 +110,11 @@ EXPENSIVE_ENDPOINTS = {
     "/jobs/job-application",
 }
 background_job_manager = BackgroundJobManager(ttl_hours=BACKGROUND_JOB_TTL_HOURS)
+
+if not is_supabase_configured():
+    logger.warning("Supabase public configuration is missing; auth and cloud storage features will fall back or remain unavailable.")
+elif not is_supabase_admin_configured():
+    logger.warning("Supabase admin configuration is missing; admin-level Supabase operations will remain unavailable.")
 
 ROLE_CATALOG = [
     "Software Engineer",
@@ -3514,15 +3520,26 @@ def health_ready():
 
 @app.get("/health/database")
 def health_database():
-    auth_store = Path("auth_cloud_sync_data")
-    analytics_store = Path("analytics_data")
-    background_jobs_store = Path("background_jobs_data")
+    database_status = check_supabase_database()
+    http_status = 200 if database_status.get("database_reachable") else 503
+    payload = {
+        "status": "healthy" if database_status.get("database_reachable") else "unhealthy",
+        "provider": "supabase",
+    }
+    return JSONResponse(status_code=http_status, content=payload)
+
+
+@app.get("/admin/supabase-status")
+def admin_supabase_status(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret")):
+    require_admin_secret(x_admin_secret)
+    database_status = check_supabase_database()
+    auth_status = check_supabase_auth()
+    storage_status = check_supabase_storage()
     return {
-        "status": "healthy" if auth_store.exists() and analytics_store.exists() and background_jobs_store.exists() else "degraded",
-        "auth_store_exists": auth_store.exists(),
-        "analytics_store_exists": analytics_store.exists(),
-        "background_jobs_store_exists": background_jobs_store.exists(),
-        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "connected": bool(database_status.get("connected") or auth_status.get("connected") or storage_status.get("connected")),
+        "database_reachable": bool(database_status.get("database_reachable")),
+        "auth_reachable": bool(auth_status.get("auth_reachable")),
+        "storage_reachable": bool(storage_status.get("storage_reachable")),
     }
 
 
