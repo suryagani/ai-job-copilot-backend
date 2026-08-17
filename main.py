@@ -21,6 +21,9 @@ from reportlab.lib.pagesizes import A4, letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.enums import TA_LEFT
+
+load_dotenv()
+
 from career_knowledge_engine import generate_career_knowledge
 from cover_letter import generate_cover_letter_package
 from linkedin_engine import generate_linkedin_optimization_package
@@ -46,7 +49,6 @@ from services.supabase_client import check_supabase_auth, check_supabase_databas
 # -----------------------
 # Setup
 # -----------------------
-load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
 if not api_key:

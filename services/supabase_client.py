@@ -7,10 +7,37 @@ from typing import Any
 
 import httpx
 
-SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
-SUPABASE_ANON_KEY = os.getenv("SUPABASE_ANON_KEY", "").strip()
-SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "").strip()
-SUPABASE_REDIRECT_URL = os.getenv("SUPABASE_REDIRECT_URL", "").strip()
+
+def _env(name: str) -> str:
+    return os.getenv(name, "").strip()
+
+
+def _supabase_url() -> str:
+    return _env("SUPABASE_URL").rstrip("/")
+
+
+def _supabase_anon_key() -> str:
+    return _env("SUPABASE_ANON_KEY")
+
+
+def _supabase_service_role_key() -> str:
+    return _env("SUPABASE_SERVICE_ROLE_KEY")
+
+
+def _supabase_redirect_url() -> str:
+    return _env("SUPABASE_REDIRECT_URL")
+
+
+def __getattr__(name: str):
+    if name == "SUPABASE_URL":
+        return _supabase_url()
+    if name == "SUPABASE_ANON_KEY":
+        return _supabase_anon_key()
+    if name == "SUPABASE_SERVICE_ROLE_KEY":
+        return _supabase_service_role_key()
+    if name == "SUPABASE_REDIRECT_URL":
+        return _supabase_redirect_url()
+    raise AttributeError(name)
 
 
 @dataclass(frozen=True)
@@ -44,23 +71,23 @@ class SupabaseConfigurationError(RuntimeError):
 
 
 def is_supabase_configured() -> bool:
-    return bool(SUPABASE_URL and SUPABASE_ANON_KEY)
+    return bool(_supabase_url() and _supabase_anon_key())
 
 
 def is_supabase_admin_configured() -> bool:
-    return bool(SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY)
+    return bool(_supabase_url() and _supabase_service_role_key())
 
 
 def get_supabase_client() -> SupabaseRestClient:
     if not is_supabase_configured():
         raise SupabaseConfigurationError("Supabase public configuration is missing.")
-    return SupabaseRestClient(url=SUPABASE_URL, key=SUPABASE_ANON_KEY, admin=False)
+    return SupabaseRestClient(url=_supabase_url(), key=_supabase_anon_key(), admin=False)
 
 
 def get_supabase_admin_client() -> SupabaseRestClient:
     if not is_supabase_admin_configured():
         raise SupabaseConfigurationError("Supabase admin configuration is missing.")
-    return SupabaseRestClient(url=SUPABASE_URL, key=SUPABASE_SERVICE_ROLE_KEY, admin=True)
+    return SupabaseRestClient(url=_supabase_url(), key=_supabase_service_role_key(), admin=True)
 
 
 def get_supabase_public_config() -> dict[str, str]:
@@ -68,12 +95,12 @@ def get_supabase_public_config() -> dict[str, str]:
         return {
             "supabase_url": "",
             "supabase_anon_key": "",
-            "supabase_redirect_url": SUPABASE_REDIRECT_URL,
+            "supabase_redirect_url": _supabase_redirect_url(),
         }
     return {
-        "supabase_url": SUPABASE_URL,
-        "supabase_anon_key": SUPABASE_ANON_KEY,
-        "supabase_redirect_url": SUPABASE_REDIRECT_URL,
+        "supabase_url": _supabase_url(),
+        "supabase_anon_key": _supabase_anon_key(),
+        "supabase_redirect_url": _supabase_redirect_url(),
     }
 
 
