@@ -12,6 +12,8 @@ from pathlib import Path
 
 import httpx
 
+from auth_profile import get_authenticated_profile
+
 from services.supabase_client import (
     SUPABASE_ANON_KEY,
     SUPABASE_REDIRECT_URL,
@@ -264,12 +266,21 @@ def verify_access_token(token: str) -> dict | None:
     if response.status_code >= 400:
         return None
     payload = response.json()
-    return {
+    user = {
         "id": payload.get("id", ""),
         "email": payload.get("email", ""),
         "full_name": ((payload.get("user_metadata") or {}).get("full_name") or ""),
         "auth_mode": "supabase",
     }
+    profile = get_authenticated_profile(user["id"], access_token=token)
+    if not profile:
+        return None
+    user.update({key: profile.get(key, "") for key in ("role", "account_status", "full_name", "email")})
+    return user
+
+
+def user_is_admin(user: dict) -> bool:
+    return str((user or {}).get("role") or "").strip().lower() in {"admin", "owner"}
 
 
 def _normalize_asset_record(record: dict) -> dict:

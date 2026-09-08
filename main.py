@@ -31,7 +31,7 @@ from interview_engine import generate_interview_prep_package
 from portfolio_engine import generate_portfolio_package
 from career_dashboard import get_dashboard_snapshot, get_dashboard_assets, get_dashboard_timeline, get_dashboard_statistics, get_dashboard_history
 from career_dashboard.career_assets import register_asset, register_job_description
-from auth_cloud_sync import delete_career_asset, get_auth_config, get_career_asset_by_id, list_career_assets, login_user, save_career_asset, signup_user, verify_access_token
+from auth_cloud_sync import delete_career_asset, get_auth_config, get_career_asset_by_id, list_career_assets, login_user, save_career_asset, signup_user, user_is_admin, verify_access_token
 from analytics_engine import analytics_countries, analytics_downloads, analytics_errors, analytics_recent_events, analytics_roles, analytics_summary, analytics_tool_usage, track_analytics_event
 from job_application_engine import generate_job_application_package
 from resume_designer import render_resume_package
@@ -741,6 +741,8 @@ class AuthUserOutput(BaseModel):
     id: str
     email: str
     full_name: str
+    role: str = "user"
+    account_status: str = "active"
     auth_mode: str
 
 
@@ -884,6 +886,10 @@ def get_current_user_required(authorization: str | None) -> tuple[dict, str]:
     user, token = get_current_user_optional(authorization)
     if not user:
         raise HTTPException(status_code=401, detail="Authentication required.")
+    status = str(user.get("account_status", "active") or "active").strip().lower()
+    if status != "active":
+        detail = "Your account is currently suspended." if status == "suspended" else "Your account is not active."
+        raise HTTPException(status_code=403, detail=detail)
     return user, token
 
 
@@ -892,6 +898,19 @@ def require_admin_secret(x_admin_secret: str | None) -> None:
         raise HTTPException(status_code=503, detail="Admin access is not configured safely.")
     if str(x_admin_secret or "").strip() != ADMIN_SECRET:
         raise HTTPException(status_code=403, detail="Admin access denied.")
+
+
+def require_admin_access(authorization: str | None = None) -> dict:
+    user, _ = get_current_user_optional(authorization)
+    if not user:
+        raise HTTPException(status_code=403, detail="Admin access denied.")
+    status = str(user.get("account_status", "active") or "active").strip().lower()
+    if status != "active":
+        detail = "Your account is currently suspended." if status == "suspended" else "Your account is not active."
+        raise HTTPException(status_code=403, detail=detail)
+    if not user_is_admin(user):
+        raise HTTPException(status_code=403, detail="Admin access denied.")
+    return user
 
 
 def validate_text_inputs(payload: dict) -> None:
@@ -4419,8 +4438,8 @@ def career_history():
 
 
 @app.get("/admin/analytics/summary")
-def admin_analytics_summary(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
-    require_admin_secret(x_admin_secret)
+def admin_analytics_summary(authorization: str | None = Header(default=None), sample: bool = False):
+    require_admin_access(authorization)
     return analytics_summary(include_sample=sample)
 
 
