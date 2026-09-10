@@ -19,7 +19,9 @@ from services.supabase_client import (
     SUPABASE_REDIRECT_URL,
     SUPABASE_SERVICE_ROLE_KEY,
     SUPABASE_URL,
+    get_supabase_admin_client,
     get_supabase_public_config,
+    is_supabase_admin_configured,
     is_supabase_configured,
 )
 AUTH_SECRET_KEY = os.getenv("AUTH_SECRET_KEY", "change-me-auth-secret").encode("utf-8")
@@ -281,6 +283,139 @@ def verify_access_token(token: str) -> dict | None:
 
 def user_is_admin(user: dict) -> bool:
     return str((user or {}).get("role") or "").strip().lower() in {"admin", "owner"}
+
+
+def _admin_rest_request(method: str, path: str, *, params: dict | None = None, json_body: dict | None = None) -> httpx.Response:
+    if not is_supabase_admin_configured():
+        raise RuntimeError("Supabase admin configuration is missing.")
+    client = get_supabase_admin_client()
+    headers = client.headers(prefer_return=json_body is not None)
+    return httpx.request(
+        method,
+        client.rest_url(path),
+        headers=headers,
+        params=params,
+        json=json_body,
+        timeout=15,
+    )
+
+
+def _admin_profile_output(profile: dict, asset_count: int = 0) -> dict:
+    return {
+        "id": str(profile.get("id") or "").strip(),
+        "email": str(profile.get("email") or "").strip(),
+        "full_name": str(profile.get("full_name") or "").strip(),
+        "role": str(profile.get("role") or "user").strip().lower(),
+        "account_status": str(profile.get("account_status") or "active").strip().lower(),
+        "created_at": str(profile.get("created_at") or "").strip(),
+        "last_login_at": str(profile.get("last_login_at") or "").strip(),
+        "asset_count": asset_count,
+    }
+
+
+def list_waitlist_entries() -> list[dict]:
+    response = _admin_rest_request(
+        "GET",
+        "rest/v1/waitlist",
+        params={"select": "id,email,first_name,target_role,source,created_at,status", "order": "created_at.desc"},
+    )
+    if response.status_code >= 300:
+        raise RuntimeError("Waitlist lookup failed.")
+    payload = response.json()
+    return payload if isinstance(payload, list) else []
+
+
+def get_admin_profile(user_id: str) -> dict | None:
+    user_id = str(user_id or "").strip()
+    if not user_id:
+        return None
+    response = _admin_rest_request(
+        "GET",
+        "rest/v1/profiles",
+        params={
+            "select": "id,email,full_name,role,account_status,created_at,last_login_at",
+            "id": f"eq.{user_id}",
+            "limit": "1",
+        },
+    )
+    if response.status_code >= 300:
+        raise RuntimeError("Profile lookup failed.")
+    payload = response.json()
+    return payload[0] if isinstance(payload, list) and payload else None
+
+
+def list_admin_users() -> list[dict]:
+    response = _admin_rest_request(
+        "GET",
+        "rest/v1/profiles",
+        params={
+            "select": "id,email,full_name,role,account_status,created_at,last_login_at",
+            "order": "created_at.desc",
+        },
+    )
+    if response.status_code >= 300:
+        raise RuntimeError("Profile listing failed.")
+    profiles = response.json()
+    if not isinstance(profiles, list):
+        return []
+
+    asset_counts: dict[str, int] = {}
+    try:
+        assets = _admin_rest_request("GET", "rest/v1/career_assets", params={"select": "user_id"})
+        if assets.status_code < 300 and isinstance(assets.json(), list):
+            for asset in assets.json():
+                user_id = str(asset.get("user_id") or "").strip()
+                if user_id:
+                    asset_counts[user_id] = asset_counts.get(user_id, 0) + 1
+    except Exception:
+        asset_counts = {}
+
+    return [
+        _admin_profile_output(profile, asset_counts.get(str(profile.get("id") or "").strip(), 0))
+        for profile in profiles
+    ]
+
+
+def update_profile_role(user_id: str, role: str) -> dict:
+    role = str(role or "").strip().lower()
+    if role not in {"user", "admin", "owner"}:
+        raise ValueError("Role must be user, admin, or owner.")
+    response = _admin_rest_request(
+        "PATCH",
+        "rest/v1/profiles",
+        params={"id": f"eq.{str(user_id or '').strip()}"},
+        json_body={"role": role},
+    )
+    if response.status_code >= 300:
+        raise ValueError("Profile role update failed.")
+    updated = response.json()
+    if isinstance(updated, list) and updated:
+        return updated[0]
+    profile = get_admin_profile(user_id)
+    if not profile:
+        raise ValueError("User profile not found.")
+    return profile
+
+
+def update_profile_status(user_id: str, account_status: str) -> dict:
+    account_status = str(account_status or "").strip().lower()
+    if account_status not in {"active", "suspended"}:
+        raise ValueError("Account status must be active or suspended.")
+    response = _admin_rest_request(
+        "PATCH",
+        "rest/v1/profiles",
+        params={"id": f"eq.{str(user_id or '').strip()}"},
+        json_body={"account_status": account_status},
+    )
+    if response.status_code >= 300:
+        raise ValueError("Profile status update failed.")
+    updated = response.json()
+    if isinstance(updated, list) and updated:
+        return updated[0]
+    profile = get_admin_profile(user_id)
+    if not profile:
+        raise ValueError("User profile not found.")
+    return profile
 
 
 def _normalize_asset_record(record: dict) -> dict:

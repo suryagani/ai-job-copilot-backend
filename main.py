@@ -31,7 +31,22 @@ from interview_engine import generate_interview_prep_package
 from portfolio_engine import generate_portfolio_package
 from career_dashboard import get_dashboard_snapshot, get_dashboard_assets, get_dashboard_timeline, get_dashboard_statistics, get_dashboard_history
 from career_dashboard.career_assets import register_asset, register_job_description
-from auth_cloud_sync import delete_career_asset, get_auth_config, get_career_asset_by_id, list_career_assets, login_user, save_career_asset, signup_user, user_is_admin, verify_access_token
+from auth_cloud_sync import (
+    delete_career_asset,
+    get_admin_profile,
+    get_auth_config,
+    get_career_asset_by_id,
+    list_admin_users,
+    list_career_assets,
+    list_waitlist_entries,
+    login_user,
+    save_career_asset,
+    signup_user,
+    update_profile_role,
+    update_profile_status,
+    user_is_admin,
+    verify_access_token,
+)
 from analytics_engine import analytics_countries, analytics_downloads, analytics_errors, analytics_recent_events, analytics_roles, analytics_summary, analytics_tool_usage, track_analytics_event
 from job_application_engine import generate_job_application_package
 from resume_designer import render_resume_package
@@ -754,6 +769,35 @@ class AuthResponseOutput(BaseModel):
     user: AuthUserOutput
 
 
+class AdminUserOutput(BaseModel):
+    id: str
+    email: str = ""
+    full_name: str = ""
+    role: str = "user"
+    account_status: str = "active"
+    created_at: str = ""
+    last_login_at: str = ""
+    asset_count: int = 0
+
+
+class AdminUserRoleUpdateInput(BaseModel):
+    role: str
+
+
+class AdminUserStatusUpdateInput(BaseModel):
+    account_status: str
+
+
+class WaitlistAdminOutput(BaseModel):
+    id: str
+    email: str
+    first_name: str = ""
+    target_role: str = ""
+    source: str = "direct"
+    created_at: str = ""
+    status: str = "waiting"
+
+
 class SaveCareerAssetInput(BaseModel):
     asset_type: str
     title: str
@@ -911,6 +955,26 @@ def require_admin_access(authorization: str | None = None) -> dict:
     if not user_is_admin(user):
         raise HTTPException(status_code=403, detail="Admin access denied.")
     return user
+
+
+def require_owner_access(authorization: str | None = None) -> dict:
+    user, _ = get_current_user_required(authorization)
+    if str(user.get("role") or "").strip().lower() != "owner":
+        raise HTTPException(status_code=403, detail="Owner access denied.")
+    return user
+
+
+def _admin_user_output(profile: dict) -> dict:
+    return {
+        "id": str(profile.get("id") or "").strip(),
+        "email": str(profile.get("email") or "").strip(),
+        "full_name": str(profile.get("full_name") or "").strip(),
+        "role": str(profile.get("role") or "user").strip().lower(),
+        "account_status": str(profile.get("account_status") or "active").strip().lower(),
+        "created_at": str(profile.get("created_at") or "").strip(),
+        "last_login_at": str(profile.get("last_login_at") or "").strip(),
+        "asset_count": int(profile.get("asset_count") or 0),
+    }
 
 
 def validate_text_inputs(payload: dict) -> None:
@@ -4444,38 +4508,38 @@ def admin_analytics_summary(authorization: str | None = Header(default=None), sa
 
 
 @app.get("/admin/analytics/tool-usage")
-def admin_analytics_tool_usage(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
-    require_admin_secret(x_admin_secret)
+def admin_analytics_tool_usage(authorization: str | None = Header(default=None), sample: bool = False):
+    require_admin_access(authorization)
     return analytics_tool_usage(include_sample=sample)
 
 
 @app.get("/admin/analytics/countries")
-def admin_analytics_countries(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
-    require_admin_secret(x_admin_secret)
+def admin_analytics_countries(authorization: str | None = Header(default=None), sample: bool = False):
+    require_admin_access(authorization)
     return analytics_countries(include_sample=sample)
 
 
 @app.get("/admin/analytics/roles")
-def admin_analytics_roles(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
-    require_admin_secret(x_admin_secret)
+def admin_analytics_roles(authorization: str | None = Header(default=None), sample: bool = False):
+    require_admin_access(authorization)
     return analytics_roles(include_sample=sample)
 
 
 @app.get("/admin/analytics/downloads")
-def admin_analytics_downloads(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
-    require_admin_secret(x_admin_secret)
+def admin_analytics_downloads(authorization: str | None = Header(default=None), sample: bool = False):
+    require_admin_access(authorization)
     return analytics_downloads(include_sample=sample)
 
 
 @app.get("/admin/analytics/errors")
-def admin_analytics_errors(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False):
-    require_admin_secret(x_admin_secret)
+def admin_analytics_errors(authorization: str | None = Header(default=None), sample: bool = False):
+    require_admin_access(authorization)
     return analytics_errors(include_sample=sample)
 
 
 @app.get("/admin/analytics/recent-events")
-def admin_analytics_recent_events(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret"), sample: bool = False, limit: int = 30):
-    require_admin_secret(x_admin_secret)
+def admin_analytics_recent_events(authorization: str | None = Header(default=None), sample: bool = False, limit: int = 30):
+    require_admin_access(authorization)
     return analytics_recent_events(include_sample=sample, limit=limit)
 
 
@@ -4531,6 +4595,62 @@ def admin_analytics_health_summary(x_admin_secret: str | None = Header(default=N
 def admin_analytics_background_jobs(x_admin_secret: str | None = Header(default=None, alias="X-Admin-Secret")):
     require_admin_secret(x_admin_secret)
     return background_job_manager.background_metrics()
+
+
+@app.get("/admin/users", response_model=list[AdminUserOutput])
+def admin_list_users(authorization: str | None = Header(default=None)):
+    require_owner_access(authorization)
+    try:
+        return list_admin_users()
+    except Exception as exc:
+        logger.warning("Admin user listing failed: %s", type(exc).__name__)
+        raise HTTPException(status_code=503, detail="User data is temporarily unavailable.") from exc
+
+
+@app.get("/admin/waitlist", response_model=list[WaitlistAdminOutput])
+def admin_list_waitlist(authorization: str | None = Header(default=None)):
+    require_admin_access(authorization)
+    try:
+        return list_waitlist_entries()
+    except Exception as exc:
+        logger.warning("Waitlist admin lookup failed: %s", type(exc).__name__)
+        raise HTTPException(status_code=503, detail="Waitlist data is temporarily unavailable.") from exc
+
+
+@app.patch("/admin/users/{user_id}/role", response_model=AdminUserOutput)
+def admin_update_user_role(user_id: str, data: AdminUserRoleUpdateInput, authorization: str | None = Header(default=None)):
+    owner = require_owner_access(authorization)
+    target_role = str(data.role or "").strip().lower()
+    if target_role not in {"user", "admin", "owner"}:
+        raise HTTPException(status_code=400, detail="Role must be user, admin, or owner.")
+    target_profile = get_admin_profile(user_id)
+    if not target_profile:
+        raise HTTPException(status_code=404, detail="User profile not found.")
+    if str(target_profile.get("role") or "").strip().lower() == "owner":
+        raise HTTPException(status_code=403, detail="Owner role changes must be performed through secure admin tooling.")
+    if str(owner.get("id") or "").strip() == str(user_id).strip() and target_role != "owner":
+        raise HTTPException(status_code=403, detail="Owner self-demotion is not allowed from the web admin portal.")
+    try:
+        return _admin_user_output(update_profile_role(user_id, target_role))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.patch("/admin/users/{user_id}/status", response_model=AdminUserOutput)
+def admin_update_user_status(user_id: str, data: AdminUserStatusUpdateInput, authorization: str | None = Header(default=None)):
+    owner = require_owner_access(authorization)
+    account_status = str(data.account_status or "").strip().lower()
+    if account_status not in {"active", "suspended"}:
+        raise HTTPException(status_code=400, detail="Account status must be active or suspended.")
+    target_profile = get_admin_profile(user_id)
+    if not target_profile:
+        raise HTTPException(status_code=404, detail="User profile not found.")
+    if str(target_profile.get("role") or "").strip().lower() == "owner" and str(owner.get("id") or "").strip() == str(user_id).strip():
+        raise HTTPException(status_code=403, detail="Owner self-suspension is not allowed from the web admin portal.")
+    try:
+        return _admin_user_output(update_profile_status(user_id, account_status))
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @app.post("/analyze-resume-intelligence", response_model=ResumeIntelligenceAnalysisOutput)
