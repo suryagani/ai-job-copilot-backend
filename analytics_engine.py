@@ -4,11 +4,19 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 import json
+import os
+import threading
+import time
 import uuid
 
 ANALYTICS_DIR = Path('analytics_data')
 ANALYTICS_FILE = ANALYTICS_DIR / 'analytics_events.json'
 AUTH_USERS_FILE = Path('auth_cloud_sync_data') / 'users.json'
+ANALYTICS_MAX_EVENTS = int(os.getenv('ANALYTICS_MAX_EVENTS', '2000'))
+ANALYTICS_CACHE_TTL_SECONDS = float(os.getenv('ANALYTICS_CACHE_TTL_SECONDS', '5'))
+_ANALYTICS_CACHE_LOCK = threading.Lock()
+_ANALYTICS_CACHE: tuple[dict, ...] = ()
+_ANALYTICS_CACHE_LOADED_AT = 0.0
 
 GENERATION_EVENTS = {
     'resume_builder_completed',
@@ -118,13 +126,70 @@ def _sample_events() -> list[dict]:
     ]
 
 
-def list_analytics_events(include_sample: bool = False) -> list[dict]:
+def _read_recent_events(limit: int) -> list[dict]:
+    if limit <= 0 or not ANALYTICS_FILE.exists():
+        return []
+    decoder = json.JSONDecoder()
+    records: list[dict] = []
+    buffer = ''
+    eof = False
+
+    with ANALYTICS_FILE.open('r', encoding='utf-8') as handle:
+        while len(records) < limit:
+            if not buffer and not eof:
+                chunk = handle.read(65536)
+                if chunk:
+                    buffer = chunk
+                else:
+                    eof = True
+            buffer = buffer.lstrip()
+            if not buffer:
+                if eof:
+                    break
+                continue
+            if buffer[0] == '[':
+                buffer = buffer[1:].lstrip()
+                continue
+            if buffer[0] == ']':
+                break
+            if buffer[0] == ',':
+                buffer = buffer[1:].lstrip()
+                continue
+            try:
+                record, consumed = decoder.raw_decode(buffer)
+            except json.JSONDecodeError:
+                if eof:
+                    break
+                chunk = handle.read(65536)
+                if chunk:
+                    buffer += chunk
+                    continue
+                eof = True
+                continue
+            if isinstance(record, dict):
+                records.append(record)
+            buffer = buffer[consumed:]
+    return records
+
+
+def _load_cached_events() -> tuple[dict, ...]:
+    global _ANALYTICS_CACHE, _ANALYTICS_CACHE_LOADED_AT
+    now = time.monotonic()
+    with _ANALYTICS_CACHE_LOCK:
+        if now - _ANALYTICS_CACHE_LOADED_AT < ANALYTICS_CACHE_TTL_SECONDS:
+            return _ANALYTICS_CACHE
+        events = _read_recent_events(ANALYTICS_MAX_EVENTS)
+        _ANALYTICS_CACHE = tuple(events)
+        _ANALYTICS_CACHE_LOADED_AT = now
+        return _ANALYTICS_CACHE
+
+
+def list_analytics_events(include_sample: bool = False) -> tuple[dict, ...]:
     _ensure_storage()
-    events = _read_json(ANALYTICS_FILE)
+    events = _load_cached_events()
     if events:
-        events.sort(key=lambda item: item.get('created_at', ''), reverse=True)
         return events
-    return _sample_events() if include_sample else []
+    return tuple(_sample_events()) if include_sample else ()
 
 
 def track_analytics_event(
@@ -158,6 +223,9 @@ def track_analytics_event(
     events.append(record)
     events.sort(key=lambda item: item.get('created_at', ''), reverse=True)
     _write_json(ANALYTICS_FILE, events)
+    global _ANALYTICS_CACHE_LOADED_AT
+    with _ANALYTICS_CACHE_LOCK:
+        _ANALYTICS_CACHE_LOADED_AT = 0.0
     return record
 
 

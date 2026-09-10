@@ -313,11 +313,16 @@ def _admin_profile_output(profile: dict, asset_count: int = 0) -> dict:
     }
 
 
-def list_waitlist_entries() -> list[dict]:
+def list_waitlist_entries(limit: int = 100) -> list[dict]:
+    limit = max(1, min(int(limit), 100))
     response = _admin_rest_request(
         "GET",
         "rest/v1/waitlist",
-        params={"select": "id,email,first_name,target_role,source,created_at,status", "order": "created_at.desc"},
+        params={
+            "select": "id,email,first_name,target_role,source,created_at,status",
+            "order": "created_at.desc",
+            "limit": str(limit),
+        },
     )
     if response.status_code >= 300:
         raise RuntimeError("Waitlist lookup failed.")
@@ -344,13 +349,15 @@ def get_admin_profile(user_id: str) -> dict | None:
     return payload[0] if isinstance(payload, list) and payload else None
 
 
-def list_admin_users() -> list[dict]:
+def list_admin_users(limit: int = 100) -> list[dict]:
+    limit = max(1, min(int(limit), 100))
     response = _admin_rest_request(
         "GET",
         "rest/v1/profiles",
         params={
             "select": "id,email,full_name,role,account_status,created_at,last_login_at",
             "order": "created_at.desc",
+            "limit": str(limit),
         },
     )
     if response.status_code >= 300:
@@ -361,7 +368,18 @@ def list_admin_users() -> list[dict]:
 
     asset_counts: dict[str, int] = {}
     try:
-        assets = _admin_rest_request("GET", "rest/v1/career_assets", params={"select": "user_id"})
+        user_ids = [str(profile.get("id") or "").strip() for profile in profiles if str(profile.get("id") or "").strip()]
+        if not user_ids:
+            return [_admin_profile_output(profile, 0) for profile in profiles]
+        assets = _admin_rest_request(
+            "GET",
+            "rest/v1/career_assets",
+            params={
+                "select": "user_id",
+                "user_id": f"in.({','.join(user_ids)})",
+                "limit": "5000",
+            },
+        )
         if assets.status_code < 300 and isinstance(assets.json(), list):
             for asset in assets.json():
                 user_id = str(asset.get("user_id") or "").strip()

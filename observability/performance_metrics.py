@@ -2,13 +2,19 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass, field
+from collections import deque
+import os
 from statistics import mean
 from time import time
 
 
 @dataclass
 class PerformanceRegistry:
-    latencies: dict[str, list[float]] = field(default_factory=lambda: defaultdict(list))
+    latencies: dict[str, deque[float]] = field(
+        default_factory=lambda: defaultdict(
+            lambda: deque(maxlen=int(os.getenv("MAX_LATENCY_SAMPLES", "1000")))
+        )
+    )
     counters: dict[str, int] = field(default_factory=lambda: defaultdict(int))
     failures: list[dict] = field(default_factory=list)
 

@@ -110,6 +110,11 @@ BACKGROUND_JOB_POLL_PER_HOUR = int(os.getenv("BACKGROUND_JOB_POLL_PER_HOUR", "30
 BACKGROUND_JOB_TTL_HOURS = int(os.getenv("BACKGROUND_JOB_TTL_HOURS", "24"))
 MAX_INPUT_CHARACTERS = int(os.getenv("MAX_INPUT_CHARACTERS", "50000"))
 MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "5"))
+ADMIN_WAITLIST_DEFAULT_LIMIT = 100
+ADMIN_USERS_DEFAULT_LIMIT = 100
+RATE_LIMIT_MAX_IDENTITIES = int(os.getenv("RATE_LIMIT_MAX_IDENTITIES", "5000"))
+IDEMPOTENCY_TTL_SECONDS = int(os.getenv("IDEMPOTENCY_TTL_SECONDS", "3600"))
+IDEMPOTENCY_MAX_ENTRIES = int(os.getenv("IDEMPOTENCY_MAX_ENTRIES", "1000"))
 
 IDEMPOTENCY_LOCK = Lock()
 IDEMPOTENCY_STORE: dict[str, dict] = {}
@@ -1006,6 +1011,7 @@ def enforce_rate_limit(request: Request) -> None:
         now = time.time()
         cutoff = now - 3600
         with RATE_LIMIT_LOCK:
+            _prune_rate_limit_store_locked(now, cutoff)
             history = [stamp for stamp in RATE_LIMIT_STORE.get(identity + ":poll", []) if stamp >= cutoff]
             if len(history) >= BACKGROUND_JOB_POLL_PER_HOUR:
                 metrics_registry.increment("rate_limit_hits")
@@ -1019,12 +1025,32 @@ def enforce_rate_limit(request: Request) -> None:
     now = time.time()
     cutoff = now - 3600
     with RATE_LIMIT_LOCK:
+        _prune_rate_limit_store_locked(now, cutoff)
         history = [stamp for stamp in RATE_LIMIT_STORE.get(identity, []) if stamp >= cutoff]
         if len(history) >= limit:
             metrics_registry.increment("rate_limit_hits")
             raise RateLimitExceeded()
         history.append(now)
         RATE_LIMIT_STORE[identity] = history
+
+
+def _prune_rate_limit_store_locked(now: float, cutoff: float) -> None:
+    stale_keys = []
+    for key, history in RATE_LIMIT_STORE.items():
+        fresh = [stamp for stamp in history if stamp >= cutoff]
+        if fresh:
+            RATE_LIMIT_STORE[key] = fresh
+        else:
+            stale_keys.append(key)
+    for key in stale_keys:
+        RATE_LIMIT_STORE.pop(key, None)
+    if len(RATE_LIMIT_STORE) > RATE_LIMIT_MAX_IDENTITIES:
+        oldest = sorted(
+            RATE_LIMIT_STORE.items(),
+            key=lambda item: max(item[1], default=now),
+        )
+        for key, _ in oldest[: len(RATE_LIMIT_STORE) - RATE_LIMIT_MAX_IDENTITIES]:
+            RATE_LIMIT_STORE.pop(key, None)
 
 
 def make_idempotency_key(request: Request, raw_body: bytes) -> str:
@@ -1040,6 +1066,7 @@ def get_stored_idempotency_response(request: Request, raw_body: bytes):
         return None
     store_key = make_idempotency_key(request, raw_body)
     with IDEMPOTENCY_LOCK:
+        _prune_idempotency_store_locked(time.time())
         entry = IDEMPOTENCY_STORE.get(store_key)
         if not entry:
             IDEMPOTENCY_STORE[store_key] = {"status": "processing", "created_at": time.time()}
@@ -1063,6 +1090,7 @@ def store_idempotency_response(request: Request, raw_body: bytes, response_paylo
         return
     store_key = make_idempotency_key(request, raw_body)
     with IDEMPOTENCY_LOCK:
+        _prune_idempotency_store_locked(time.time())
         IDEMPOTENCY_STORE[store_key] = {"status": "completed", "status_code": status_code, "content": response_payload, "created_at": time.time()}
 
 
@@ -1073,6 +1101,21 @@ def clear_idempotency_response(request: Request, raw_body: bytes) -> None:
     store_key = make_idempotency_key(request, raw_body)
     with IDEMPOTENCY_LOCK:
         IDEMPOTENCY_STORE.pop(store_key, None)
+
+
+def _prune_idempotency_store_locked(now: float) -> None:
+    cutoff = now - IDEMPOTENCY_TTL_SECONDS
+    stale = [key for key, entry in IDEMPOTENCY_STORE.items() if float(entry.get("created_at", 0)) < cutoff]
+    for key in stale:
+        IDEMPOTENCY_STORE.pop(key, None)
+    if len(IDEMPOTENCY_STORE) > IDEMPOTENCY_MAX_ENTRIES:
+        keep = sorted(
+            IDEMPOTENCY_STORE.items(),
+            key=lambda item: float(item[1].get("created_at", 0)),
+            reverse=True,
+        )[:IDEMPOTENCY_MAX_ENTRIES]
+        IDEMPOTENCY_STORE.clear()
+        IDEMPOTENCY_STORE.update(keep)
 
 
 def validate_rendered_file(path_value: str, expected_suffix: str) -> dict:
@@ -4598,20 +4641,26 @@ def admin_analytics_background_jobs(x_admin_secret: str | None = Header(default=
 
 
 @app.get("/admin/users", response_model=list[AdminUserOutput])
-def admin_list_users(authorization: str | None = Header(default=None)):
+def admin_list_users(
+    authorization: str | None = Header(default=None),
+    limit: int = ADMIN_USERS_DEFAULT_LIMIT,
+):
     require_owner_access(authorization)
     try:
-        return list_admin_users()
+        return list_admin_users(limit=limit)
     except Exception as exc:
         logger.warning("Admin user listing failed: %s", type(exc).__name__)
         raise HTTPException(status_code=503, detail="User data is temporarily unavailable.") from exc
 
 
 @app.get("/admin/waitlist", response_model=list[WaitlistAdminOutput])
-def admin_list_waitlist(authorization: str | None = Header(default=None)):
+def admin_list_waitlist(
+    authorization: str | None = Header(default=None),
+    limit: int = ADMIN_WAITLIST_DEFAULT_LIMIT,
+):
     require_admin_access(authorization)
     try:
-        return list_waitlist_entries()
+        return list_waitlist_entries(limit=limit)
     except Exception as exc:
         logger.warning("Waitlist admin lookup failed: %s", type(exc).__name__)
         raise HTTPException(status_code=503, detail="Waitlist data is temporarily unavailable.") from exc
