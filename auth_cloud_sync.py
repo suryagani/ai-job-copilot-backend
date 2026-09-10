@@ -29,6 +29,8 @@ AUTH_DATA_DIR = Path("auth_cloud_sync_data")
 LOCAL_USERS_FILE = AUTH_DATA_DIR / "users.json"
 LOCAL_ASSETS_FILE = AUTH_DATA_DIR / "career_assets.json"
 TOKEN_TTL_SECONDS = 60 * 60 * 24 * 7
+SUPABASE_ADMIN_TIMEOUT = httpx.Timeout(connect=5.0, read=10.0, write=10.0, pool=5.0)
+SUPABASE_ADMIN_LIMITS = httpx.Limits(max_connections=8, max_keepalive_connections=4)
 
 
 def _ensure_storage() -> None:
@@ -263,7 +265,7 @@ def verify_access_token(token: str) -> dict | None:
         "apikey": SUPABASE_ANON_KEY,
         "Authorization": f"Bearer {token}",
     }
-    with httpx.Client(timeout=30) as client:
+    with httpx.Client(timeout=SUPABASE_ADMIN_TIMEOUT, limits=SUPABASE_ADMIN_LIMITS) as client:
         response = client.get(f"{SUPABASE_URL}/auth/v1/user", headers=headers)
     if response.status_code >= 400:
         return None
@@ -285,19 +287,34 @@ def user_is_admin(user: dict) -> bool:
     return str((user or {}).get("role") or "").strip().lower() in {"admin", "owner"}
 
 
-def _admin_rest_request(method: str, path: str, *, params: dict | None = None, json_body: dict | None = None) -> httpx.Response:
+def _admin_rest_request(
+    method: str,
+    path: str,
+    *,
+    params: dict | None = None,
+    json_body: dict | None = None,
+    http_client: httpx.Client | None = None,
+) -> httpx.Response:
     if not is_supabase_admin_configured():
         raise RuntimeError("Supabase admin configuration is missing.")
-    client = get_supabase_admin_client()
-    headers = client.headers(prefer_return=json_body is not None)
-    return httpx.request(
-        method,
-        client.rest_url(path),
-        headers=headers,
-        params=params,
-        json=json_body,
-        timeout=15,
-    )
+    supabase_client = get_supabase_admin_client()
+    headers = supabase_client.headers(prefer_return=json_body is not None)
+    if http_client is not None:
+        return http_client.request(
+            method,
+            supabase_client.rest_url(path),
+            headers=headers,
+            params=params,
+            json=json_body,
+        )
+    with httpx.Client(timeout=SUPABASE_ADMIN_TIMEOUT, limits=SUPABASE_ADMIN_LIMITS) as request_client:
+        return request_client.request(
+            method,
+            supabase_client.rest_url(path),
+            headers=headers,
+            params=params,
+            json=json_body,
+        )
 
 
 def _admin_profile_output(profile: dict, asset_count: int = 0) -> dict:
@@ -351,47 +368,50 @@ def get_admin_profile(user_id: str) -> dict | None:
 
 def list_admin_users(limit: int = 100) -> list[dict]:
     limit = max(1, min(int(limit), 100))
-    response = _admin_rest_request(
-        "GET",
-        "rest/v1/profiles",
-        params={
-            "select": "id,email,full_name,role,account_status,created_at,last_login_at",
-            "order": "created_at.desc",
-            "limit": str(limit),
-        },
-    )
-    if response.status_code >= 300:
-        raise RuntimeError("Profile listing failed.")
-    profiles = response.json()
-    if not isinstance(profiles, list):
-        return []
-
-    asset_counts: dict[str, int] = {}
-    try:
-        user_ids = [str(profile.get("id") or "").strip() for profile in profiles if str(profile.get("id") or "").strip()]
-        if not user_ids:
-            return [_admin_profile_output(profile, 0) for profile in profiles]
-        assets = _admin_rest_request(
+    with httpx.Client(timeout=SUPABASE_ADMIN_TIMEOUT, limits=SUPABASE_ADMIN_LIMITS) as http_client:
+        response = _admin_rest_request(
             "GET",
-            "rest/v1/career_assets",
+            "rest/v1/profiles",
             params={
-                "select": "user_id",
-                "user_id": f"in.({','.join(user_ids)})",
-                "limit": "5000",
+                "select": "id,email,full_name,role,account_status,created_at,last_login_at",
+                "order": "created_at.desc",
+                "limit": str(limit),
             },
+            http_client=http_client,
         )
-        if assets.status_code < 300 and isinstance(assets.json(), list):
-            for asset in assets.json():
-                user_id = str(asset.get("user_id") or "").strip()
-                if user_id:
-                    asset_counts[user_id] = asset_counts.get(user_id, 0) + 1
-    except Exception:
-        asset_counts = {}
+        if response.status_code >= 300:
+            raise RuntimeError("Profile listing failed.")
+        profiles = response.json()
+        if not isinstance(profiles, list):
+            return []
 
-    return [
-        _admin_profile_output(profile, asset_counts.get(str(profile.get("id") or "").strip(), 0))
-        for profile in profiles
-    ]
+        asset_counts: dict[str, int] = {}
+        try:
+            user_ids = [str(profile.get("id") or "").strip() for profile in profiles if str(profile.get("id") or "").strip()]
+            if not user_ids:
+                return [_admin_profile_output(profile, 0) for profile in profiles]
+            assets = _admin_rest_request(
+                "GET",
+                "rest/v1/career_assets",
+                params={
+                    "select": "user_id",
+                    "user_id": f"in.({','.join(user_ids)})",
+                    "limit": "5000",
+                },
+                http_client=http_client,
+            )
+            if assets.status_code < 300 and isinstance(assets.json(), list):
+                for asset in assets.json():
+                    user_id = str(asset.get("user_id") or "").strip()
+                    if user_id:
+                        asset_counts[user_id] = asset_counts.get(user_id, 0) + 1
+        except Exception:
+            asset_counts = {}
+
+        return [
+            _admin_profile_output(profile, asset_counts.get(str(profile.get("id") or "").strip(), 0))
+            for profile in profiles
+        ]
 
 
 def update_profile_role(user_id: str, role: str) -> dict:

@@ -45,6 +45,8 @@ class AdminMemoryBoundsTests(unittest.TestCase):
 
         self.assertEqual(len(result), 1)
         self.assertEqual(captured[0][1]["limit"], "100")
+        self.assertEqual(captured[1][1]["select"], "user_id")
+        self.assertEqual(captured[1][1]["user_id"], "in.(user-1)")
         self.assertEqual(captured[1][1]["limit"], "5000")
 
     def test_analytics_snapshot_is_bounded_and_shared(self):

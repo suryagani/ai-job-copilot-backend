@@ -11,6 +11,8 @@ from services.supabase_client import (
     is_supabase_configured,
 )
 
+SUPABASE_AUTH_TIMEOUT = httpx.Timeout(connect=5.0, read=10.0, write=10.0, pool=5.0)
+
 
 def get_authenticated_profile(user_uuid: str, access_token: str = "") -> dict[str, Any] | None:
     """Read authorization fields from the profile bound to an authenticated UUID."""
@@ -20,12 +22,12 @@ def get_authenticated_profile(user_uuid: str, access_token: str = "") -> dict[st
     try:
         client = get_supabase_admin_client() if is_supabase_admin_configured() else get_supabase_client()
         bearer = None if client.admin else str(access_token or "").strip() or None
-        response = httpx.get(
-            client.rest_url("rest/v1/profiles"),
-            headers=client.headers(bearer_token=bearer),
-            params={"select": "id,role,account_status,full_name,email", "id": f"eq.{user_id}", "limit": "1"},
-            timeout=15,
-        )
+        with httpx.Client(timeout=SUPABASE_AUTH_TIMEOUT) as http_client:
+            response = http_client.get(
+                client.rest_url("rest/v1/profiles"),
+                headers=client.headers(bearer_token=bearer),
+                params={"select": "id,role,account_status,full_name,email", "id": f"eq.{user_id}", "limit": "1"},
+            )
         if response.status_code >= 400:
             return None
         rows = response.json()
