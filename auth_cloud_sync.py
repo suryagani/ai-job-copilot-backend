@@ -13,6 +13,7 @@ from pathlib import Path
 import httpx
 
 from auth_profile import get_authenticated_profile
+from launch_control import ensure_signup_open, get_launch_status
 
 from services.supabase_client import (
     SUPABASE_ANON_KEY,
@@ -123,6 +124,7 @@ def get_auth_config() -> dict:
         "email_login_enabled": True,
         "google_login_enabled": bool(is_supabase_configured()),
         **get_supabase_public_config(),
+        **get_launch_status(),
     }
 
 
@@ -135,6 +137,7 @@ def _extract_error(response: httpx.Response) -> str:
 
 
 def signup_user(email: str, password: str, full_name: str = "") -> dict:
+    ensure_signup_open()
     email = str(email or "").strip().lower()
     password = str(password or "")
     full_name = str(full_name or "").strip()

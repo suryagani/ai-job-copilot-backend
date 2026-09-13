@@ -49,6 +49,7 @@ from auth_cloud_sync import (
 )
 from analytics_engine import analytics_countries, analytics_downloads, analytics_errors, analytics_recent_events, analytics_roles, analytics_summary, analytics_tool_usage, track_analytics_event
 from job_application_engine import generate_job_application_package
+from launch_control import get_launch_status
 from resume_designer import render_resume_package
 from resume_designer.regression_runner import run_regression_suite
 from resume_models import select_resume_model
@@ -749,6 +750,13 @@ class AuthConfigOutput(BaseModel):
     supabase_url: str
     supabase_anon_key: str
     supabase_redirect_url: str
+    launch_at: str
+    is_launched: bool
+
+
+class LaunchStatusOutput(BaseModel):
+    launch_at: str
+    is_launched: bool
 
 
 class AuthCredentialsInput(BaseModel):
@@ -4430,6 +4438,11 @@ def cancel_background_job(job_id: str):
 @app.get("/auth/config", response_model=AuthConfigOutput)
 def auth_config():
     return get_auth_config()
+
+
+@app.get("/launch/status", response_model=LaunchStatusOutput)
+def launch_status():
+    return get_launch_status()
 
 
 @app.post("/auth/signup", response_model=AuthResponseOutput)
